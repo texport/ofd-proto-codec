@@ -1,0 +1,25 @@
+package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command
+
+import kz.kazakhtelecom.proto.v203.Message
+import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.service.ServiceRequestBuilder
+import kotlinx.serialization.json.JsonObject
+
+/**
+ * Построение запроса COMMAND_SYSTEM.
+ * На первом этапе заполняем только базовые поля ServiceRequest.
+ */
+class CommandSystemRequestBuilder : CommandRequestBuilder {
+    private val serviceRequestBuilder = ServiceRequestBuilder()
+
+    /**
+     * Собирает Message.Request для команды COMMAND_SYSTEM.
+     */
+    override fun build(json: JsonObject): Message.Request {
+        val serviceRequest = serviceRequestBuilder.build(json)
+
+        return Message.Request.newBuilder()
+            .setCommand(Message.CommandTypeEnum.COMMAND_SYSTEM)
+            .setService(serviceRequest)
+            .build()
+    }
+}
