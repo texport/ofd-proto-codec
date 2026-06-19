@@ -5,7 +5,6 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.DateTimeValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.service.KkmRegInfoValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.service.OrgRegInfoValidator
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request.service.SecurityStatsValidator
 import kotlinx.serialization.json.JsonObject
 
 /**

@@ -23,8 +23,10 @@ class OrgRegInfoValidator {
         ValidationUtils.requireNonBlankString(org, "addressKz", "$basePath.addressKz", errors)
         // ИИН/БИН — обязательная строка.
         ValidationUtils.requireNonBlankString(org, "inn", "$basePath.inn", errors)
-        // ОКЭД — обязательная строка.
-        ValidationUtils.requireNonBlankString(org, "okved", "$basePath.okved", errors)
+        // ОКЭД — необязательная строка.
+        if (org.containsKey("okved")) {
+            ValidationUtils.requireNonBlankString(org, "okved", "$basePath.okved", errors)
+        }
 
         return errors
     }

@@ -24,8 +24,8 @@ class NomenclatureRequestBuilder {
 
         readString(nomenclatureJson, "barcode")?.let { builder.setBarcode(it) }
 
-        if (currentVersion == null && !builder.hasBarcode()) {
-            throw IllegalArgumentException("Missing currentVersion or barcode")
+        require(currentVersion != null || builder.hasBarcode()) {
+            "Missing currentVersion or barcode"
         }
 
         return builder.build()

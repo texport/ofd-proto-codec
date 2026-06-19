@@ -7,7 +7,6 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums.Ticket
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.intOrNull
 
 /**

@@ -10,7 +10,6 @@ import kz.mybrain.ofdcodec.infrastructure.util.ProtocolVersion
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.longOrNull
 
 /**
@@ -132,7 +131,7 @@ object JsonMessageMapper {
         val value = readString(json, JsonKeys.MESSAGE_TYPE, errors) ?: return null
         return try {
             MessageType.valueOf(value.uppercase())
-        } catch (ex: IllegalArgumentException) {
+        } catch (ignored: IllegalArgumentException) {
             errors.add(
                 ErrorFactory.error(
                     ErrorCode.JSON_INVALID_VALUE,
@@ -267,31 +266,5 @@ object JsonMessageMapper {
         return value.toInt()
     }
 
-    private fun readIntOptional(
-        json: JsonObject,
-        key: String,
-        errors: MutableList<ValidationError>
-    ): Int? {
-        val element = json[key] ?: return null
-        if (element !is JsonPrimitive || element.isString) {
-            errors.add(
-                ErrorFactory.error(
-                    ErrorCode.JSON_INVALID_TYPE,
-                    "$.$key",
-                    mapOf("field" to key)
-                )
-            )
-            return null
-        }
-        return element.intOrNull ?: run {
-            errors.add(
-                ErrorFactory.error(
-                    ErrorCode.JSON_INVALID_VALUE,
-                    "$.$key",
-                    mapOf("field" to key)
-                )
-            )
-            null
-        }
-    }
 }
+

@@ -1,6 +1,7 @@
 plugins {
-    kotlin("jvm") version "2.2.0"
-    kotlin("plugin.serialization") version "2.2.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.detekt)
 }
 
 group = "kz.mybrain"
@@ -10,13 +11,19 @@ repositories {
     mavenCentral()
 }
 
+detekt {
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+    allRules = true
+}
+
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-    implementation("kz.kazakhtelecom:ofd-kt-proto-v203:2.0.3")
-    implementation("com.google.protobuf:protobuf-java:3.25.3")
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ofd.kt.proto)
+    implementation(libs.protobuf.java)
     testImplementation(kotlin("test"))
-    testImplementation("kz.mybrain:ofd-network-client:1.0.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+    testImplementation(libs.ofd.network.client)
+    testImplementation(libs.kotlinx.coroutines.core)
 }
 
 tasks.test {
@@ -28,3 +35,4 @@ tasks.test {
 kotlin {
     jvmToolchain(17)
 }
+

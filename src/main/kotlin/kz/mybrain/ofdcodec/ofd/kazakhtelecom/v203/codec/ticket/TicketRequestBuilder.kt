@@ -107,8 +107,8 @@ class TicketRequestBuilder {
         val builder = Ticket.TicketRequest.Item.Commodity.newBuilder()
         val name = readString(commodityJson, "name")
         val code = readLong(commodityJson, "code")
-        if (name == null && code == null) {
-            throw IllegalArgumentException("Missing name or code")
+        require(name != null || code != null) {
+            "Missing name or code"
         }
         name?.let { builder.setName(it) }
         code?.let { builder.setCode(it) }
@@ -336,9 +336,7 @@ class TicketRequestBuilder {
     private fun readStringElement(element: Any?): String {
         val primitive = element as? JsonPrimitive
             ?: throw IllegalArgumentException("Invalid list value")
-        if (!primitive.isString) {
-            throw IllegalArgumentException("Invalid list value")
-        }
+        require(primitive.isString) { "Invalid list value" }
         return primitive.content
     }
 

@@ -1,0 +1,88 @@
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+
+complexity:
+  active: true
+  TooManyFunctions:
+    active: true
+    thresholdInClasses: 60
+    thresholdInInterfaces: 50
+    thresholdInObjects: 100
+  LongMethod:
+    active: true
+    threshold: 310
+  LongParameterList:
+    active: true
+    functionThreshold: 22
+    constructorThreshold: 30
+    ignoreDefaultParameters: true
+  LargeClass:
+    active: true
+    threshold: 400
+    excludes: ['**/test/**', '**/*Test.kt']
+  CyclomaticComplexMethod:
+    active: true
+    threshold: 60
+
+style:
+  active: true
+  MagicNumber:
+    active: true
+    excludes: ['**/test/**', '**/*Test.kt', '**/*Repository.kt']
+    ignoreNumbers: ['-1', '0', '1', '2', '3', '4', '5', '6', '7', '8', '10', '12', '15', '16', '18', '23', '24', '30', '31', '32', '59', '60', '100', '200', '256', '299', '360', '400', '403', '404', '409', '500', '1000', '1000L', '1500', '2000', '2100', '5000', '5_000', '9999', '10000', '10_000', '16000', '16_000', '60000', '60_000', '0.5', '0xff', '0xFF', '0xffL', '0xFFL']
+    ignorePropertyDeclaration: true
+    ignoreLocalVariableDeclaration: true
+    ignoreConstantDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+    ignoreAnnotation: true
+    ignoreNamedArgument: true
+    ignoreEnums: true
+  WildcardImport:
+    active: true
+    excludeImports: ['kotlin.test.*', 'kotlinx.serialization.json.*', 'java.util.*', 'kz.mybrain.superkassa.core.domain.model.*', 'kz.mybrain.superkassa.core.domain.port.*', 'org.springframework.web.bind.annotation.*', 'kz.mybrain.superkassa.core.application.model.*', 'kz.mybrain.superkassa.core.application.model.receipt.*', 'androidx.room.*']
+  MaxLineLength:
+    active: true
+    maxLineLength: 180
+    excludes: ['**/test/**', '**/*Test.kt']
+  ReturnCount:
+    active: true
+    max: 15
+    excludes: ['**/test/**', '**/*Test.kt']
+  FunctionOnlyReturningConstant:
+    active: true
+    excludes: ['**/ErrorMessages.kt', '**/ZxTaxBlockBuilder.kt']
+  ThrowsCount:
+    active: true
+    max: 10
+  UnusedPrivateMember:
+    active: true
+    allowedNames: '(_.*|authorization|counters|queuePort|ofdConfig|pinHasher|clock|ofd)'
+  UnusedPrivateProperty:
+    active: true
+    allowedNames: '(_.*|authorization|counters|queuePort|ofdConfig|pinHasher|clock|ofd)'
+  UnusedImports:
+    active: true
+
+naming:
+  active: true
+  FunctionNaming:
+    active: true
+    functionPattern: '^[a-z][a-zA-Z0-9]*$'
+    excludes: ['**/test/**', '**/*Test.kt']
+  ConstructorParameterNaming:
+    active: true
+    parameterPattern: '^[a-z_][a-zA-Z0-9]*$'
+    privateParameterPattern: '^[a-z_][a-zA-Z0-9]*$'
+  PackageNaming:
+    active: true
+    packagePattern: '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'
+
+exceptions:
+  active: true
+  SwallowedException:
+    active: true
+    excludes: ['**/OfdInfoCountersSnapshotParser.kt', '**/OfdResponseUtils.kt', '**/OfdManagerAdapter.kt', '**/DeliveryPortAdapter.kt', '**/ReceiptHtmlRenderer.kt', '**/ConsoleLoader.kt', '**/*Controller.kt', '**/*Mapper.kt', '**/*Indicator.kt', '**/*Delegate.kt', '**/*Repository.kt', '**/*Session.kt', '**/*HealthChecker.kt', '**/*Adapter.kt']
+  TooGenericExceptionCaught:
+    active: true
+    excludes: ['**/OfdCodec.kt', '**/OfdInfoCountersSnapshotParser.kt', '**/OfdQueueCommandHandler.kt', '**/OfdResponseUtils.kt', '**/OfdManagerAdapter.kt', '**/Base64TokenCodecPort.kt', '**/ResilienceOfdManagerPortAdapter.kt', '**/DeliveryPortAdapter.kt', '**/ReceiptHtmlRenderer.kt', '**/ConsoleLoader.kt', '**/*Controller.kt', '**/*Mapper.kt', '**/*Indicator.kt', '**/*Delegate.kt', '**/*Repository.kt', '**/*Session.kt', '**/*HealthChecker.kt', '**/*Adapter.kt']

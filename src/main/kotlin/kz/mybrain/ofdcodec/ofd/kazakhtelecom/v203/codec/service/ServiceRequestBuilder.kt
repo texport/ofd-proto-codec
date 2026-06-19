@@ -60,13 +60,7 @@ class ServiceRequestBuilder {
         return builder.build()
     }
 
-    /**
-     * Читает boolean значение, если оно корректно.
-     */
-    private fun readBool(json: JsonObject, key: String): Boolean? {
-        val element = json[key] as? JsonPrimitive ?: return null
-        return element.booleanOrNull
-    }
+
 
     /**
      * Читает целое значение, если оно корректно.

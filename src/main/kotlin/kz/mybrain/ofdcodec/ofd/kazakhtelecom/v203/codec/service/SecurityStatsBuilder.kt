@@ -44,7 +44,7 @@ class SecurityStatsBuilder {
      */
     private fun readStringRequired(json: JsonObject, key: String): String {
         val element = json[key] as? JsonPrimitive ?: throw IllegalArgumentException("Missing $key")
-        if (!element.isString) throw IllegalArgumentException("Invalid type for $key")
+        require(element.isString) { "Invalid type for $key" }
         return element.content
     }
 }

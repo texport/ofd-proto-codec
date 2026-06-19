@@ -10,7 +10,6 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.intOrNull
-import kotlinx.serialization.json.longOrNull
 import java.util.zip.CRC32
 
 /**
@@ -227,7 +226,8 @@ class ZXReportBuilder {
 
     private fun readStringRequired(json: JsonObject, key: String): String {
         val element = json[key] as? JsonPrimitive
-        return if (element != null && element.isString) element.content else throw IllegalArgumentException("Missing $key")
+        require(element != null && element.isString) { "Missing $key" }
+        return element.content
     }
 
     private fun readInt(json: JsonObject, key: String): Int? {

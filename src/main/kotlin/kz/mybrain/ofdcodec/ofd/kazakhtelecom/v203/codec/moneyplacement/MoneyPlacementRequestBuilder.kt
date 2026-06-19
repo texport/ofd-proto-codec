@@ -81,28 +81,13 @@ class MoneyPlacementRequestBuilder {
     }
 
     /**
-     * Читает обязательный int или выбрасывает ошибку.
-     */
-    private fun readIntRequired(json: JsonObject, key: String): Int {
-        val value = readInt(json, key)
-        return value ?: throw IllegalArgumentException("Missing $key")
-    }
-
-    /**
      * Читает long, если поле присутствует.
      */
-    private fun readLong(json: JsonObject, key: String): Long? {
-        val element = json[key] as? JsonPrimitive ?: return null
-        return element.longOrNull
-    }
+     private fun readLong(json: JsonObject, key: String): Long? {
+         val element = json[key] as? JsonPrimitive ?: return null
+         return element.longOrNull
+     }
 
-    /**
-     * Читает обязательный long или выбрасывает ошибку.
-     */
-    private fun readLongRequired(json: JsonObject, key: String): Long {
-        val value = readLong(json, key)
-        return value ?: throw IllegalArgumentException("Missing $key")
-    }
 
     /**
      * Читает boolean, если поле присутствует.
