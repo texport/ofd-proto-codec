@@ -36,7 +36,7 @@ includeBuild("../ofd-kt-proto")
 `build.gradle.kts`:
 ```kotlin
 dependencies {
-    implementation("kz.kazakhtelecom:ofd-kt-proto-v203:2.0.3")
+    implementation("kz.mybrain:ofd-kt-proto-v203:2.0.3")
 }
 ```
 
