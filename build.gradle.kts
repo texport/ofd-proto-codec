@@ -32,6 +32,7 @@ tasks.test {
         showStandardStreams = true
     }
 }
+
 kotlin {
     jvmToolchain(17)
 }
