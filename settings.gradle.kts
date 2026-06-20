@@ -4,9 +4,3 @@ plugins {
 rootProject.name = "ofd-proto-codec"
 
 
-
-// Если рядом есть репозиторий ofd-network-client, подключаем его для тестов.
-val networkClientRepo = file("../ofd-network-client")
-if (networkClientRepo.exists()) {
-    includeBuild("../ofd-network-client")
-}

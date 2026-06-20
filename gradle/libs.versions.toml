@@ -11,7 +11,7 @@ protobufJava = "4.35.1"
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 ofd-kt-proto = { group = "io.github.texport", name = "ofd-kt-proto", version.ref = "ofdKtProto" }
 protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobufJava" }
-ofd-network-client = { group = "kz.mybrain", name = "ofd-network-client", version.ref = "ofdNetworkClient" }
+ofd-network-client = { group = "io.github.texport", name = "ofd-network-client", version.ref = "ofdNetworkClient" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 
 [plugins]
