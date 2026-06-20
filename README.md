@@ -26,7 +26,7 @@
 
 ## Подключение proto библиотеки
 
-Используется `ofd-kt-proto-v203` через composite build:
+Используется `ofd-kt-proto` через composite build:
 
 `settings.gradle.kts`:
 ```kotlin
@@ -36,7 +36,7 @@ includeBuild("../ofd-kt-proto")
 `build.gradle.kts`:
 ```kotlin
 dependencies {
-    implementation("io.github.texport:ofd-kt-proto-v203:2.0.3")
+    implementation("io.github.texport:ofd-kt-proto:2.0.3")
 }
 ```
 
