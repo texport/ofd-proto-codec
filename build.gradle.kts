@@ -65,7 +65,7 @@ publishing {
             pom {
                 name.set("ofd-proto-codec")
                 description.set("Trilingual protocol codec for Kazakh OFD Protocol 2.0.3")
-                url.set("https://github.com/texport/superkassa")
+                url.set("https://github.com/texport/ofd-proto-codec")
 
                 licenses {
                     license {
@@ -83,9 +83,9 @@ publishing {
                 }
 
                 scm {
-                    connection.set("scm:git:git://github.com/texport/superkassa.git")
-                    developerConnection.set("scm:git:ssh://github.com/texport/superkassa.git")
-                    url.set("https://github.com/texport/superkassa")
+                    connection.set("scm:git:git://github.com/texport/ofd-proto-codec.git")
+                    developerConnection.set("scm:git:ssh://github.com/texport/ofd-proto-codec.git")
+                    url.set("https://github.com/texport/ofd-proto-codec")
                 }
             }
         }
