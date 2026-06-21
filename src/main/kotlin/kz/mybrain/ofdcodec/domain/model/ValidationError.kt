@@ -7,6 +7,7 @@ data class ValidationError(
     val code: String,
     val path: String,
     val messageRu: String,
+    val messageKk: String,
     val messageEn: String,
     val params: Map<String, String> = emptyMap()
 )

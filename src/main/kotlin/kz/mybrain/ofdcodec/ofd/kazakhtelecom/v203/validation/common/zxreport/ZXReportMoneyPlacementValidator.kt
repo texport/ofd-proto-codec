@@ -1,10 +1,10 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.zxreport
 
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidator
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonObject
 
 /**
  * Валидация MoneyPlacement внутри ZXReport.
@@ -41,8 +41,22 @@ class ZXReportMoneyPlacementValidator {
     fun validate(placement: JsonObject, path: String): List<ValidationError> {
         val errors = mutableListOf<ValidationError>()
         ValidationUtils.requireNonBlankString(placement, "operation", "$path.operation", errors)
-        ValidationUtils.requireIntInRange(placement, "operationsTotalCount", 0, Int.MAX_VALUE, "$path.operationsTotalCount", errors)
-        ValidationUtils.requireIntInRange(placement, "operationsCount", 0, Int.MAX_VALUE, "$path.operationsCount", errors)
+        ValidationUtils.requireIntInRange(
+            placement,
+            "operationsTotalCount",
+            0,
+            Int.MAX_VALUE,
+            "$path.operationsTotalCount",
+            errors
+        )
+        ValidationUtils.requireIntInRange(
+            placement,
+            "operationsCount",
+            0,
+            Int.MAX_VALUE,
+            "$path.operationsCount",
+            errors
+        )
         errors.addAll(moneyValidator.validate(placement, "operationsSum", "$path.operationsSum"))
         ValidationUtils.requireIntInRange(placement, "offlineCount", 0, Int.MAX_VALUE, "$path.offlineCount", errors)
         return errors

@@ -1,10 +1,10 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.ticket
 
+import kotlinx.serialization.json.JsonObject
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums.PaymentTypeEnumValidator
-import kotlinx.serialization.json.JsonObject
 
 /**
  * Валидация Payment для TicketRequest.
@@ -40,16 +40,42 @@ class TicketPaymentValidator {
 
         val card = payment["cardPaymentFields"] as? JsonObject
         if (card != null) {
-            ValidationUtils.optionalNonBlankString(card, "posTerminalId", "$path.cardPaymentFields.posTerminalId", errors)
+            ValidationUtils.optionalNonBlankString(
+                card,
+                "posTerminalId",
+                "$path.cardPaymentFields.posTerminalId",
+                errors
+            )
             ValidationUtils.optionalNonBlankString(card, "posCardType", "$path.cardPaymentFields.posCardType", errors)
             if (card["posAutorizationCode"] != null) {
-                ValidationUtils.requireIntInRange(card, "posAutorizationCode", 0, Int.MAX_VALUE, "$path.cardPaymentFields.posAutorizationCode", errors)
+                ValidationUtils.requireIntInRange(
+                    card,
+                    "posAutorizationCode",
+                    0,
+                    Int.MAX_VALUE,
+                    "$path.cardPaymentFields.posAutorizationCode",
+                    errors
+                )
             }
             if (card["posRrn"] != null) {
-                ValidationUtils.requireLongInRange(card, "posRrn", 0, Long.MAX_VALUE, "$path.cardPaymentFields.posRrn", errors)
+                ValidationUtils.requireLongInRange(
+                    card,
+                    "posRrn",
+                    0,
+                    Long.MAX_VALUE,
+                    "$path.cardPaymentFields.posRrn",
+                    errors
+                )
             }
             if (card["posReceiptNumber"] != null) {
-                ValidationUtils.requireIntInRange(card, "posReceiptNumber", 0, Int.MAX_VALUE, "$path.cardPaymentFields.posReceiptNumber", errors)
+                ValidationUtils.requireIntInRange(
+                    card,
+                    "posReceiptNumber",
+                    0,
+                    Int.MAX_VALUE,
+                    "$path.cardPaymentFields.posReceiptNumber",
+                    errors
+                )
             }
         } else if (payment["cardPaymentFields"] != null) {
             errors.add(ValidationUtils.invalidType("$path.cardPaymentFields"))

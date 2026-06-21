@@ -1,8 +1,8 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request.service
 
+import kotlinx.serialization.json.JsonObject
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
-import kotlinx.serialization.json.JsonObject
 
 /**
  * Валидация SecurityStats и GeoPosition для протокола Казахтелеком v203.

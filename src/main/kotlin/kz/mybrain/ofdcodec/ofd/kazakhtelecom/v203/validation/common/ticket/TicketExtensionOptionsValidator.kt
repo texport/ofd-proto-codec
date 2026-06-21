@@ -1,8 +1,8 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.ticket
 
+import kotlinx.serialization.json.JsonObject
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
-import kotlinx.serialization.json.JsonObject
 
 /**
  * Валидация ExtensionOptions для TicketRequest.

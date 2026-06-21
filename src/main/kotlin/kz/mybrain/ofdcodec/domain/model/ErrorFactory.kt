@@ -6,8 +6,9 @@ package kz.mybrain.ofdcodec.domain.model
 object ErrorFactory {
     fun error(code: ErrorCode, path: String, params: Map<String, String> = emptyMap()): ValidationError {
         val ru = format(code.ru, params)
+        val kk = format(code.kk, params)
         val en = format(code.en, params)
-        return ValidationError(code.name, path, ru, en, params)
+        return ValidationError(code.name, path, ru, kk, en, params)
     }
 
     private fun format(template: String, params: Map<String, String>): String {

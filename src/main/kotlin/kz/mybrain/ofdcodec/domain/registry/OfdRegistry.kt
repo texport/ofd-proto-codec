@@ -24,6 +24,7 @@ class OfdRegistry {
     /**
      * Список поддерживаемых версий для заданного ОФД.
      */
+    @Suppress("unused")
     fun supportedVersions(ofdId: String): Set<String> {
         return handlers[ofdId]?.keys ?: emptySet()
     }
@@ -31,5 +32,6 @@ class OfdRegistry {
     /**
      * Список всех зарегистрированных ОФД.
      */
+    @Suppress("unused")
     fun ofdIds(): Set<String> = handlers.keys
 }

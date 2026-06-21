@@ -1,9 +1,9 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command
 
+import kotlinx.serialization.json.JsonObject
 import kz.kazakhtelecom.proto.v203.Message
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.report.ReportRequestBuilder
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.service.ServiceRequestBuilder
-import kotlinx.serialization.json.JsonObject
 
 /**
  * Сборщик Request для COMMAND_REPORT.

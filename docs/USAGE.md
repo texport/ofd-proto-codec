@@ -81,6 +81,7 @@
 
 ## Поддерживаемые команды (v203)
 
+- `COMMAND_AUTH`
 - `COMMAND_SYSTEM`
 - `COMMAND_INFO`
 - `COMMAND_MONEY_PLACEMENT`
@@ -93,6 +94,34 @@
 
 Ниже приведены **максимально возможные** JSON‑структуры. Любые поля, отмеченные
 как `optional`, можно не передавать.
+
+### COMMAND_AUTH (Request)
+```json
+{
+  "service": { ... },
+  "auth": {
+    "login": "my_login",
+    "password": "my_password"
+  }
+}
+```
+
+### COMMAND_AUTH (Response)
+```json
+{
+  "commandType": "COMMAND_AUTH",
+  "result": { ... },
+  "auth": {
+    "result": "RESULT_TYPE_OK",
+    "operatorCode": "123",
+    "operatorName": "Иван Иванов",
+    "roles": [
+      "USER_ROLE_ADMINISTRATOR",
+      "USER_ROLE_PAYMASTER"
+    ]
+  }
+}
+```
 
 ### COMMAND_SYSTEM (Request)
 ```json

@@ -1,8 +1,8 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.enums
 
-import kz.kazakhtelecom.proto.v203.Common
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
+import kz.kazakhtelecom.proto.v203.Common
+import kz.mybrain.ofdcodec.infrastructure.json.readString
 
 /**
  * Чтение PaymentTypeEnum из JSON.
@@ -12,15 +12,9 @@ class PaymentTypeBuilder {
      * Читает PaymentTypeEnum по ключу и возвращает его значение.
      */
     fun readRequired(json: JsonObject, key: String): Common.PaymentTypeEnum {
-        val value = readString(json, key)
-        return Common.PaymentTypeEnum.valueOf(value ?: throw IllegalArgumentException("Missing $key"))
-    }
-
-    /**
-     * Читает строку, если поле присутствует.
-     */
-    private fun readString(json: JsonObject, key: String): String? {
-        val element = json[key] as? JsonPrimitive ?: return null
-        return if (element.isString) element.content else null
+        val value = json.readString(key)
+        return Common.PaymentTypeEnum.valueOf(
+            value ?: throw IllegalArgumentException("Missing $key / Отсутствует $key / $key өрісі жетіспейді")
+        )
     }
 }

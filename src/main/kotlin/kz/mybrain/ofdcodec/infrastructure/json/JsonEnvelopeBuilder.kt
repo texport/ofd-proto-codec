@@ -1,13 +1,12 @@
 package kz.mybrain.ofdcodec.infrastructure.json
 
-import kz.mybrain.ofdcodec.domain.model.CommandType
-import kz.mybrain.ofdcodec.domain.model.MessageType
-import kz.mybrain.ofdcodec.domain.model.MessageHeader
-import kz.mybrain.ofdcodec.infrastructure.util.ProtocolVersion
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
+import kz.mybrain.ofdcodec.domain.model.CommandType
+import kz.mybrain.ofdcodec.domain.model.MessageHeader
+import kz.mybrain.ofdcodec.domain.model.MessageType
+import kz.mybrain.ofdcodec.infrastructure.util.ProtocolVersion
 
 object JsonEnvelopeBuilder {
     /**

@@ -1,11 +1,11 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.ticket
 
-import kz.mybrain.ofdcodec.domain.model.ValidationError
-import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidator
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
+import kz.mybrain.ofdcodec.domain.model.ValidationError
+import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
+import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidator
 
 /**
  * Валидация Tax для TicketRequest.

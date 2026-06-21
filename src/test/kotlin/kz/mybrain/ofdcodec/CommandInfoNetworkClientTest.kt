@@ -1,5 +1,8 @@
 package kz.mybrain.ofdcodec
 
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonPrimitive
 import kz.kazakhtelecom.proto.v203.Message
 import kz.mybrain.network.OfdEndpoint
 import kz.mybrain.network.OfdTcpNetworkClient
@@ -9,9 +12,6 @@ import kz.mybrain.ofdcodec.domain.model.HeaderConstants
 import kz.mybrain.ofdcodec.domain.model.OfdCodecException
 import kz.mybrain.ofdcodec.infrastructure.header.HeaderCodec
 import kz.mybrain.ofdcodec.infrastructure.header.HeaderDecodeResult
-import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonPrimitive
 import java.util.Base64
 import kotlin.test.Test
 import kotlin.test.assertNotNull
@@ -84,7 +84,7 @@ class CommandInfoNetworkClientTest {
         )
         println(
             "RU: Полный JSON запроса к серверу:\n${json}\n" +
-                "EN: Full request JSON:\n${json}"
+                "EN: Full request JSON:\n$json"
         )
 
         val codec = OfdCodec(DefaultRegistry.create())
@@ -145,7 +145,7 @@ class CommandInfoNetworkClientTest {
             val protoResponse = Message.Response.parser().parsePartialFrom(payloadBytes)
             println(
                 "RU: Десериализованный proto-ответ сервера:\n${protoResponse}\n" +
-                    "EN: Raw proto response from server:\n${protoResponse}"
+                    "EN: Raw proto response from server:\n$protoResponse"
             )
         } else {
             println(
@@ -168,15 +168,15 @@ class CommandInfoNetworkClientTest {
                 "EN: Decoded JSON must not be null."
         )
         println(
-            "RU: Декодированный ответ сервера:\n${decodedJson.toString()}\n" +
-                "EN: Decoded server response:\n${decodedJson.toString()}"
+            "RU: Декодированный ответ сервера:\n$decodedJson\n" +
+                "EN: Decoded server response:\n$decodedJson"
         )
     }
 
     private fun formatErrors(exception: Throwable?): String {
         val ex = exception as? OfdCodecException ?: return ""
         val details = ex.errors.joinToString(separator = "\n") {
-            "RU: ${it.messageRu} | EN: ${it.messageEn} | path=${it.path} | code=${it.code}"
+            "RU: ${it.messageRu} | KK: ${it.messageKk} | EN: ${it.messageEn} | path=${it.path} | code=${it.code}"
         }
         return if (details.isBlank()) "" else "Errors:\n$details"
     }

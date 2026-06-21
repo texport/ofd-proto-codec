@@ -1,11 +1,11 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response
 
+import kotlinx.serialization.json.JsonObject
 import kz.mybrain.ofdcodec.domain.model.CommandType
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.port.Validator
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response.service.ServiceResponseValidator
-import kotlinx.serialization.json.JsonObject
 
 /**
  * Валидатор ответа для COMMAND_SYSTEM.

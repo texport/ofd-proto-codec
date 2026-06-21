@@ -1,9 +1,9 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common
 
-import kz.kazakhtelecom.proto.v203.Common
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.intOrNull
+import kz.kazakhtelecom.proto.v203.Common
+import kz.mybrain.ofdcodec.infrastructure.json.readInt
+import kz.mybrain.ofdcodec.infrastructure.json.readIntRequired
 
 /**
  * Сборщик proto DateTime из JSON-структуры.
@@ -13,16 +13,19 @@ class DateTimeBuilder {
      * Строит DateTime по ключу в JSON-объекте.
      */
     fun build(container: JsonObject, key: String): Common.DateTime {
-        val dt = container[key] as? JsonObject ?: throw IllegalArgumentException("Missing $key")
-        val date = dt["date"] as? JsonObject ?: throw IllegalArgumentException("Missing $key.date")
-        val time = dt["time"] as? JsonObject ?: throw IllegalArgumentException("Missing $key.time")
+        val dt = container[key] as? JsonObject
+            ?: throw IllegalArgumentException("Missing $key / Отсутствует $key / $key өрісі жетіспейді")
+        val date = dt["date"] as? JsonObject
+            ?: throw IllegalArgumentException("Missing $key.date / Отсутствует $key.date / $key.date өрісі жетіспейді")
+        val time = dt["time"] as? JsonObject
+            ?: throw IllegalArgumentException("Missing $key.time / Отсутствует $key.time / $key.time өрісі жетіспейді")
 
-        val year = readUIntRequired(date, "year")
-        val month = readUIntRequired(date, "month")
-        val day = readUIntRequired(date, "day")
-        val hour = readUIntRequired(time, "hour")
-        val minute = readUIntRequired(time, "minute")
-        val second = readUInt(time, "second")
+        val year = date.readIntRequired("year")
+        val month = date.readIntRequired("month")
+        val day = date.readIntRequired("day")
+        val hour = time.readIntRequired("hour")
+        val minute = time.readIntRequired("minute")
+        val second = time.readInt("second")
 
         val dateProto = Common.Date.newBuilder()
             .setYear(year)
@@ -40,20 +43,5 @@ class DateTimeBuilder {
             .setDate(dateProto)
             .setTime(timeProto)
             .build()
-    }
-
-    /**
-     * Читает целое значение, если оно корректно.
-     */
-    private fun readUInt(json: JsonObject, key: String): Int? {
-        val element = json[key] as? JsonPrimitive ?: return null
-        return element.intOrNull
-    }
-
-    /**
-     * Читает обязательное целое значение или выбрасывает ошибку.
-     */
-    private fun readUIntRequired(json: JsonObject, key: String): Int {
-        return readUInt(json, key) ?: throw IllegalArgumentException("Missing $key")
     }
 }

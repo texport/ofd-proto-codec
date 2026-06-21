@@ -1,14 +1,13 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.closeshift
 
+import kotlinx.serialization.json.JsonObject
 import kz.kazakhtelecom.proto.v203.Report
+import kz.mybrain.ofdcodec.infrastructure.json.readBool
+import kz.mybrain.ofdcodec.infrastructure.json.readInt
+import kz.mybrain.ofdcodec.infrastructure.json.readLong
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common.DateTimeBuilder
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common.OperatorBuilder
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.report.ZXReportBuilder
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.intOrNull
-import kotlinx.serialization.json.longOrNull
 
 /**
  * Сборщик CloseShiftRequest из JSON-структуры.
@@ -23,50 +22,24 @@ class CloseShiftRequestBuilder {
      */
     fun build(payload: JsonObject): Report.CloseShiftRequest {
         val closeShiftJson = payload["closeShift"] as? JsonObject
-            ?: throw IllegalArgumentException("Missing closeShift")
+            ?: throw IllegalArgumentException("Missing closeShift / Отсутствует closeShift / closeShift өрісі жетіспейді")
 
         val builder = Report.CloseShiftRequest.newBuilder()
         builder.setCloseTime(dateTimeBuilder.build(closeShiftJson, "closeTime"))
 
-        readBool(closeShiftJson, "isOffline")?.let { builder.setIsOffline(it) }
-        readUInt(closeShiftJson, "frShiftNumber")?.let { builder.setFrShiftNumber(it) }
-        readBool(closeShiftJson, "withdrawMoney")?.let { builder.setWithdrawMoney(it) }
-        readLong(closeShiftJson, "printedDocumentNumber")?.let { builder.setPrintedDocumentNumber(it) }
+        closeShiftJson.readBool("isOffline")?.let { builder.setIsOffline(it) }
+        closeShiftJson.readInt("frShiftNumber")?.let { builder.setFrShiftNumber(it) }
+        closeShiftJson.readBool("withdrawMoney")?.let { builder.setWithdrawMoney(it) }
+        closeShiftJson.readLong("printedDocumentNumber")?.let { builder.setPrintedDocumentNumber(it) }
 
         val zxReportJson = closeShiftJson["zReport"] as? JsonObject
-            ?: throw IllegalArgumentException("Missing zReport")
+            ?: throw IllegalArgumentException("Missing zReport / Отсутствует zReport / zReport өрісі жетіспейді")
         builder.setZReport(zxReportBuilder.build(zxReportJson))
 
         val operatorJson = closeShiftJson["operator"] as? JsonObject
-            ?: throw IllegalArgumentException("Missing operator")
+            ?: throw IllegalArgumentException("Missing operator / Отсутствует operator / operator өрісі жетіспейді")
         builder.setOperator(operatorBuilder.build(operatorJson))
 
         return builder.build()
-    }
-
-    /**
-     * Читает boolean, если поле присутствует.
-     */
-    private fun readBool(json: JsonObject, key: String): Boolean? {
-        val element = json[key] as? JsonPrimitive ?: return null
-        return element.booleanOrNull
-    }
-
-    /**
-     * Читает uint32, если поле присутствует.
-     */
-    private fun readUInt(json: JsonObject, key: String): Int? {
-        val element = json[key] as? JsonPrimitive ?: return null
-        val value = element.intOrNull ?: return null
-        return if (value >= 0) value else null
-    }
-
-    /**
-     * Читает uint64, если поле присутствует.
-     */
-    private fun readLong(json: JsonObject, key: String): Long? {
-        val element = json[key] as? JsonPrimitive ?: return null
-        val value = element.longOrNull ?: return null
-        return if (value >= 0) value else null
     }
 }

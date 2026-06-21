@@ -1,11 +1,11 @@
 package kz.mybrain.ofdcodec
 
-import kz.mybrain.ofdcodec.application.DefaultRegistry
-import kz.mybrain.ofdcodec.application.OfdCodec
-import kz.mybrain.ofdcodec.domain.model.OfdCodecException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
+import kz.mybrain.ofdcodec.application.DefaultRegistry
+import kz.mybrain.ofdcodec.application.OfdCodec
+import kz.mybrain.ofdcodec.domain.model.OfdCodecException
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -41,7 +41,7 @@ class CommandNomenclatureSerializationTest {
         )
         println(
             "RU: Входной JSON для сериализации:\n${json}\n" +
-                "EN: Input JSON for serialization:\n${json}"
+                "EN: Input JSON for serialization:\n$json"
         )
         val size = output["size"]?.jsonPrimitive?.longOrNull
         val messageBase64 = output["messageBase64"]?.jsonPrimitive?.content
@@ -129,7 +129,7 @@ class CommandNomenclatureSerializationTest {
     private fun formatErrors(exception: Throwable?): String {
         val ex = exception as? OfdCodecException ?: return ""
         val details = ex.errors.joinToString(separator = "\n") {
-            "RU: ${it.messageRu} | EN: ${it.messageEn} | path=${it.path} | code=${it.code}"
+            "RU: ${it.messageRu} | KK: ${it.messageKk} | EN: ${it.messageEn} | path=${it.path} | code=${it.code}"
         }
         return if (details.isBlank()) "" else "Errors:\n$details"
     }

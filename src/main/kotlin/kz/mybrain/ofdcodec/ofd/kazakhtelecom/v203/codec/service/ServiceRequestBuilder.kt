@@ -1,11 +1,10 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.service
 
-import kz.kazakhtelecom.proto.v203.Service
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common.DateTimeBuilder
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.intOrNull
+import kz.kazakhtelecom.proto.v203.Service
+import kz.mybrain.ofdcodec.infrastructure.json.readBoolRequired
+import kz.mybrain.ofdcodec.infrastructure.json.readInt
+import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common.DateTimeBuilder
 
 /**
  * Построение ServiceRequest для команд, где он обязателен или допускается.
@@ -24,12 +23,12 @@ class ServiceRequestBuilder {
         val builder = Service.ServiceRequest.newBuilder()
 
         if (serviceJson != null) {
-            builder.setGetRegInfo(readBoolRequired(serviceJson, "getRegInfo"))
+            builder.setGetRegInfo(serviceJson.readBoolRequired("getRegInfo"))
             builder.setGetBindedTaxation(false)
-            readUInt(serviceJson, "nomenclatureVersion")?.let { builder.setNomenclatureVersion(it) }
+            serviceJson.readInt("nomenclatureVersion")?.let { builder.setNomenclatureVersion(it) }
 
             val offline = serviceJson["offlinePeriod"] as? JsonObject
-                ?: throw IllegalArgumentException("Missing offlinePeriod")
+                ?: throw IllegalArgumentException("Missing offlinePeriod / Отсутствует offlinePeriod / offlinePeriod өрісі жетіспейді")
             val begin = dateTimeBuilder.build(offline, "beginTime")
             val end = dateTimeBuilder.build(offline, "endTime")
             builder.setOfflinePeriod(
@@ -40,13 +39,13 @@ class ServiceRequestBuilder {
             )
 
             val security = serviceJson["securityStats"] as? JsonObject
-                ?: throw IllegalArgumentException("Missing securityStats")
+                ?: throw IllegalArgumentException("Missing securityStats / Отсутствует securityStats / securityStats өрісі жетіспейді")
             builder.setSecurityStats(securityStatsBuilder.build(security))
 
             val regInfo = serviceJson["regInfo"] as? JsonObject
-                ?: throw IllegalArgumentException("Missing regInfo")
-            val kkm = regInfo["kkm"] as? JsonObject ?: throw IllegalArgumentException("Missing regInfo.kkm")
-            val org = regInfo["org"] as? JsonObject ?: throw IllegalArgumentException("Missing regInfo.org")
+                ?: throw IllegalArgumentException("Missing regInfo / Отсутствует regInfo / regInfo өрісі жетіспейді")
+            val kkm = regInfo["kkm"] as? JsonObject ?: throw IllegalArgumentException("Missing regInfo.kkm / Отсутствует regInfo.kkm / regInfo.kkm өрісі жетіспейді")
+            val org = regInfo["org"] as? JsonObject ?: throw IllegalArgumentException("Missing regInfo.org / Отсутствует regInfo.org / regInfo.org өрісі жетіспейді")
             builder.setRegInfo(
                 Service.ServiceRequest.RegInfo.newBuilder()
                     .setKkm(kkmRegInfoBuilder.build(kkm))
@@ -59,23 +58,4 @@ class ServiceRequestBuilder {
         builder.clearTicketAdInfos()
         return builder.build()
     }
-
-
-
-    /**
-     * Читает целое значение, если оно корректно.
-     */
-    private fun readUInt(json: JsonObject, key: String): Int? {
-        val element = json[key] as? JsonPrimitive ?: return null
-        return element.intOrNull
-    }
-
-    /**
-     * Читает обязательный boolean или выбрасывает ошибку.
-     */
-    private fun readBoolRequired(json: JsonObject, key: String): Boolean {
-        val element = json[key] as? JsonPrimitive ?: throw IllegalArgumentException("Missing $key")
-        return element.booleanOrNull ?: throw IllegalArgumentException("Invalid type for $key")
-    }
-
 }

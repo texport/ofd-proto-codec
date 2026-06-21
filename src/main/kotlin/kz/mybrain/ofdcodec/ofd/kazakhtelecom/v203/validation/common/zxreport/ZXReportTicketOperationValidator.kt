@@ -1,11 +1,11 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.zxreport
 
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums.OperationTypeEnumValidator
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonObject
 
 /**
  * Валидация TicketOperation внутри ZXReport.
@@ -46,7 +46,14 @@ class ZXReportTicketOperationValidator {
     fun validate(operation: JsonObject, path: String): List<ValidationError> {
         val errors = mutableListOf<ValidationError>()
         errors.addAll(operationTypeValidator.validate(operation, "operation", "$path.operation"))
-        ValidationUtils.requireIntInRange(operation, "ticketsTotalCount", 0, Int.MAX_VALUE, "$path.ticketsTotalCount", errors)
+        ValidationUtils.requireIntInRange(
+            operation,
+            "ticketsTotalCount",
+            0,
+            Int.MAX_VALUE,
+            "$path.ticketsTotalCount",
+            errors
+        )
         ValidationUtils.requireIntInRange(operation, "ticketsCount", 0, Int.MAX_VALUE, "$path.ticketsCount", errors)
         errors.addAll(moneyValidator.validate(operation, "ticketsSum", "$path.ticketsSum"))
         val paymentsElement = operation["payments"]

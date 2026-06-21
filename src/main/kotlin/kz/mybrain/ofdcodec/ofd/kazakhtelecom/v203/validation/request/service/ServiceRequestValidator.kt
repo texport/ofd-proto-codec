@@ -1,11 +1,11 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request.service
 
+import kotlinx.serialization.json.JsonObject
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.DateTimeValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.service.KkmRegInfoValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.service.OrgRegInfoValidator
-import kotlinx.serialization.json.JsonObject
 
 /**
  * Базовая валидация ServiceRequest для протокола Казахтелеком v203.
@@ -54,5 +54,4 @@ class ServiceRequestValidator {
 
         return errors
     }
-
 }

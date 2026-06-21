@@ -1,13 +1,13 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response.service
 
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.service.KkmRegInfoValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.service.OrgRegInfoValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.service.PosRegInfoValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response.TicketAdValidator
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonObject
 
 /**
  * Валидация ServiceResponse для ответов ОФД Казахтелеком v203.

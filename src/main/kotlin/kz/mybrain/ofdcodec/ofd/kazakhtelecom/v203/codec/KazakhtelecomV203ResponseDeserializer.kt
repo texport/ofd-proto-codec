@@ -1,5 +1,9 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec
 
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
 import kz.kazakhtelecom.proto.v203.Common
 import kz.kazakhtelecom.proto.v203.Message
 import kz.kazakhtelecom.proto.v203.Nomenclature
@@ -9,11 +13,6 @@ import kz.kazakhtelecom.proto.v203.Service
 import kz.kazakhtelecom.proto.v203.Ticket
 import kz.mybrain.ofdcodec.domain.port.Deserializer
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.model.ResultType
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.buildJsonArray
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
 import java.util.Base64
 
 /**
@@ -40,6 +39,7 @@ class KazakhtelecomV203ResponseDeserializer : Deserializer {
                                 put("code", JsonPrimitive(mapped.code))
                                 put("name", JsonPrimitive(mapped.title))
                                 put("descriptionRu", JsonPrimitive(mapped.descriptionRu))
+                                put("descriptionKz", JsonPrimitive(mapped.descriptionKz))
                                 put("descriptionEn", JsonPrimitive(mapped.descriptionEn))
                             }
                         )
@@ -61,6 +61,9 @@ class KazakhtelecomV203ResponseDeserializer : Deserializer {
             }
             if (response.hasReport()) {
                 put("report", buildReportResponse(response.report))
+            }
+            if (response.hasAuth()) {
+                put("auth", buildAuthResponse(response.auth))
             }
         }
     }
@@ -336,5 +339,26 @@ class KazakhtelecomV203ResponseDeserializer : Deserializer {
         }
     }
 
-
+    /**
+     * Преобразует AuthResponse в JSON.
+     */
+    private fun buildAuthResponse(auth: kz.kazakhtelecom.proto.v203.Auth.AuthResponse): JsonObject {
+        return buildJsonObject {
+            put("result", JsonPrimitive(auth.result.name))
+            if (auth.hasOperatorCode()) {
+                put("operatorCode", JsonPrimitive(auth.operatorCode))
+            }
+            if (auth.hasOperatorName()) {
+                put("operatorName", JsonPrimitive(auth.operatorName))
+            }
+            if (auth.rolesCount > 0) {
+                put(
+                    "roles",
+                    buildJsonArray {
+                        auth.rolesList.forEach { add(JsonPrimitive(it.name)) }
+                    }
+                )
+            }
+        }
+    }
 }

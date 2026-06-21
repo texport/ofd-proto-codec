@@ -1,11 +1,10 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec
 
-import kz.kazakhtelecom.proto.v203.Report
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
+import kz.kazakhtelecom.proto.v203.Report
 
 object KazakhtelecomV203ReportDeserializerHelper {
 
@@ -48,10 +47,16 @@ object KazakhtelecomV203ReportDeserializerHelper {
                 )
             }
             if (zxReport.ticketOperationsCount > 0) {
-                put("ticketOperations", buildJsonArray { zxReport.ticketOperationsList.forEach { add(buildZXTicketOperation(it)) } })
+                put(
+                    "ticketOperations",
+                    buildJsonArray { zxReport.ticketOperationsList.forEach { add(buildZXTicketOperation(it)) } }
+                )
             }
             if (zxReport.moneyPlacementsCount > 0) {
-                put("moneyPlacements", buildJsonArray { zxReport.moneyPlacementsList.forEach { add(buildZXMoneyPlacement(it)) } })
+                put(
+                    "moneyPlacements",
+                    buildJsonArray { zxReport.moneyPlacementsList.forEach { add(buildZXMoneyPlacement(it)) } }
+                )
             }
             if (zxReport.hasAnnulledTickets()) {
                 put("annulledTickets", buildZXAnnulledTickets(zxReport.annulledTickets))
@@ -59,7 +64,10 @@ object KazakhtelecomV203ReportDeserializerHelper {
             put("cashSum", buildMoney(zxReport.cashSum))
             put("revenue", buildZXRevenue(zxReport.revenue))
             if (zxReport.nonNullableSumsCount > 0) {
-                put("nonNullableSums", buildJsonArray { zxReport.nonNullableSumsList.forEach { add(buildZXNonNullableSum(it)) } })
+                put(
+                    "nonNullableSums",
+                    buildJsonArray { zxReport.nonNullableSumsList.forEach { add(buildZXNonNullableSum(it)) } }
+                )
             }
             if (zxReport.hasOpenShiftTime()) {
                 put("openShiftTime", buildDateTime(zxReport.openShiftTime))
@@ -169,7 +177,10 @@ object KazakhtelecomV203ReportDeserializerHelper {
             put("annulledTicketsTotalCount", JsonPrimitive(tickets.annulledTicketsTotalCount))
             put("annulledTicketsCount", JsonPrimitive(tickets.annulledTicketsCount))
             if (tickets.annulledOperationsCount > 0) {
-                put("annulledOperations", buildJsonArray { tickets.annulledOperationsList.forEach { add(buildZXOperation(it)) } })
+                put(
+                    "annulledOperations",
+                    buildJsonArray { tickets.annulledOperationsList.forEach { add(buildZXOperation(it)) } }
+                )
             }
         }
     }

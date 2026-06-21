@@ -1,10 +1,9 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums
 
+import kotlinx.serialization.json.JsonObject
 import kz.kazakhtelecom.proto.v203.Report
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
 
 /**
  * Валидация ReportTypeEnum для протокола Казахтелеком v203.
@@ -15,21 +14,10 @@ class ReportTypeEnumValidator {
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.
      */
     fun validate(container: JsonObject, key: String, path: String): List<ValidationError> {
-        val errors = mutableListOf<ValidationError>()
-        val element = container[key] as? JsonPrimitive
-        if (element == null) {
-            errors.add(ValidationUtils.missingField(path))
-            return errors
-        }
-        if (!element.isString) {
-            errors.add(ValidationUtils.invalidType(path))
-            return errors
-        }
-        val value = element.content
-        val allowed = Report.ReportTypeEnum.values().map { it.name }.toSet()
-        if (value !in allowed) {
-            errors.add(ValidationUtils.invalidValue(path))
-        }
-        return errors
+        return ValidationUtils.validateEnum(container, key, path, ALLOWED)
+    }
+
+    companion object {
+        private val ALLOWED = Report.ReportTypeEnum.entries.map { it.name }.toSet()
     }
 }

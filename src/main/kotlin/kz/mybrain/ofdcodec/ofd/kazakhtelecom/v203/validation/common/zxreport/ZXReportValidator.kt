@@ -1,10 +1,10 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.zxreport
 
+import kotlinx.serialization.json.JsonObject
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.DateTimeValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidator
-import kotlinx.serialization.json.JsonObject
 
 /**
  * Валидация ZXReport для протокола Казахтелеком v203.
@@ -49,7 +49,13 @@ class ZXReportValidator {
         errors.addAll(taxValidator.validateList(zxReport, "taxes", "$path.taxes"))
 
         // Необнуляемые суммы (опционально).
-        errors.addAll(nonNullableSumValidator.validateList(zxReport, "startShiftNonNullableSums", "$path.startShiftNonNullableSums"))
+        errors.addAll(
+            nonNullableSumValidator.validateList(
+                zxReport,
+                "startShiftNonNullableSums",
+                "$path.startShiftNonNullableSums"
+            )
+        )
         errors.addAll(nonNullableSumValidator.validateList(zxReport, "nonNullableSums", "$path.nonNullableSums"))
 
         // Операции по чекам (опционально).

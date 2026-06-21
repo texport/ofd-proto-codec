@@ -1,5 +1,8 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request
 
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
 import kz.mybrain.ofdcodec.domain.model.CommandType
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.port.Validator
@@ -8,9 +11,6 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.DateTimeVali
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums.ReportTypeEnumValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.zxreport.ZXReportValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request.service.ServiceRequestValidator
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.JsonObject
 
 /**
  * Валидатор запроса для COMMAND_REPORT.

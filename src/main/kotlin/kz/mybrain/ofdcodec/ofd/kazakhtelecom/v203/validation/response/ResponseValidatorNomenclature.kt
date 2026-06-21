@@ -1,16 +1,16 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response
 
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.intOrNull
 import kz.mybrain.ofdcodec.domain.model.CommandType
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.port.Validator
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.DateTimeValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidator
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.intOrNull
 
 /**
  * Валидатор ответа для COMMAND_NOMENCLATURE.
@@ -69,7 +69,9 @@ class ResponseValidatorNomenclature : Validator {
             if (createdTime !is JsonObject) {
                 errors.add(ValidationUtils.invalidType("$.payload.nomenclature.createdTime"))
             } else {
-                errors.addAll(dateTimeValidator.validate(nomenclature, "createdTime", "$.payload.nomenclature.createdTime"))
+                errors.addAll(
+                    dateTimeValidator.validate(nomenclature, "createdTime", "$.payload.nomenclature.createdTime")
+                )
             }
         }
 
@@ -135,7 +137,14 @@ class ResponseValidatorNomenclature : Validator {
         ValidationUtils.requireLongInRange(element, "id", 0, Long.MAX_VALUE, "$path.id", errors)
         // parentGroupId опционален, uint64.
         if (element["parentGroupId"] != null) {
-            ValidationUtils.requireLongInRange(element, "parentGroupId", 0, Long.MAX_VALUE, "$path.parentGroupId", errors)
+            ValidationUtils.requireLongInRange(
+                element,
+                "parentGroupId",
+                0,
+                Long.MAX_VALUE,
+                "$path.parentGroupId",
+                errors
+            )
         }
 
         val isItemType = typeElement?.isString == true && typeElement.content == "ITEM"
@@ -168,7 +177,14 @@ class ResponseValidatorNomenclature : Validator {
 
         // discountPercent/markupPercent опциональны, uint32.
         if (item["discountPercent"] != null) {
-            ValidationUtils.requireIntInRange(item, "discountPercent", 0, Int.MAX_VALUE, "$path.discountPercent", errors)
+            ValidationUtils.requireIntInRange(
+                item,
+                "discountPercent",
+                0,
+                Int.MAX_VALUE,
+                "$path.discountPercent",
+                errors
+            )
         }
         if (item["markupPercent"] != null) {
             ValidationUtils.requireIntInRange(item, "markupPercent", 0, Int.MAX_VALUE, "$path.markupPercent", errors)
@@ -195,9 +211,23 @@ class ResponseValidatorNomenclature : Validator {
                         errors.add(ValidationUtils.invalidType(taxPath))
                         return@forEachIndexed
                     }
-                    ValidationUtils.requireIntInRange(taxObj, "taxationType", 0, Int.MAX_VALUE, "$taxPath.taxationType", errors)
+                    ValidationUtils.requireIntInRange(
+                        taxObj,
+                        "taxationType",
+                        0,
+                        Int.MAX_VALUE,
+                        "$taxPath.taxationType",
+                        errors
+                    )
                     ValidationUtils.requireIntInRange(taxObj, "taxType", 0, Int.MAX_VALUE, "$taxPath.taxType", errors)
-                    ValidationUtils.requireIntInRange(taxObj, "taxPercent", 0, Int.MAX_VALUE, "$taxPath.taxPercent", errors)
+                    ValidationUtils.requireIntInRange(
+                        taxObj,
+                        "taxPercent",
+                        0,
+                        Int.MAX_VALUE,
+                        "$taxPath.taxPercent",
+                        errors
+                    )
                 }
             }
         }

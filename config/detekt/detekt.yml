@@ -9,6 +9,7 @@ complexity:
     thresholdInClasses: 60
     thresholdInInterfaces: 50
     thresholdInObjects: 100
+    thresholdInFiles: 20
   LongMethod:
     active: true
     threshold: 310
@@ -86,3 +87,9 @@ exceptions:
   TooGenericExceptionCaught:
     active: true
     excludes: ['**/OfdCodec.kt', '**/OfdInfoCountersSnapshotParser.kt', '**/OfdQueueCommandHandler.kt', '**/OfdResponseUtils.kt', '**/OfdManagerAdapter.kt', '**/Base64TokenCodecPort.kt', '**/ResilienceOfdManagerPortAdapter.kt', '**/DeliveryPortAdapter.kt', '**/ReceiptHtmlRenderer.kt', '**/ConsoleLoader.kt', '**/*Controller.kt', '**/*Mapper.kt', '**/*Indicator.kt', '**/*Delegate.kt', '**/*Repository.kt', '**/*Session.kt', '**/*HealthChecker.kt', '**/*Adapter.kt']
+
+formatting:
+  active: true
+  MaximumLineLength:
+    active: true
+    maxLineLength: 180

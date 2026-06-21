@@ -1,13 +1,13 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response
 
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.intOrNull
 import kz.mybrain.ofdcodec.domain.model.CommandType
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.port.Validator
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response.service.ServiceResponseValidator
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.intOrNull
 
 /**
  * Валидатор ответа для COMMAND_TICKET.
@@ -49,16 +49,36 @@ class ResponseValidatorTicket : Validator {
             if (ticketObject == null) {
                 errors.add(ValidationUtils.missingField("$.payload.ticket"))
             } else {
-                ValidationUtils.requireNonBlankString(ticketObject, "ticketNumber", "$.payload.ticket.ticketNumber", errors)
-                ValidationUtils.optionalNonBlankString(ticketObject, "qrCodeBase64", "$.payload.ticket.qrCodeBase64", errors)
+                ValidationUtils.requireNonBlankString(
+                    ticketObject,
+                    "ticketNumber",
+                    "$.payload.ticket.ticketNumber",
+                    errors
+                )
+                ValidationUtils.optionalNonBlankString(
+                    ticketObject,
+                    "qrCodeBase64",
+                    "$.payload.ticket.qrCodeBase64",
+                    errors
+                )
             }
         } else if (ticket != null) {
             val ticketObject = ticket as? JsonObject
             if (ticketObject == null) {
                 errors.add(ValidationUtils.invalidType("$.payload.ticket"))
             } else {
-                ValidationUtils.optionalNonBlankString(ticketObject, "ticketNumber", "$.payload.ticket.ticketNumber", errors)
-                ValidationUtils.optionalNonBlankString(ticketObject, "qrCodeBase64", "$.payload.ticket.qrCodeBase64", errors)
+                ValidationUtils.optionalNonBlankString(
+                    ticketObject,
+                    "ticketNumber",
+                    "$.payload.ticket.ticketNumber",
+                    errors
+                )
+                ValidationUtils.optionalNonBlankString(
+                    ticketObject,
+                    "qrCodeBase64",
+                    "$.payload.ticket.qrCodeBase64",
+                    errors
+                )
             }
         }
 

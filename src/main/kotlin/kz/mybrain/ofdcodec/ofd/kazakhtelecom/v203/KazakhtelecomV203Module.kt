@@ -2,15 +2,16 @@ package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203
 
 import kz.mybrain.ofdcodec.domain.registry.OfdProtocolHandler
 import kz.mybrain.ofdcodec.domain.registry.OfdRegistry
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command.CommandInfoRequestBuilder
+import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.KazakhtelecomV203RequestSerializer
+import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.KazakhtelecomV203ResponseDeserializer
+import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command.CommandAuthRequestBuilder
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command.CommandCloseShiftRequestBuilder
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command.CommandNomenclatureRequestBuilder
+import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command.CommandInfoRequestBuilder
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command.CommandMoneyPlacementRequestBuilder
+import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command.CommandNomenclatureRequestBuilder
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command.CommandReportRequestBuilder
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command.CommandSystemRequestBuilder
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command.CommandTicketRequestBuilder
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.KazakhtelecomV203RequestSerializer
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.KazakhtelecomV203ResponseDeserializer
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.CommandValidatorRegistry
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request.RequestValidatorAuth
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request.RequestValidatorCloseShift
@@ -78,7 +79,8 @@ object KazakhtelecomV203Module {
                 kz.mybrain.ofdcodec.domain.model.CommandType.COMMAND_INFO to CommandInfoRequestBuilder(),
                 kz.mybrain.ofdcodec.domain.model.CommandType.COMMAND_MONEY_PLACEMENT to CommandMoneyPlacementRequestBuilder(),
                 kz.mybrain.ofdcodec.domain.model.CommandType.COMMAND_NOMENCLATURE to CommandNomenclatureRequestBuilder(),
-                kz.mybrain.ofdcodec.domain.model.CommandType.COMMAND_REPORT to CommandReportRequestBuilder()
+                kz.mybrain.ofdcodec.domain.model.CommandType.COMMAND_REPORT to CommandReportRequestBuilder(),
+                kz.mybrain.ofdcodec.domain.model.CommandType.COMMAND_AUTH to CommandAuthRequestBuilder()
             )
         )
         val responseDeserializer = KazakhtelecomV203ResponseDeserializer()

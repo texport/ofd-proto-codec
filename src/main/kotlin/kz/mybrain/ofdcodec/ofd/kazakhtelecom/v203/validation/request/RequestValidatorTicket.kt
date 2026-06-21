@@ -1,5 +1,8 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request
 
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.intOrNull
 import kz.mybrain.ofdcodec.domain.model.CommandType
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.port.Validator
@@ -14,10 +17,6 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.ticket.Ticke
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.ticket.TicketPaymentValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.ticket.TicketTaxValidator
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request.service.ServiceRequestValidator
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.intOrNull
-import kotlinx.serialization.json.intOrNull
 
 /**
  * Валидатор запроса для COMMAND_TICKET.
@@ -124,23 +123,53 @@ class RequestValidatorTicket : Validator {
 
         val extensionOptions = ticket["extensionOptions"]
         if (extensionOptions is JsonObject) {
-            errors.addAll(extensionOptionsValidator.validate(ticket, "extensionOptions", "$.payload.ticket.extensionOptions"))
+            errors.addAll(
+                extensionOptionsValidator.validate(ticket, "extensionOptions", "$.payload.ticket.extensionOptions")
+            )
         } else if (extensionOptions != null) {
             errors.add(ValidationUtils.invalidType("$.payload.ticket.extensionOptions"))
         }
 
         if (ticket["offlineTicketNumber"] != null) {
-            ValidationUtils.requireIntInRange(ticket, "offlineTicketNumber", 0, Int.MAX_VALUE, "$.payload.ticket.offlineTicketNumber", errors)
+            ValidationUtils.requireIntInRange(
+                ticket,
+                "offlineTicketNumber",
+                0,
+                Int.MAX_VALUE,
+                "$.payload.ticket.offlineTicketNumber",
+                errors
+            )
         }
         ValidationUtils.optionalNonBlankString(ticket, "printedTicket", "$.payload.ticket.printedTicket", errors)
         if (ticket["frShiftNumber"] != null) {
-            ValidationUtils.requireIntInRange(ticket, "frShiftNumber", 0, Int.MAX_VALUE, "$.payload.ticket.frShiftNumber", errors)
+            ValidationUtils.requireIntInRange(
+                ticket,
+                "frShiftNumber",
+                0,
+                Int.MAX_VALUE,
+                "$.payload.ticket.frShiftNumber",
+                errors
+            )
         }
         if (ticket["shiftDocumentNumber"] != null) {
-            ValidationUtils.requireIntInRange(ticket, "shiftDocumentNumber", 0, Int.MAX_VALUE, "$.payload.ticket.shiftDocumentNumber", errors)
+            ValidationUtils.requireIntInRange(
+                ticket,
+                "shiftDocumentNumber",
+                0,
+                Int.MAX_VALUE,
+                "$.payload.ticket.shiftDocumentNumber",
+                errors
+            )
         }
         if (ticket["printedDocumentNumber"] != null) {
-            ValidationUtils.requireLongInRange(ticket, "printedDocumentNumber", 0, Long.MAX_VALUE, "$.payload.ticket.printedDocumentNumber", errors)
+            ValidationUtils.requireLongInRange(
+                ticket,
+                "printedDocumentNumber",
+                0,
+                Long.MAX_VALUE,
+                "$.payload.ticket.printedDocumentNumber",
+                errors
+            )
         }
 
         val parentTicket = ticket["parentTicket"]
@@ -195,9 +224,15 @@ class RequestValidatorTicket : Validator {
         val items = ticket["items"] as? kotlinx.serialization.json.JsonArray ?: return false
         return items.any { item ->
             val obj = item as? JsonObject ?: return@any false
-            val commodityTaxes = (obj["commodity"] as? JsonObject)?.get("taxes") as? kotlinx.serialization.json.JsonArray
-            val stornoTaxes = (obj["stornoCommodity"] as? JsonObject)?.get("taxes") as? kotlinx.serialization.json.JsonArray
-            (commodityTaxes != null && commodityTaxes.isNotEmpty()) || (stornoTaxes != null && stornoTaxes.isNotEmpty())
+            val commodityTaxes = (obj["commodity"] as? JsonObject)?.get(
+                "taxes"
+            ) as? kotlinx.serialization.json.JsonArray
+            val stornoTaxes = (obj["stornoCommodity"] as? JsonObject)?.get(
+                "taxes"
+            ) as? kotlinx.serialization.json.JsonArray
+
+            val hasTaxes = !commodityTaxes.isNullOrEmpty() || !stornoTaxes.isNullOrEmpty()
+            hasTaxes
         }
     }
 

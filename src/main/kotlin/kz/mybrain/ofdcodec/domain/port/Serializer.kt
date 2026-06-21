@@ -1,7 +1,7 @@
 package kz.mybrain.ofdcodec.domain.port
 
-import kz.mybrain.ofdcodec.domain.model.CommandType
 import kotlinx.serialization.json.JsonObject
+import kz.mybrain.ofdcodec.domain.model.CommandType
 
 /**
  * Сериализация JSON в бинарный payload согласно proto-библиотеке ОФД.

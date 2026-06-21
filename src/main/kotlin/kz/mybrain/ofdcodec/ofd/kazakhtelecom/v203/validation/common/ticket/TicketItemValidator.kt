@@ -1,13 +1,13 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.ticket
 
-import kz.mybrain.ofdcodec.domain.model.ValidationError
-import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidator
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums.TicketItemTypeEnumValidator
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.intOrNull
+import kz.mybrain.ofdcodec.domain.model.ValidationError
+import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
+import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidator
+import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums.TicketItemTypeEnumValidator
 
 /**
  * Валидация Item для TicketRequest.
@@ -58,9 +58,13 @@ class TicketItemValidator {
             "ITEM_TYPE_COMMODITY" -> validateCommodity(item, "$path.commodity", errors)
             "ITEM_TYPE_STORNO_COMMODITY" -> validateStornoCommodity(item, "$path.stornoCommodity", errors)
             "ITEM_TYPE_MARKUP" -> errors.addAll(modifierValidator.validate(item, "markup", "$path.markup"))
-            "ITEM_TYPE_STORNO_MARKUP" -> errors.addAll(modifierValidator.validate(item, "stornoMarkup", "$path.stornoMarkup"))
+            "ITEM_TYPE_STORNO_MARKUP" -> errors.addAll(
+                modifierValidator.validate(item, "stornoMarkup", "$path.stornoMarkup")
+            )
             "ITEM_TYPE_DISCOUNT" -> errors.addAll(modifierValidator.validate(item, "discount", "$path.discount"))
-            "ITEM_TYPE_STORNO_DISCOUNT" -> errors.addAll(modifierValidator.validate(item, "stornoDiscount", "$path.stornoDiscount"))
+            "ITEM_TYPE_STORNO_DISCOUNT" -> errors.addAll(
+                modifierValidator.validate(item, "stornoDiscount", "$path.stornoDiscount")
+            )
         }
 
         return errors
@@ -92,7 +96,7 @@ class TicketItemValidator {
         errors.addAll(moneyValidator.validate(commodity, "sum", "$path.sum"))
         validateTaxes(commodity, "$path.taxes", errors)
 
-        validateStringList(commodity, "listExciseStamp", "$path.listExciseStamp", errors)
+        validateExciseStampList(commodity, "$path.listExciseStamp", errors)
         ValidationUtils.optionalNonBlankString(commodity, "physicalLabel", "$path.physicalLabel", errors)
         ValidationUtils.optionalNonBlankString(commodity, "productId", "$path.productId", errors)
         ValidationUtils.optionalNonBlankString(commodity, "barcode", "$path.barcode", errors)
@@ -123,7 +127,7 @@ class TicketItemValidator {
         errors.addAll(moneyValidator.validate(storno, "sum", "$path.sum"))
         validateTaxes(storno, "$path.taxes", errors)
 
-        validateStringList(storno, "listExciseStamp", "$path.listExciseStamp", errors)
+        validateExciseStampList(storno, "$path.listExciseStamp", errors)
         ValidationUtils.optionalNonBlankString(storno, "physicalLabel", "$path.physicalLabel", errors)
         ValidationUtils.optionalNonBlankString(storno, "productId", "$path.productId", errors)
         ValidationUtils.optionalNonBlankString(storno, "barcode", "$path.barcode", errors)
@@ -158,10 +162,14 @@ class TicketItemValidator {
     }
 
     /**
-     * Валидирует список строк.
+     * Валидирует список акцизных марок.
      */
-    private fun validateStringList(container: JsonObject, key: String, path: String, errors: MutableList<ValidationError>) {
-        val list = container[key] ?: return
+    private fun validateExciseStampList(
+        container: JsonObject,
+        path: String,
+        errors: MutableList<ValidationError>
+    ) {
+        val list = container["listExciseStamp"] ?: return
         val array = list as? JsonArray
         if (array == null) {
             errors.add(ValidationUtils.invalidType(path))

@@ -1,26 +1,25 @@
 package kz.mybrain.ofdcodec.application
 
-import kz.mybrain.ofdcodec.domain.model.CommandType
-import kz.mybrain.ofdcodec.domain.model.ErrorCode
-import kz.mybrain.ofdcodec.domain.model.ErrorFactory
-import kz.mybrain.ofdcodec.domain.model.MessageType
-import kz.mybrain.ofdcodec.domain.model.OfdCodecException
-import kz.mybrain.ofdcodec.domain.model.ValidationError
-import kz.mybrain.ofdcodec.domain.registry.OfdRegistry
-import kz.mybrain.ofdcodec.domain.port.OfdResolver
-import kz.mybrain.ofdcodec.infrastructure.header.HeaderCodec
-import kz.mybrain.ofdcodec.domain.model.HeaderConstants
-import kz.mybrain.ofdcodec.infrastructure.header.HeaderDecodeResult
-import kz.mybrain.ofdcodec.domain.model.MessageHeader
-import kz.mybrain.ofdcodec.infrastructure.json.JsonEnvelopeBuilder
-import kz.mybrain.ofdcodec.infrastructure.json.JsonKeys
-import kz.mybrain.ofdcodec.infrastructure.json.JsonMessageMapper
-import kz.mybrain.ofdcodec.infrastructure.util.ProtocolVersion
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
+import kz.mybrain.ofdcodec.domain.model.CommandType
+import kz.mybrain.ofdcodec.domain.model.ErrorCode
+import kz.mybrain.ofdcodec.domain.model.ErrorFactory
+import kz.mybrain.ofdcodec.domain.model.HeaderConstants
+import kz.mybrain.ofdcodec.domain.model.MessageHeader
+import kz.mybrain.ofdcodec.domain.model.MessageType
+import kz.mybrain.ofdcodec.domain.model.OfdCodecException
+import kz.mybrain.ofdcodec.domain.model.ValidationError
+import kz.mybrain.ofdcodec.domain.port.OfdResolver
+import kz.mybrain.ofdcodec.domain.registry.OfdRegistry
+import kz.mybrain.ofdcodec.infrastructure.header.HeaderCodec
+import kz.mybrain.ofdcodec.infrastructure.header.HeaderDecodeResult
+import kz.mybrain.ofdcodec.infrastructure.json.JsonEnvelopeBuilder
+import kz.mybrain.ofdcodec.infrastructure.json.JsonKeys
+import kz.mybrain.ofdcodec.infrastructure.json.JsonMessageMapper
+import kz.mybrain.ofdcodec.infrastructure.util.ProtocolVersion
 import java.util.Base64
 
 /**
@@ -54,14 +53,13 @@ class OfdCodec(
 
         if (parsed.messageType != MessageType.REQUEST) {
             return Result.failure(
-                OfdCodecException(listOf(ErrorFactory.error(ErrorCode.ENCODE_UNSUPPORTED_MESSAGE_TYPE, "$.messageType")))
+                OfdCodecException(
+                    listOf(ErrorFactory.error(ErrorCode.ENCODE_UNSUPPORTED_MESSAGE_TYPE, "$.messageType"))
+                )
             )
         }
 
-        val validationErrors = when (parsed.messageType) {
-            MessageType.REQUEST -> handler.requestValidator.validate(parsed.commandType, parsed.payload)
-            MessageType.RESPONSE -> handler.responseValidator.validate(parsed.commandType, parsed.payload)
-        }
+        val validationErrors = handler.requestValidator.validate(parsed.commandType, parsed.payload)
         if (validationErrors.isNotEmpty()) {
             return Result.failure(OfdCodecException(validationErrors))
         }
@@ -118,11 +116,9 @@ class OfdCodec(
             header.size.toInt().coerceAtMost(bytes.size)
         )
         val ofdId = ofdResolver.resolve(header, payloadBytes, registry)
-        if (ofdId == null) {
-            return Result.failure(
+            ?: return Result.failure(
                 OfdCodecException(listOf(ErrorFactory.error(ErrorCode.MESSAGE_UNDETERMINED_OFD, "$.ofdId")))
             )
-        }
 
         val protocolVersionText = ProtocolVersion.toNumericString(header.protocolVersion)
         val handler = registry.find(ofdId, protocolVersionText)
@@ -177,8 +173,7 @@ class OfdCodec(
             )
         }
         val command = CommandType.fromName(element.content)
-        if (command == null) {
-            return Pair(
+            ?: return Pair(
                 CommandType.COMMAND_RESERVED,
                 ErrorFactory.error(
                     ErrorCode.COMMAND_UNSUPPORTED,
@@ -186,7 +181,6 @@ class OfdCodec(
                     mapOf("command" to element.content)
                 )
             )
-        }
         return Pair(command, null)
     }
 

@@ -1,52 +1,19 @@
 package kz.mybrain.ofdcodec.domain.validation
 
-import kz.mybrain.ofdcodec.domain.model.ErrorCode
-import kz.mybrain.ofdcodec.domain.model.ErrorFactory
-import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.longOrNull
+import kz.mybrain.ofdcodec.domain.model.ErrorCode
+import kz.mybrain.ofdcodec.domain.model.ErrorFactory
+import kz.mybrain.ofdcodec.domain.model.ValidationError
 
 /**
  * Общие проверки для бизнес-валидаций.
  */
 object ValidationUtils {
-    /**
-     * Возвращает true, если строка не пустая и содержит только цифры.
-     */
-    fun isDigits(value: String): Boolean {
-        return value.isNotEmpty() && value.all { it in '0'..'9' }
-    }
-
-    /**
-     * Возвращает true, если строка не содержит пробельных символов.
-     */
-    fun hasNoWhitespace(value: String): Boolean {
-        return value.none { it.isWhitespace() }
-    }
-
-    /**
-     * Возвращает true, если строка не пустая и не состоит только из пробелов.
-     */
-    fun isNotBlank(value: String): Boolean = value.isNotBlank()
-
-    /**
-     * Возвращает true, если длина равна указанной.
-     */
-    fun hasLength(value: String, length: Int): Boolean = value.length == length
-
-    /**
-     * Возвращает true, если длина не превышает указанную.
-     */
-    fun isNotLongerThan(value: String, maxLength: Int): Boolean = value.length <= maxLength
-
-    /**
-     * Возвращает true, если у строки нет пробелов по краям.
-     */
-    fun isTrimmed(value: String): Boolean = value == value.trim()
 
     /**
      * Формирует ошибку отсутствующего поля.
@@ -124,20 +91,6 @@ object ValidationUtils {
     }
 
     /**
-     * Проверяет обязательную строку.
-     */
-    fun requireString(json: JsonObject, key: String, path: String, errors: MutableList<ValidationError>) {
-        val element = json[key] as? JsonPrimitive
-        if (element == null) {
-            errors.add(missingField(path))
-            return
-        }
-        if (!element.isString) {
-            errors.add(invalidType(path))
-        }
-    }
-
-    /**
      * Проверяет обязательную строку и непустое значение после trim.
      */
     fun requireNonBlankString(json: JsonObject, key: String, path: String, errors: MutableList<ValidationError>) {
@@ -152,16 +105,6 @@ object ValidationUtils {
         }
         if (element.content.isBlank()) {
             errors.add(invalidValue(path))
-        }
-    }
-
-    /**
-     * Проверяет опциональную строку, если поле присутствует.
-     */
-    fun optionalString(json: JsonObject, key: String, path: String, errors: MutableList<ValidationError>) {
-        val element = json[key] ?: return
-        if (element !is JsonPrimitive || !element.isString) {
-            errors.add(invalidType(path))
         }
     }
 
@@ -215,7 +158,7 @@ object ValidationUtils {
             errors.add(invalidType(path))
             return
         }
-        if (value < min || value > max) {
+        if (value !in min..max) {
             errors.add(invalidValue(path))
         }
     }
@@ -241,8 +184,61 @@ object ValidationUtils {
             errors.add(invalidType(path))
             return
         }
-        if (value < min || value > max) {
+        if (value !in min..max) {
             errors.add(invalidValue(path))
         }
+    }
+
+    /**
+     * Валидирует список элементов JsonArray с помощью переданной функции валидации.
+     */
+    fun validateList(
+        container: JsonObject,
+        key: String,
+        path: String,
+        errors: MutableList<ValidationError>,
+        validateItem: (item: JsonObject, itemPath: String) -> List<ValidationError>
+    ) {
+        val element = container[key] ?: return
+        val array = element as? JsonArray
+        if (array == null) {
+            errors.add(invalidType(path))
+            return
+        }
+        array.forEachIndexed { index, item ->
+            val itemPath = "$path[$index]"
+            val obj = item as? JsonObject
+            if (obj == null) {
+                errors.add(invalidType(itemPath))
+            } else {
+                errors.addAll(validateItem(obj, itemPath))
+            }
+        }
+    }
+
+    /**
+     * Валидирует значение по ключу, проверяя, что оно принадлежит разрешенному множеству значений.
+     */
+    fun validateEnum(
+        container: JsonObject,
+        key: String,
+        path: String,
+        allowed: Set<String>
+    ): List<ValidationError> {
+        val errors = mutableListOf<ValidationError>()
+        val element = container[key] as? JsonPrimitive
+        if (element == null) {
+            errors.add(missingField(path))
+            return errors
+        }
+        if (!element.isString) {
+            errors.add(invalidType(path))
+            return errors
+        }
+        val value = element.content
+        if (value !in allowed) {
+            errors.add(invalidValue(path))
+        }
+        return errors
     }
 }

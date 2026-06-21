@@ -1,16 +1,16 @@
 package kz.mybrain.ofdcodec.infrastructure.json
 
-import kz.mybrain.ofdcodec.domain.model.CommandType
-import kz.mybrain.ofdcodec.domain.model.ErrorCode
-import kz.mybrain.ofdcodec.domain.model.ErrorFactory
-import kz.mybrain.ofdcodec.domain.model.MessageType
-import kz.mybrain.ofdcodec.domain.model.ValidationError
-import kz.mybrain.ofdcodec.domain.model.HeaderConstants
-import kz.mybrain.ofdcodec.infrastructure.util.ProtocolVersion
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.longOrNull
+import kz.mybrain.ofdcodec.domain.model.CommandType
+import kz.mybrain.ofdcodec.domain.model.ErrorCode
+import kz.mybrain.ofdcodec.domain.model.ErrorFactory
+import kz.mybrain.ofdcodec.domain.model.HeaderConstants
+import kz.mybrain.ofdcodec.domain.model.MessageType
+import kz.mybrain.ofdcodec.domain.model.ValidationError
+import kz.mybrain.ofdcodec.infrastructure.util.ProtocolVersion
 
 /**
  * Поля заголовка, полученные из JSON-конверта.
@@ -61,7 +61,7 @@ object JsonMessageMapper {
         val messageType = readMessageType(json, errors)
         val commandType = readCommandType(json, errors)
         val header = readHeader(json, errors)
-        val payload = readObject(json, JsonKeys.PAYLOAD, errors)
+        val payload = readPayloadObject(json, errors)
 
         val versionNumber = if (protocolVersionText != null) {
             ProtocolVersion.parseNumeric(protocolVersionText)
@@ -111,7 +111,7 @@ object JsonMessageMapper {
 
         val deviceId = readLong(headerElement, JsonKeys.DEVICE_ID, errors)
         val token = readLong(headerElement, JsonKeys.TOKEN, errors)
-        val reqNum = readInt(headerElement, JsonKeys.REQ_NUM, errors)
+        val reqNum = readReqNumInt(headerElement, errors)
         if (errors.isNotEmpty()) {
             return null
         }
@@ -131,7 +131,7 @@ object JsonMessageMapper {
         val value = readString(json, JsonKeys.MESSAGE_TYPE, errors) ?: return null
         return try {
             MessageType.valueOf(value.uppercase())
-        } catch (ignored: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             errors.add(
                 ErrorFactory.error(
                     ErrorCode.JSON_INVALID_VALUE,
@@ -161,11 +161,11 @@ object JsonMessageMapper {
         return command
     }
 
-    private fun readObject(
+    private fun readPayloadObject(
         json: JsonObject,
-        key: String,
         errors: MutableList<ValidationError>
     ): JsonObject? {
+        val key = JsonKeys.PAYLOAD
         val element = json[key]
         if (element == null) {
             errors.add(
@@ -257,14 +257,11 @@ object JsonMessageMapper {
         }
     }
 
-    private fun readInt(
+    private fun readReqNumInt(
         json: JsonObject,
-        key: String,
         errors: MutableList<ValidationError>
     ): Int? {
-        val value = readLong(json, key, errors) ?: return null
+        val value = readLong(json, JsonKeys.REQ_NUM, errors) ?: return null
         return value.toInt()
     }
-
 }
-

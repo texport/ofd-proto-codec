@@ -1,9 +1,9 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.zxreport
 
-import kz.mybrain.ofdcodec.domain.model.ValidationError
-import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
+import kz.mybrain.ofdcodec.domain.model.ValidationError
+import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 
 /**
  * Валидация Tax внутри ZXReport.
