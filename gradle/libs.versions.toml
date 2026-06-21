@@ -8,7 +8,6 @@ coroutines = "1.11.0"
 protobufJava = "4.35.1"
 nmcp = "1.4.4"
 
-
 [libraries]
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 ofd-kt-proto = { group = "io.github.texport", name = "ofd-kt-proto", version.ref = "ofdKtProto" }
@@ -23,5 +22,3 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 nmcp = { id = "com.gradleup.nmcp", version.ref = "nmcp" }
-
-

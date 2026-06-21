@@ -7,7 +7,6 @@ plugins {
     id("signing")
 }
 
-
 group = "io.github.texport"
 version = "1.0.0"
 
@@ -45,11 +44,13 @@ kotlin {
 }
 
 val sourcesJar = tasks.register<Jar>("sourcesJar") {
+    description = "Generates the sources JAR artifact"
     archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
 }
 
 val javadocJar = tasks.register<Jar>("javadocJar") {
+    description = "Generates the javadoc JAR artifact"
     archiveClassifier.set("javadoc")
     from(tasks.javadoc)
 }
@@ -69,7 +70,7 @@ publishing {
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
                     }
                 }
 
