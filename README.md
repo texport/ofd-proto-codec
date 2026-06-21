@@ -196,34 +196,3 @@ result.onSuccess { jsonEnvelope ->
     // Обрабатываем ответ сервера
 }
 ```
-
----
-
-### Publishing & Releasing (Публикация и Релизы)
-
-#### Local Publishing (Локальная публикация)
-Для публикации библиотеки в локальный Maven-репозиторий выполните:
-```bash
-./gradlew publishToMavenLocal
-```
-
-#### Central Publishing (Публикация в Maven Central)
-Проект настроен на публикацию в Sonatype Central с использованием плагина **NMCP**:
-1. Убедитесь, что ваши GPG-ключи и учетные данные Sonatype настроены (в `~/.gradle/gradle.properties` или через переменные окружения `OSSRH_USERNAME`, `OSSRH_PASSWORD`, `SIGNING_KEY`, `SIGNING_PASSWORD`).
-2. Запустите задачу публикации:
-```bash
-./gradlew publishAllPublicationsToCentralPortal
-```
-
-#### GitHub Releases
-Создание нового релиза на GitHub выполняется следующим образом:
-1. Создание и пуш git-тега:
-```bash
-git tag -a v1.0.0 -m "Release version 1.0.0"
-git push origin v1.0.0
-```
-2. Создание релиза через GitHub CLI `gh`:
-```bash
-gh release create v1.0.0 --title "v1.0.0" --notes "Initial release of ofd-proto-codec library"
-```
-
