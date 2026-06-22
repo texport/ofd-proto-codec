@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "io.github.texport"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenLocal()
@@ -107,8 +107,8 @@ signing {
     val signingPassword = System.getenv("SIGNING_PASSWORD")
     if (!signingKey.isNullOrEmpty() && !signingPassword.isNullOrEmpty()) {
         useInMemoryPgpKeys(signingKey, signingPassword)
-        sign(publishing.publications["mavenJava"])
     }
+    sign(publishing.publications["mavenJava"])
 }
 
 nmcp {
