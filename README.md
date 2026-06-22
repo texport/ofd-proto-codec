@@ -1,7 +1,7 @@
 # ofd-proto-codec
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.texport/ofd-proto-codec.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.texport/ofd-proto-codec)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/texport/ofd-proto-codec/releases)
+[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/texport/ofd-proto-codec/releases)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![CI Build](https://img.shields.io/github/actions/workflow/status/texport/ofd-proto-codec/ci.yml?branch=main&label=CI%20Build)](https://github.com/texport/ofd-proto-codec/actions)
 
@@ -62,7 +62,7 @@ Add the dependency to your `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("io.github.texport:ofd-proto-codec:1.0.0")
+    implementation("io.github.texport:ofd-proto-codec:1.0.1")
 }
 ```
 
@@ -152,7 +152,7 @@ result.onSuccess { jsonEnvelope ->
 
 ```kotlin
 dependencies {
-    implementation("io.github.texport:ofd-proto-codec:1.0.0")
+    implementation("io.github.texport:ofd-proto-codec:1.0.1")
 }
 ```
 
