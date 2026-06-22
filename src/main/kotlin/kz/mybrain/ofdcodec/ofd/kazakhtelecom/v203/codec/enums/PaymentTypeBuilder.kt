@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.infrastructure.json.readString
 /**
  * Чтение PaymentTypeEnum из JSON.
  */
-class PaymentTypeBuilder {
+internal class PaymentTypeBuilder {
     /**
      * Читает PaymentTypeEnum по ключу и возвращает его значение.
      */

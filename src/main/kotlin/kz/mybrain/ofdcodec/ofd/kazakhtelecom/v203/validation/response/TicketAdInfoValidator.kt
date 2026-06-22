@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидация TicketAdInfo для ответов ОФД Казахтелеком v203.
  */
-class TicketAdInfoValidator {
+internal class TicketAdInfoValidator {
     /**
      * Валидирует тип и версию рекламного блока.
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.

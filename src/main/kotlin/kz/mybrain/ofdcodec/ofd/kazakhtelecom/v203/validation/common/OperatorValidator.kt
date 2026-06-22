@@ -9,7 +9,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
  *
  * code обязателен, name опционален (если указан — не пустой).
  */
-class OperatorValidator {
+internal class OperatorValidator {
     /**
      * Валидирует Operator по ключу в контейнере.
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.

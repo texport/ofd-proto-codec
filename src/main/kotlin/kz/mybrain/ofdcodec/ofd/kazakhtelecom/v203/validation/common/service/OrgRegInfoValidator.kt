@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидация OrgRegInfo для протокола Казахтелеком v203.
  */
-class OrgRegInfoValidator {
+internal class OrgRegInfoValidator {
     /**
      * Валидирует обязательные поля OrgRegInfo.
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.

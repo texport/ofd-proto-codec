@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.infrastructure.json.readString
 /**
  * Сборщик NomenclatureRequest из JSON-структуры.
  */
-class NomenclatureRequestBuilder {
+internal class NomenclatureRequestBuilder {
     /**
      * Строит NomenclatureRequest из JSON-объекта payload.
      */

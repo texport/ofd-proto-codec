@@ -44,7 +44,7 @@ object KazakhtelecomV203Module {
         registry.register(defaultHandler(ofdId))
     }
 
-    fun defaultHandler(ofdId: String = OFD_ID): OfdProtocolHandler {
+    internal fun defaultHandler(ofdId: String = OFD_ID): OfdProtocolHandler {
         val requestRegistry = CommandValidatorRegistry(
             mapOf(
                 kz.mybrain.ofdcodec.domain.model.CommandType.COMMAND_SYSTEM to RequestValidatorSystem(),

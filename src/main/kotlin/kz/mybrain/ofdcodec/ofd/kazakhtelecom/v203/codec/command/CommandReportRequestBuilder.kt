@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.service.ServiceRequestBu
 /**
  * Сборщик Request для COMMAND_REPORT.
  */
-class CommandReportRequestBuilder : CommandRequestBuilder {
+internal class CommandReportRequestBuilder : CommandRequestBuilder {
     private val serviceRequestBuilder = ServiceRequestBuilder()
     private val reportRequestBuilder = ReportRequestBuilder()
 

@@ -15,7 +15,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request.service.Ser
 /**
  * Валидатор запроса для COMMAND_MONEY_PLACEMENT.
  */
-class RequestValidatorMoneyPlacement : Validator {
+internal class RequestValidatorMoneyPlacement : Validator {
     private val dateTimeValidator = DateTimeValidator()
     private val moneyValidator = MoneyValidator()
     private val operatorValidator = OperatorValidator()

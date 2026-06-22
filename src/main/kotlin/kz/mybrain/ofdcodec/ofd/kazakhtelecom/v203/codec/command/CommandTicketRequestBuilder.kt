@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.ticket.TicketRequestBuil
 /**
  * Построение запроса COMMAND_TICKET.
  */
-class CommandTicketRequestBuilder : CommandRequestBuilder {
+internal class CommandTicketRequestBuilder : CommandRequestBuilder {
     private val serviceRequestBuilder = ServiceRequestBuilder()
     private val ticketRequestBuilder = TicketRequestBuilder()
 

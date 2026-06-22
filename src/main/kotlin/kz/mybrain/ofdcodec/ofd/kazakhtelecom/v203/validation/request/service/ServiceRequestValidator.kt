@@ -11,7 +11,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.service.OrgR
  * Базовая валидация ServiceRequest для протокола Казахтелеком v203.
  * Обязательные поля берутся из документа протокола.
  */
-class ServiceRequestValidator {
+internal class ServiceRequestValidator {
     private val dateTimeValidator = DateTimeValidator()
     private val kkmRegInfoValidator = KkmRegInfoValidator()
     private val orgRegInfoValidator = OrgRegInfoValidator()

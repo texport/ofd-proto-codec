@@ -13,7 +13,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidat
  * Обязательные поля: taxType, percent, sum, isInTotalSum.
  * Поле taxationType опционально.
  */
-class TicketTaxValidator {
+internal class TicketTaxValidator {
     private val moneyValidator = MoneyValidator()
 
     /**

@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.service.ServiceRequestBu
 /**
  * Сборщик Request для COMMAND_NOMENCLATURE.
  */
-class CommandNomenclatureRequestBuilder : CommandRequestBuilder {
+internal class CommandNomenclatureRequestBuilder : CommandRequestBuilder {
     private val serviceRequestBuilder = ServiceRequestBuilder()
     private val nomenclatureRequestBuilder = NomenclatureRequestBuilder()
 

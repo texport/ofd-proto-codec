@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.domain.model.MessageHeader
 import kz.mybrain.ofdcodec.domain.model.MessageType
 import kz.mybrain.ofdcodec.infrastructure.util.ProtocolVersion
 
-object JsonEnvelopeBuilder {
+internal object JsonEnvelopeBuilder {
     /**
      * Формирует JSON-конверт для ответа.
      */

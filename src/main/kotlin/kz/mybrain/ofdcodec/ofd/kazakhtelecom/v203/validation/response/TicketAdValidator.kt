@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидация TicketAd для ответов ОФД Казахтелеком v203.
  */
-class TicketAdValidator {
+internal class TicketAdValidator {
     private val infoValidator = TicketAdInfoValidator()
 
     /**

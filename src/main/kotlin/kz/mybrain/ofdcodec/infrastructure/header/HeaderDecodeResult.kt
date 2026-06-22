@@ -6,7 +6,7 @@ import kz.mybrain.ofdcodec.domain.model.ValidationError
 /**
  * Результат чтения заголовка.
  */
-sealed class HeaderDecodeResult {
+internal sealed class HeaderDecodeResult {
     data class Success(val header: MessageHeader) : HeaderDecodeResult()
     data class Errors(val errors: List<ValidationError>) : HeaderDecodeResult()
 }

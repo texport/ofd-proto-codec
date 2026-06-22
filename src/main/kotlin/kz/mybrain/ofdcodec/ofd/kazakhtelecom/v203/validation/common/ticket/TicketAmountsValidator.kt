@@ -12,7 +12,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidat
  * taken/change опциональны и требуются только при наличной оплате
  * (это проверяется на уровне RequestValidatorTicket).
  */
-class TicketAmountsValidator {
+internal class TicketAmountsValidator {
     private val moneyValidator = MoneyValidator()
     private val modifierValidator = TicketModifierValidator()
 

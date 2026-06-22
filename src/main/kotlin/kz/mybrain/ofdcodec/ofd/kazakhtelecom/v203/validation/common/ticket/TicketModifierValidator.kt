@@ -14,7 +14,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidat
  * Используется для скидок/наценок и их сторно.
  * Обязательны name и sum, taxes опциональны.
  */
-class TicketModifierValidator {
+internal class TicketModifierValidator {
     private val moneyValidator = MoneyValidator()
     private val taxValidator = TicketTaxValidator()
 

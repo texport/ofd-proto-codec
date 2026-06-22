@@ -18,7 +18,7 @@ import java.util.Base64
 /**
  * Десериализация ответов ОФД для протокола Казахтелеком 2.0.3.
  */
-class KazakhtelecomV203ResponseDeserializer : Deserializer {
+internal class KazakhtelecomV203ResponseDeserializer : Deserializer {
     /**
      * Десериализует proto Response в JSON-структуру.
      */

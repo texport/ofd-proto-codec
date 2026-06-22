@@ -12,7 +12,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums.Operat
  *
  * payments считается опциональным: если поле отсутствует в ответе, ошибки не формируются.
  */
-class ZXReportTicketOperationValidator {
+internal class ZXReportTicketOperationValidator {
     private val operationTypeValidator = OperationTypeEnumValidator()
     private val moneyValidator = MoneyValidator()
     private val paymentValidator = ZXReportTicketPaymentValidator()

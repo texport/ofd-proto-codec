@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.domain.model.ValidationError
 /**
  * Валидатор бизнес-логики для JSON-представления сообщений.
  */
-interface Validator {
+internal interface Validator {
     /**
      * Валидирует payload с учетом команды.
      */

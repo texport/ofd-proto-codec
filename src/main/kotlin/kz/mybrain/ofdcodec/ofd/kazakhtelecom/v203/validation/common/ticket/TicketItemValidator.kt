@@ -15,7 +15,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums.Ticket
  * Проверяет обязательность полей и соответствие структуре для каждого типа позиции:
  * commodity / stornoCommodity / markup / stornoMarkup / discount / stornoDiscount.
  */
-class TicketItemValidator {
+internal class TicketItemValidator {
     private val itemTypeValidator = TicketItemTypeEnumValidator()
     private val moneyValidator = MoneyValidator()
     private val taxValidator = TicketTaxValidator()

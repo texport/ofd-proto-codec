@@ -3,7 +3,7 @@ package kz.mybrain.ofdcodec.infrastructure.json
 /**
  * Ключи верхнего уровня для JSON-конверта.
  */
-object JsonKeys {
+internal object JsonKeys {
     const val OFD_ID = "ofdId"
     const val PROTOCOL_VERSION = "protocolVersion"
     const val MESSAGE_TYPE = "messageType"

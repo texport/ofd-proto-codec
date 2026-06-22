@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command.CommandRequestBu
 /**
  * Сериализация запросов ККМ для протокола Казахтелеком 2.0.3.
  */
-class KazakhtelecomV203RequestSerializer(
+internal class KazakhtelecomV203RequestSerializer(
     private val builders: Map<CommandType, CommandRequestBuilder>
 ) : Serializer {
     /**

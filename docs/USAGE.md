@@ -1,11 +1,11 @@
-# OFD Proto Codec: JSON API
+# OFD Proto Codec: JSON API / Спецификация JSON API
 
-Этот документ описывает JSON‑форматы для `encode` (REQUEST) и `decode` (RESPONSE).
-Все ошибки возвращаются сразу списком и содержат сообщения на русском и английском.
+This document describes the JSON formats for encode (REQUEST) and decode (RESPONSE). All validation errors are returned as a list and contain messages in Russian, Kazakh, and English.
+/ Этот документ описывает JSON‑форматы для encode (REQUEST) и decode (RESPONSE). Все ошибки возвращаются сразу списком и содержат сообщения на русском, казахском и английском языках.
 
-## Общий JSON‑конверт
+## Common JSON Envelope / Общий JSON‑конверт
 
-### Запрос (encode)
+### Request (encode) / Запрос (encode)
 ```json
 {
   "ofdId": "kazakhtelecom",
@@ -21,7 +21,7 @@
 }
 ```
 
-### Ответ (decode)
+### Response (decode) / Ответ (decode)
 ```json
 {
   "ofdId": "kazakhtelecom",
@@ -38,7 +38,7 @@
 }
 ```
 
-### Result (общий блок ответа)
+### Result (common response block) / Result (общий блок ответа)
 ```json
 {
   "result": {
@@ -54,32 +54,38 @@
 }
 ```
 
-### Важные правила
-- `protocolVersion` в формате `"203"`, без точек.
-- `messageType` всегда `REQUEST` для encode и `RESPONSE` для decode.
-- `header.size` и `messageBase64` возвращаются только из `encode`.
-- `appCode` **не передается** в JSON и **не возвращается** в JSON.
+### Important Rules / Важные правила
+- `protocolVersion` is in the `"203"` format, without dots. / `protocolVersion` в формате `"203"`, без точек.
+- `messageType` is always `REQUEST` for encode and `RESPONSE` for decode. / `messageType` всегда `REQUEST` для encode и `RESPONSE` для decode.
+- `header.size` and `messageBase64` are returned only from `encode`. / `header.size` и `messageBase64` возвращаются только из `encode`.
+- `appCode` is **not passed** in JSON and is **not returned** in JSON. / `appCode` **не передается** в JSON и **не возвращается** в JSON.
 
-## Токен и его смена
+## Token Rotation / Токен и его смена
 
-Токен меняется в ответе сервера. Новый токен берется из `header.token` ответа
-и используется в следующем запросе.
+The token is rotated in the server's response. The new token is taken from `header.token` of the response and must be used in the subsequent request.
+/ Токен меняется в ответе сервера. Новый токен берется из `header.token` ответа и используется в следующем запросе.
 
-Из известных команд, которые **меняют токен**:
+Known commands that **rotate the token**: / Из известных команд, которые **меняют токен**:
 - `COMMAND_TICKET`
 - `COMMAND_CLOSE_SHIFT`
 
-Если появятся другие команды с ротацией токена, их нужно добавить в этот список.
+If other commands with token rotation are introduced, they should be added here. / Если появятся другие команды с ротацией токена, их нужно добавить в этот список.
 
-## Правила валидации
+## Validation Rules / Правила валидации
 
-Библиотека валидирует **все** поля и возвращает **все** найденные ошибки одним списком.
+The library validates **all** fields and returns **all** found errors as a single list.
+To avoid validation errors:
+- satisfy all mandatory fields,
+- do not mismatch types (e.g. `string` instead of `number` and vice versa),
+- follow the numeric ranges (`uint32`, `uint64`) specified in the protocol.
+
+/ Библиотека валидирует **все** поля и возвращает **все** найденные ошибки одним списком.
 Чтобы избежать ошибок:
 - соблюдайте обязательные поля,
 - не путайте типы (`string` вместо `number` и наоборот),
 - следуйте диапазонам (`uint32`, `uint64`) из протокола.
 
-## Поддерживаемые команды (v203)
+## Supported Commands (v203) / Поддерживаемые команды (v203)
 
 - `COMMAND_AUTH`
 - `COMMAND_SYSTEM`
@@ -90,10 +96,10 @@
 - `COMMAND_TICKET`
 - `COMMAND_CLOSE_SHIFT`
 
-## Payload: структура по командам
+## Payload: Command-specific structures / Payload: структура по командам
 
-Ниже приведены **максимально возможные** JSON‑структуры. Любые поля, отмеченные
-как `optional`, можно не передавать.
+Below are the **maximum possible** JSON structures. Any fields marked as `optional` can be omitted.
+/ Ниже приведены **максимально возможные** JSON‑структуры. Любые поля, отмеченные как `optional`, можно не передавать.
 
 ### COMMAND_AUTH (Request)
 ```json
@@ -191,7 +197,7 @@
 }
 ```
 
-`currentVersion` и `barcode` — хотя бы одно поле должно быть задано.
+At least one of `currentVersion` or `barcode` must be provided. / `currentVersion` и `barcode` — хотя бы одно поле должно быть задано.
 
 ### COMMAND_NOMENCLATURE (Response)
 ```json
@@ -311,13 +317,13 @@
 }
 ```
 
-Ключевые правила для `COMMAND_TICKET`:
-- `items` обязателен и содержит минимум один элемент.
-- Для `ITEM_TYPE_COMMODITY` обязателен `name` или `code`.
-- `taxes` либо на уровне чека, либо на уровне позиций (взаимоисключающие).
-- Для `PAYMENT_CASH` обязательны `amounts.taken` и `amounts.change`.
-- `parentTicket` обязателен для `OPERATION_BUY_RETURN` и `OPERATION_SELL_RETURN`.
-- `domain` не используется и игнорируется библиотекой.
+Key rules for `COMMAND_TICKET`: / Ключевые правила для `COMMAND_TICKET`:
+- `items` is required and must contain at least one item. / `items` обязателен и содержит минимум один элемент.
+- For `ITEM_TYPE_COMMODITY`, `name` or `code` is required. / Для `ITEM_TYPE_COMMODITY` обязателен `name` или `code`.
+- `taxes` can be defined either at the ticket level or at the item level (mutually exclusive). / `taxes` либо на уровне чека, либо на уровне позиций (взаимоисключающие).
+- For `PAYMENT_CASH`, `amounts.taken` and `amounts.change` are required. / Для `PAYMENT_CASH` обязательны `amounts.taken` и `amounts.change`.
+- `parentTicket` is required for `OPERATION_BUY_RETURN` and `OPERATION_SELL_RETURN`. / `parentTicket` обязателен для `OPERATION_BUY_RETURN` и `OPERATION_SELL_RETURN`.
+- `domain` is not used and is ignored by the library. / `domain` не используется и игнорируется библиотекой.
 
 ### COMMAND_TICKET (Response)
 ```json
@@ -387,7 +393,7 @@
 }
 ```
 
-## Общие блоки
+## Common Blocks / Общие блоки
 
 ### Service (Request)
 ```json

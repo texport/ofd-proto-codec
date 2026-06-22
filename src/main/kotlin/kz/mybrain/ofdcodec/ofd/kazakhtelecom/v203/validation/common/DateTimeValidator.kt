@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидация DateTime/Date/Time для протокола Казахтелеком v203.
  */
-class DateTimeValidator {
+internal class DateTimeValidator {
     /**
      * Валидирует DateTime по ключу в контейнере.
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.

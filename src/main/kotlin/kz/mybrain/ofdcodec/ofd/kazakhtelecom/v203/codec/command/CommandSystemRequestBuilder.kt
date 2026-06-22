@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.service.ServiceRequestBu
  * Построение запроса COMMAND_SYSTEM.
  * На первом этапе заполняем только базовые поля ServiceRequest.
  */
-class CommandSystemRequestBuilder : CommandRequestBuilder {
+internal class CommandSystemRequestBuilder : CommandRequestBuilder {
     private val serviceRequestBuilder = ServiceRequestBuilder()
 
     /**

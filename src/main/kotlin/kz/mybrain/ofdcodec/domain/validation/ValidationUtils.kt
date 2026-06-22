@@ -13,7 +13,7 @@ import kz.mybrain.ofdcodec.domain.model.ValidationError
 /**
  * Общие проверки для бизнес-валидаций.
  */
-object ValidationUtils {
+internal object ValidationUtils {
 
     /**
      * Формирует ошибку отсутствующего поля.

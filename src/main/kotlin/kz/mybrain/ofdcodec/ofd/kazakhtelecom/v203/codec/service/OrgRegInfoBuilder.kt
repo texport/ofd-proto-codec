@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.infrastructure.json.readStringRequired
 /**
  * Сборщик proto OrgRegInfo из JSON-структуры.
  */
-class OrgRegInfoBuilder {
+internal class OrgRegInfoBuilder {
     /**
      * Строит OrgRegInfo из JSON-объекта.
      */

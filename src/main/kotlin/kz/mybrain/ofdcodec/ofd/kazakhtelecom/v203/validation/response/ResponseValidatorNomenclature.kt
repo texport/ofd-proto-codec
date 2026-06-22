@@ -15,7 +15,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidat
 /**
  * Валидатор ответа для COMMAND_NOMENCLATURE.
  */
-class ResponseValidatorNomenclature : Validator {
+internal class ResponseValidatorNomenclature : Validator {
     private val dateTimeValidator = DateTimeValidator()
     private val moneyValidator = MoneyValidator()
 

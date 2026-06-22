@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидация PosRegInfo для ответов ОФД Казахтелеком v203.
  */
-class PosRegInfoValidator {
+internal class PosRegInfoValidator {
     /**
      * Валидирует поля торговой точки в ответе сервера.
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.

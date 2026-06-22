@@ -3,7 +3,7 @@ package kz.mybrain.ofdcodec.infrastructure.util
 /**
  * Утилиты преобразования версии протокола между текстовым и числовым видом.
  */
-object ProtocolVersion {
+internal object ProtocolVersion {
     private val numericPattern = Regex("^\\d+$")
 
     /**
@@ -20,6 +20,6 @@ object ProtocolVersion {
     fun toNumericString(version: Int): String = version.toString()
 
     fun isValidNumericVersion(version: Int): Boolean {
-        return version >= 0
+        return version > 0
     }
 }

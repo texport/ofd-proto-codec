@@ -12,7 +12,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидатор ответа для COMMAND_AUTH.
  */
-class ResponseValidatorAuth : Validator {
+internal class ResponseValidatorAuth : Validator {
     /**
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.
      */

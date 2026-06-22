@@ -9,7 +9,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.enums.ReportTypeBuilder
 /**
  * Сборщик ReportRequest из JSON-структуры.
  */
-class ReportRequestBuilder {
+internal class ReportRequestBuilder {
     private val dateTimeBuilder = DateTimeBuilder()
     private val reportTypeBuilder = ReportTypeBuilder()
     private val zxReportBuilder = ZXReportBuilder()

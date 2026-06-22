@@ -14,7 +14,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response.service.Se
 /**
  * Валидатор ответа для COMMAND_CLOSE_SHIFT.
  */
-class ResponseValidatorCloseShift : Validator {
+internal class ResponseValidatorCloseShift : Validator {
     private val reportTypeValidator = ReportTypeEnumValidator()
     private val zxReportValidator = ZXReportValidator()
     private val serviceValidator = ServiceResponseValidator()

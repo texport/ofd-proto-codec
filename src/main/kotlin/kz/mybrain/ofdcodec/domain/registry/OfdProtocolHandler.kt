@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.domain.port.Validator
 /**
  * Набор обработчиков для конкретного ОФД и версии протокола.
  */
-data class OfdProtocolHandler(
+internal data class OfdProtocolHandler(
     val ofdId: String,
     val protocolVersion: String,
     val requestValidator: Validator,

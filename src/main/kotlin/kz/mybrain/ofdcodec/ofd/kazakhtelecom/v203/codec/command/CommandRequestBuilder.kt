@@ -6,7 +6,7 @@ import kz.kazakhtelecom.proto.v203.Message
 /**
  * Построение payload для конкретной команды в виде proto Request.
  */
-fun interface CommandRequestBuilder {
+internal fun interface CommandRequestBuilder {
     /**
      * Строит proto Request на основе JSON payload.
      */

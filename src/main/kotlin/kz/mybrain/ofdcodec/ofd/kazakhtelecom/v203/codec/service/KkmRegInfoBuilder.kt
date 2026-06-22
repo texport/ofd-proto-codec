@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.infrastructure.json.readStringRequired
 /**
  * Сборщик proto KkmRegInfo из JSON-структуры.
  */
-class KkmRegInfoBuilder {
+internal class KkmRegInfoBuilder {
     /**
      * Строит KkmRegInfo из JSON-объекта.
      */

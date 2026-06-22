@@ -10,7 +10,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response.service.Se
 /**
  * Валидатор ответа для COMMAND_INFO.
  */
-class ResponseValidatorInfo : Validator {
+internal class ResponseValidatorInfo : Validator {
     private val serviceValidator = ServiceResponseValidator()
 
     /**

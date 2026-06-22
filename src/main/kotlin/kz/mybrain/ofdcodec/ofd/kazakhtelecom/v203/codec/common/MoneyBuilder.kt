@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.infrastructure.json.readLongRequired
 /**
  * Сборщик Money из JSON-структуры.
  */
-class MoneyBuilder {
+internal class MoneyBuilder {
     /**
      * Строит Money из JSON-объекта.
      */

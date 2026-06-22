@@ -17,7 +17,7 @@ import java.util.zip.CRC32
 /**
  * Сборщик ZXReport из JSON-структуры.
  */
-class ZXReportBuilder {
+internal class ZXReportBuilder {
     private val dateTimeBuilder = DateTimeBuilder()
     private val moneyBuilder = MoneyBuilder()
     private val operationTypeBuilder = OperationTypeBuilder()

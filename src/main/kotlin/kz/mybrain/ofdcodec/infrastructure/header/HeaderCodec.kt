@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.domain.model.MessageHeader
 import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.infrastructure.util.ProtocolVersion
 
-object HeaderCodec {
+internal object HeaderCodec {
     /**
      * Читает заголовок сообщения (little-endian).
      */

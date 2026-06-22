@@ -9,7 +9,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.service.ServiceRequestBu
 /**
  * Сборщик Request для COMMAND_AUTH.
  */
-class CommandAuthRequestBuilder : CommandRequestBuilder {
+internal class CommandAuthRequestBuilder : CommandRequestBuilder {
     private val serviceRequestBuilder = ServiceRequestBuilder()
 
     /**

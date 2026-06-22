@@ -6,7 +6,7 @@ import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kz.kazakhtelecom.proto.v203.Report
 
-object KazakhtelecomV203ReportDeserializerHelper {
+internal object KazakhtelecomV203ReportDeserializerHelper {
 
     fun buildReportResponse(report: Report.ReportResponse): JsonObject {
         return buildJsonObject {

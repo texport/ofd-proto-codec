@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.infrastructure.json.readString
 /**
  * Чтение ItemTypeEnum для TicketRequest.Item из JSON.
  */
-class TicketItemTypeBuilder {
+internal class TicketItemTypeBuilder {
     /**
      * Читает ItemTypeEnum по ключу и возвращает его значение.
      */

@@ -15,7 +15,7 @@ data class MessageHeader(
 /**
  * Константы заголовка.
  */
-object HeaderConstants {
+internal object HeaderConstants {
     const val APPCODE = 0x81A2
     const val HEADER_SIZE = 18
 }

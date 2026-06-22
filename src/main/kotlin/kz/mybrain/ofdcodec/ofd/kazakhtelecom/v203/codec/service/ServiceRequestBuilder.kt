@@ -9,7 +9,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common.DateTimeBuilder
 /**
  * Построение ServiceRequest для команд, где он обязателен или допускается.
  */
-class ServiceRequestBuilder {
+internal class ServiceRequestBuilder {
     private val dateTimeBuilder = DateTimeBuilder()
     private val kkmRegInfoBuilder = KkmRegInfoBuilder()
     private val orgRegInfoBuilder = OrgRegInfoBuilder()

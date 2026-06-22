@@ -15,7 +15,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request.service.Ser
 /**
  * Валидатор запроса для COMMAND_REPORT.
  */
-class RequestValidatorReport : Validator {
+internal class RequestValidatorReport : Validator {
     private val serviceValidator = ServiceRequestValidator()
     private val reportTypeValidator = ReportTypeEnumValidator()
     private val zxReportValidator = ZXReportValidator()

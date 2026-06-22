@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.infrastructure.json.readStringRequired
 /**
  * Сборщик proto SecurityStats из JSON-структуры.
  */
-class SecurityStatsBuilder {
+internal class SecurityStatsBuilder {
     /**
      * Строит SecurityStats из JSON-объекта.
      */

@@ -10,7 +10,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response.service.Se
 /**
  * Валидатор ответа для COMMAND_MONEY_PLACEMENT.
  */
-class ResponseValidatorMoneyPlacement : Validator {
+internal class ResponseValidatorMoneyPlacement : Validator {
     /**
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.
      * В ответе обязателен result, service валидируется при наличии.

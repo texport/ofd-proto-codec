@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.infrastructure.json.readString
 /**
  * Сборщик Operator из JSON-структуры.
  */
-class OperatorBuilder {
+internal class OperatorBuilder {
     /**
      * Строит Operator из JSON-объекта.
      */

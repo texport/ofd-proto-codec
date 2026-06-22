@@ -31,7 +31,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request.service.Ser
  * - parentTicket обязателен для возвратов (BUY_RETURN/SELL_RETURN);
  * - domain игнорируется (в v203 не используется).
  */
-class RequestValidatorTicket : Validator {
+internal class RequestValidatorTicket : Validator {
     private val serviceValidator = ServiceRequestValidator()
     private val operationTypeValidator = OperationTypeEnumValidator()
     private val dateTimeValidator = DateTimeValidator()

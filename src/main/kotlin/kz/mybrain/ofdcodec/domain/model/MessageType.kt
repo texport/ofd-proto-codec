@@ -3,7 +3,7 @@ package kz.mybrain.ofdcodec.domain.model
 /**
  * Тип сообщения в протоколе.
  */
-enum class MessageType {
+internal enum class MessageType {
     REQUEST,
     RESPONSE
 }

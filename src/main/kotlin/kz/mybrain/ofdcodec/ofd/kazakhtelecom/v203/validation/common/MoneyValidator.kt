@@ -9,7 +9,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
  *
  * Оба поля обязательны: bills (uint64) и coins (uint32).
  */
-class MoneyValidator {
+internal class MoneyValidator {
     /**
      * Валидирует Money по ключу в контейнере.
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.

@@ -9,7 +9,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidat
 /**
  * Валидация ZXReport для протокола Казахтелеком v203.
  */
-class ZXReportValidator {
+internal class ZXReportValidator {
     private val dateTimeValidator = DateTimeValidator()
     private val moneyValidator = MoneyValidator()
     private val revenueValidator = ZXReportRevenueValidator()

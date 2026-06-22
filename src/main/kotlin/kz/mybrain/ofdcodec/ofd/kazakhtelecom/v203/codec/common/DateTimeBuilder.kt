@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.infrastructure.json.readIntRequired
 /**
  * Сборщик proto DateTime из JSON-структуры.
  */
-class DateTimeBuilder {
+internal class DateTimeBuilder {
     /**
      * Строит DateTime по ключу в JSON-объекте.
      */

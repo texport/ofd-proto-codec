@@ -3,7 +3,7 @@ package kz.mybrain.ofdcodec.domain.model
 /**
  * Формирует ошибки с подстановкой параметров в шаблоны RU/EN.
  */
-object ErrorFactory {
+internal object ErrorFactory {
     fun error(code: ErrorCode, path: String, params: Map<String, String> = emptyMap()): ValidationError {
         val ru = format(code.ru, params)
         val kk = format(code.kk, params)

@@ -12,7 +12,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums.Paymen
  * Обязательные поля: type и sum.
  * cardPaymentFields и mobilePaymentFields опциональны.
  */
-class TicketPaymentValidator {
+internal class TicketPaymentValidator {
     private val paymentTypeValidator = PaymentTypeEnumValidator()
     private val moneyValidator = MoneyValidator()
 

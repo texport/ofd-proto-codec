@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидация SecurityStats и GeoPosition для протокола Казахтелеком v203.
  */
-class SecurityStatsValidator {
+internal class SecurityStatsValidator {
     /**
      * Валидирует securityStats и вложенную geoPosition.
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.

@@ -15,7 +15,7 @@ import kz.mybrain.ofdcodec.infrastructure.util.ProtocolVersion
 /**
  * Поля заголовка, полученные из JSON-конверта.
  */
-data class HeaderFields(
+internal data class HeaderFields(
     val deviceId: Long,
     val token: Long,
     val reqNum: Int,
@@ -25,7 +25,7 @@ data class HeaderFields(
 /**
  * Результат разбора входного JSON-конверта.
  */
-data class ParsedEnvelope(
+internal data class ParsedEnvelope(
     val ofdId: String,
     val protocolVersionText: String,
     val protocolVersion: Int,
@@ -47,7 +47,7 @@ data class ParsedEnvelope(
  *
  * Поле header.size не требуется при кодировании, вычисляется автоматически.
  */
-object JsonMessageMapper {
+internal object JsonMessageMapper {
     fun parseEnvelope(
         json: JsonElement
     ): Pair<ParsedEnvelope?, List<ValidationError>> {

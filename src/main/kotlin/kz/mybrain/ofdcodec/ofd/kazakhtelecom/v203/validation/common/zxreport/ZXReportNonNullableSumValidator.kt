@@ -10,7 +10,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums.Operat
 /**
  * Валидация NonNullableSum внутри ZXReport.
  */
-class ZXReportNonNullableSumValidator {
+internal class ZXReportNonNullableSumValidator {
     private val operationTypeValidator = OperationTypeEnumValidator()
     private val moneyValidator = MoneyValidator()
 

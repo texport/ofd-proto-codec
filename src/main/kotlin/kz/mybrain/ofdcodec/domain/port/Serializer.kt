@@ -6,7 +6,7 @@ import kz.mybrain.ofdcodec.domain.model.CommandType
 /**
  * Сериализация JSON в бинарный payload согласно proto-библиотеке ОФД.
  */
-interface Serializer {
+internal interface Serializer {
     /**
      * Сериализует payload с учетом команды.
      */

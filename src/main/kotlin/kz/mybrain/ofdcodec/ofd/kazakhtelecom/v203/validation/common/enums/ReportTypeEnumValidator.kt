@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидация ReportTypeEnum для протокола Казахтелеком v203.
  */
-class ReportTypeEnumValidator {
+internal class ReportTypeEnumValidator {
     /**
      * Валидирует enum по ключу в контейнере.
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.

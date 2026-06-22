@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидация KkmRegInfo для протокола Казахтелеком v203.
  */
-class KkmRegInfoValidator {
+internal class KkmRegInfoValidator {
     /**
      * Валидирует обязательные и опциональные поля KkmRegInfo.
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.

@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.service.ServiceRequestBu
 /**
  * Построение запроса COMMAND_MONEY_PLACEMENT.
  */
-class CommandMoneyPlacementRequestBuilder : CommandRequestBuilder {
+internal class CommandMoneyPlacementRequestBuilder : CommandRequestBuilder {
     private val serviceRequestBuilder = ServiceRequestBuilder()
     private val moneyPlacementRequestBuilder = MoneyPlacementRequestBuilder()
 

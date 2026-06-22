@@ -10,7 +10,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums.Operat
 /**
  * Валидация TaxOperation внутри ZXReport.Tax.
  */
-class ZXReportTaxOperationValidator {
+internal class ZXReportTaxOperationValidator {
     private val operationTypeValidator = OperationTypeEnumValidator()
     private val moneyValidator = MoneyValidator()
 

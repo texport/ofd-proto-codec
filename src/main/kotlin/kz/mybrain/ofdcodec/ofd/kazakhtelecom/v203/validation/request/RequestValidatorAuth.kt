@@ -10,7 +10,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request.service.Ser
 /**
  * Валидатор запроса для COMMAND_AUTH.
  */
-class RequestValidatorAuth : Validator {
+internal class RequestValidatorAuth : Validator {
     private val serviceValidator = ServiceRequestValidator()
 
     /**

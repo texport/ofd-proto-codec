@@ -15,7 +15,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response.service.Se
  * Требует result.resultCode, а при успешном результате — блок ticket
  * с номером чека и опциональным QR.
  */
-class ResponseValidatorTicket : Validator {
+internal class ResponseValidatorTicket : Validator {
     private val serviceValidator = ServiceResponseValidator()
 
     /**

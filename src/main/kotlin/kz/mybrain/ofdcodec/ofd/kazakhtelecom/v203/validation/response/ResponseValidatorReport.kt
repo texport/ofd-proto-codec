@@ -13,7 +13,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.zxreport.ZXR
 /**
  * Валидатор ответа для COMMAND_REPORT.
  */
-class ResponseValidatorReport : Validator {
+internal class ResponseValidatorReport : Validator {
     private val reportTypeValidator = ReportTypeEnumValidator()
     private val zxReportValidator = ZXReportValidator()
 

@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.infrastructure.json.readString
 /**
  * Чтение OperationTypeEnum из JSON.
  */
-class OperationTypeBuilder {
+internal class OperationTypeBuilder {
     /**
      * Читает OperationTypeEnum по ключу и возвращает его значение.
      */

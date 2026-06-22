@@ -14,7 +14,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidat
  * Используется для операций возврата. Все поля обязательны,
  * если parentTicket присутствует в JSON.
  */
-class TicketParentTicketValidator {
+internal class TicketParentTicketValidator {
     private val dateTimeValidator = DateTimeValidator()
     private val moneyValidator = MoneyValidator()
 

@@ -9,7 +9,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
  *
  * Все поля опциональны и проверяются только на корректный тип/непустую строку.
  */
-class TicketExtensionOptionsValidator {
+internal class TicketExtensionOptionsValidator {
     /**
      * Валидирует ExtensionOptions по ключу в контейнере.
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.

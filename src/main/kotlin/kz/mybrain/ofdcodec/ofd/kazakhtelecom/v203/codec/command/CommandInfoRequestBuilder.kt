@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.service.ServiceRequestBu
  * Построение запроса COMMAND_INFO.
  * Использует ServiceRequest с обязательными служебными данными.
  */
-class CommandInfoRequestBuilder : CommandRequestBuilder {
+internal class CommandInfoRequestBuilder : CommandRequestBuilder {
     private val serviceRequestBuilder = ServiceRequestBuilder()
 
     /**

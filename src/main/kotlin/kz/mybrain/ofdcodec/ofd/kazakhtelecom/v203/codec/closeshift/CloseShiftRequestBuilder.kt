@@ -12,7 +12,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.report.ZXReportBuilder
 /**
  * Сборщик CloseShiftRequest из JSON-структуры.
  */
-class CloseShiftRequestBuilder {
+internal class CloseShiftRequestBuilder {
     private val dateTimeBuilder = DateTimeBuilder()
     private val zxReportBuilder = ZXReportBuilder()
     private val operatorBuilder = OperatorBuilder()
@@ -32,12 +32,16 @@ class CloseShiftRequestBuilder {
         closeShiftJson.readBool("withdrawMoney")?.let { builder.setWithdrawMoney(it) }
         closeShiftJson.readLong("printedDocumentNumber")?.let { builder.setPrintedDocumentNumber(it) }
 
-        val zxReportJson = closeShiftJson["zReport"] as? JsonObject
-            ?: throw IllegalArgumentException("Missing zReport / Отсутствует zReport / zReport өрісі жетіспейді")
+        val zxReportJson = closeShiftJson["zReport"]
+        if (zxReportJson !is JsonObject) {
+            throw IllegalArgumentException("Missing zReport / Отсутствует zReport / zReport өрісі жетіспейді")
+        }
         builder.setZReport(zxReportBuilder.build(zxReportJson))
 
-        val operatorJson = closeShiftJson["operator"] as? JsonObject
-            ?: throw IllegalArgumentException("Missing operator / Отсутствует operator / operator өрісі жетіспейді")
+        val operatorJson = closeShiftJson["operator"]
+        if (operatorJson !is JsonObject) {
+            throw IllegalArgumentException("Missing operator / Отсутствует operator / operator өрісі жетіспейді")
+        }
         builder.setOperator(operatorBuilder.build(operatorJson))
 
         return builder.build()

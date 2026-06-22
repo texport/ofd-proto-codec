@@ -10,7 +10,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.request.service.Ser
 /**
  * Валидатор запроса для COMMAND_INFO.
  */
-class RequestValidatorInfo : Validator {
+internal class RequestValidatorInfo : Validator {
     /**
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.
      * В COMMAND_INFO обязательна служебная часть service.

@@ -3,7 +3,7 @@ package kz.mybrain.ofdcodec.domain.model
 /**
  * Команды протокола обмена ККМ ↔ ОФД.
  */
-enum class CommandType(val code: Int, val title: String) {
+internal enum class CommandType(val code: Int, val title: String) {
     COMMAND_SYSTEM(0, "Системный обмен"),
     COMMAND_TICKET(1, "Фискализация"),
     COMMAND_CLOSE_SHIFT(2, "Закрытие смены"),

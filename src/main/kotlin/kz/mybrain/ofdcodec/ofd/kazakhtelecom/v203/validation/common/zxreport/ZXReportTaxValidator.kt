@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидация Tax внутри ZXReport.
  */
-class ZXReportTaxValidator {
+internal class ZXReportTaxValidator {
     private val taxOperationValidator = ZXReportTaxOperationValidator()
 
     /**

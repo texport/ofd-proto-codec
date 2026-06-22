@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.domain.port.Validator
 /**
  * Валидатор запроса для COMMAND_RESERVED.
  */
-class RequestValidatorReserved : Validator {
+internal class RequestValidatorReserved : Validator {
     /**
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.
      * Пока проверок нет, возвращается пустой список ошибок.

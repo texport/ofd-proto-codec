@@ -13,7 +13,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common.OperatorBuilder
 /**
  * Сборщик MoneyPlacementRequest из JSON-структуры.
  */
-class MoneyPlacementRequestBuilder {
+internal class MoneyPlacementRequestBuilder {
     private val dateTimeBuilder = DateTimeBuilder()
     private val moneyBuilder = MoneyBuilder()
     private val operatorBuilder = OperatorBuilder()

@@ -10,7 +10,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.enums.Paymen
 /**
  * Валидация Payment внутри TicketOperation.
  */
-class ZXReportTicketPaymentValidator {
+internal class ZXReportTicketPaymentValidator {
     private val paymentTypeValidator = PaymentTypeEnumValidator()
     private val moneyValidator = MoneyValidator()
 

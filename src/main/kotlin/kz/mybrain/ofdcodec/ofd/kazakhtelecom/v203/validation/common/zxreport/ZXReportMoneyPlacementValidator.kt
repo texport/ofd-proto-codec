@@ -9,7 +9,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidat
 /**
  * Валидация MoneyPlacement внутри ZXReport.
  */
-class ZXReportMoneyPlacementValidator {
+internal class ZXReportMoneyPlacementValidator {
     private val moneyValidator = MoneyValidator()
 
     /**

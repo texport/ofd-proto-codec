@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидация Section внутри ZXReport.
  */
-class ZXReportSectionValidator {
+internal class ZXReportSectionValidator {
     private val operationValidator = ZXReportOperationValidator()
 
     /**

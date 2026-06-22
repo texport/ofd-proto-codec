@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидация PaymentTypeEnum для протокола Казахтелеком v203.
  */
-class PaymentTypeEnumValidator {
+internal class PaymentTypeEnumValidator {
     /**
      * Валидирует enum по ключу в контейнере.
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.

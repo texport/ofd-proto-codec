@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.nmcp)
     id("maven-publish")
     id("signing")
+    id("jacoco")
 }
 
 group = "io.github.texport"
@@ -36,6 +37,15 @@ tasks.test {
     useJUnitPlatform()
     testLogging {
         showStandardStreams = true
+    }
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
     }
 }
 
@@ -92,7 +102,6 @@ publishing {
     }
 }
 
-
 signing {
     val signingKey = System.getenv("SIGNING_KEY")
     val signingPassword = System.getenv("SIGNING_PASSWORD")
@@ -109,5 +118,3 @@ nmcp {
         publishingType.set("USER_MANAGED")
     }
 }
-
-

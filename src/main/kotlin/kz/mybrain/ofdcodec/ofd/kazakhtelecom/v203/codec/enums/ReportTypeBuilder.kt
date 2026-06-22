@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.infrastructure.json.readString
 /**
  * Чтение ReportTypeEnum из JSON.
  */
-class ReportTypeBuilder {
+internal class ReportTypeBuilder {
     /**
      * Читает ReportTypeEnum по ключу и возвращает его значение.
      */

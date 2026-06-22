@@ -10,7 +10,7 @@ import kz.mybrain.ofdcodec.domain.port.Validator
 /**
  * Диспетчер валидаторов по типу команды.
  */
-class CommandValidatorRegistry(
+internal class CommandValidatorRegistry(
     private val validators: Map<CommandType, Validator>
 ) : Validator {
     /**

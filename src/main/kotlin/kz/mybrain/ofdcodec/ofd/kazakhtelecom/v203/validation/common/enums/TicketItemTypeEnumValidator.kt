@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 /**
  * Валидация ItemTypeEnum для TicketRequest.Item.
  */
-class TicketItemTypeEnumValidator {
+internal class TicketItemTypeEnumValidator {
     /**
      * Валидирует enum по ключу в контейнере.
      * Проверяет JSON и собирает все ошибки по полям без остановки на первой.

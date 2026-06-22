@@ -28,7 +28,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.enums.TicketItemTypeBuil
  * Ожидает в payload объект "ticket" и строит protobuf TicketRequest.
  * Domain намеренно игнорируется, так как в протоколе v203 этот блок не используется.
  */
-class TicketRequestBuilder {
+internal class TicketRequestBuilder {
     private val dateTimeBuilder = DateTimeBuilder()
     private val moneyBuilder = MoneyBuilder()
     private val operatorBuilder = OperatorBuilder()
