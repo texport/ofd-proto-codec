@@ -33,15 +33,11 @@ internal class CloseShiftRequestBuilder {
         closeShiftJson.readLong("printedDocumentNumber")?.let { builder.setPrintedDocumentNumber(it) }
 
         val zxReportJson = closeShiftJson["zReport"]
-        if (zxReportJson !is JsonObject) {
-            throw IllegalArgumentException("Missing zReport / Отсутствует zReport / zReport өрісі жетіспейді")
-        }
+        require(zxReportJson is JsonObject) { "Missing zReport / Отсутствует zReport / zReport өрісі жетіспейді" }
         builder.setZReport(zxReportBuilder.build(zxReportJson))
 
         val operatorJson = closeShiftJson["operator"]
-        if (operatorJson !is JsonObject) {
-            throw IllegalArgumentException("Missing operator / Отсутствует operator / operator өрісі жетіспейді")
-        }
+        require(operatorJson is JsonObject) { "Missing operator / Отсутствует operator / operator өрісі жетіспейді" }
         builder.setOperator(operatorBuilder.build(operatorJson))
 
         return builder.build()

@@ -155,7 +155,13 @@ class AdditionalCoverageTest {
             put("nullVal", JsonNull)
             put("arr", buildJsonArray { add(1) })
             put("obj", buildJsonObject {})
-            put("objList", buildJsonArray { add(buildJsonObject { put("x", 1) }); add(123) })
+            put(
+                "objList",
+                buildJsonArray {
+                    add(buildJsonObject { put("x", 1) })
+                    add(123)
+                }
+            )
         }
 
         // Test fallback paths (returning null or throwing)
@@ -208,11 +214,14 @@ class AdditionalCoverageTest {
             put("protocolVersion", "203")
             put("messageType", "INVALID_TYPE")
             put("commandType", "COMMAND_TICKET")
-            put("header", buildJsonObject {
-                put("deviceId", 123)
-                put("token", 456)
-                put("reqNum", 1)
-            })
+            put(
+                "header",
+                buildJsonObject {
+                    put("deviceId", 123)
+                    put("token", 456)
+                    put("reqNum", 1)
+                }
+            )
             put("payload", buildJsonObject {})
         }
         val (_, errs1) = JsonMessageMapper.parseEnvelope(badMsgType)
@@ -224,11 +233,14 @@ class AdditionalCoverageTest {
             put("protocolVersion", "203")
             put("messageType", "REQUEST")
             put("commandType", "COMMAND_UNKNOWN_STUFF")
-            put("header", buildJsonObject {
-                put("deviceId", 123)
-                put("token", 456)
-                put("reqNum", 1)
-            })
+            put(
+                "header",
+                buildJsonObject {
+                    put("deviceId", 123)
+                    put("token", 456)
+                    put("reqNum", 1)
+                }
+            )
             put("payload", buildJsonObject {})
         }
         val (_, errs2) = JsonMessageMapper.parseEnvelope(badCmdType)
@@ -240,11 +252,14 @@ class AdditionalCoverageTest {
             put("protocolVersion", "203")
             put("messageType", "REQUEST")
             put("commandType", "COMMAND_TICKET")
-            put("header", buildJsonObject {
-                put("deviceId", 123)
-                put("token", 456)
-                put("reqNum", 1)
-            })
+            put(
+                "header",
+                buildJsonObject {
+                    put("deviceId", 123)
+                    put("token", 456)
+                    put("reqNum", 1)
+                }
+            )
             put("payload", 123)
         }
         val (_, errs3) = JsonMessageMapper.parseEnvelope(badPayloadType)
@@ -256,11 +271,14 @@ class AdditionalCoverageTest {
             put("protocolVersion", "203")
             put("messageType", "REQUEST")
             put("commandType", "COMMAND_TICKET")
-            put("header", buildJsonObject {
-                put("deviceId", 123)
-                put("token", 456)
-                put("reqNum", 1)
-            })
+            put(
+                "header",
+                buildJsonObject {
+                    put("deviceId", 123)
+                    put("token", 456)
+                    put("reqNum", 1)
+                }
+            )
             put("payload", buildJsonObject {})
         }
         val (_, errs4) = JsonMessageMapper.parseEnvelope(badOfdIdType)
@@ -272,11 +290,14 @@ class AdditionalCoverageTest {
             put("protocolVersion", "203")
             put("messageType", "REQUEST")
             put("commandType", "COMMAND_TICKET")
-            put("header", buildJsonObject {
-                put("deviceId", buildJsonObject {})
-                put("token", 456)
-                put("reqNum", 1)
-            })
+            put(
+                "header",
+                buildJsonObject {
+                    put("deviceId", buildJsonObject {})
+                    put("token", 456)
+                    put("reqNum", 1)
+                }
+            )
             put("payload", buildJsonObject {})
         }
         val (_, errs5) = JsonMessageMapper.parseEnvelope(badDeviceIdVal)
@@ -290,29 +311,51 @@ class AdditionalCoverageTest {
         // 1. Missing cardPaymentFields and mobilePaymentFields invalid type
         val p1 = buildJsonObject {
             put("type", "PAYMENT_CARD")
-            put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
+            put(
+                "sum",
+                buildJsonObject {
+                    put("bills", 100)
+                    put("coins", 0)
+                }
+            )
             put("cardPaymentFields", 123)
             put("mobilePaymentFields", "invalid")
         }
         val errs1 = validator.validateObject(p1, "$.payment")
-        assertTrue(errs1.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payment.cardPaymentFields" })
-        assertTrue(errs1.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payment.mobilePaymentFields" })
+        assertTrue(
+            errs1.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payment.cardPaymentFields" }
+        )
+        assertTrue(
+            errs1.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payment.mobilePaymentFields" }
+        )
 
         // 2. Valid cardPaymentFields and mobilePaymentFields, testing positive ranges
         val p2 = buildJsonObject {
             put("type", "PAYMENT_CARD")
-            put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-            put("cardPaymentFields", buildJsonObject {
-                put("posTerminalId", "TERM123")
-                put("posCardType", "VISA")
-                put("posAutorizationCode", 123456)
-                put("posRrn", 99999999999L)
-                put("posReceiptNumber", 12)
-            })
-            put("mobilePaymentFields", buildJsonObject {
-                put("qrType", "QR1")
-                put("qrId", "QRID123")
-            })
+            put(
+                "sum",
+                buildJsonObject {
+                    put("bills", 100)
+                    put("coins", 0)
+                }
+            )
+            put(
+                "cardPaymentFields",
+                buildJsonObject {
+                    put("posTerminalId", "TERM123")
+                    put("posCardType", "VISA")
+                    put("posAutorizationCode", 123456)
+                    put("posRrn", 99999999999L)
+                    put("posReceiptNumber", 12)
+                }
+            )
+            put(
+                "mobilePaymentFields",
+                buildJsonObject {
+                    put("qrType", "QR1")
+                    put("qrId", "QRID123")
+                }
+            )
         }
         val errs2 = validator.validateObject(p2, "$.payment")
         assertTrue(errs2.isEmpty())
@@ -320,14 +363,23 @@ class AdditionalCoverageTest {
         // 3. Testing negative/invalid ranges inside cardPaymentFields
         val p3 = buildJsonObject {
             put("type", "PAYMENT_CARD")
-            put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-            put("cardPaymentFields", buildJsonObject {
-                put("posTerminalId", " ")
-                put("posCardType", "")
-                put("posAutorizationCode", -1)
-                put("posRrn", -1L)
-                put("posReceiptNumber", -5)
-            })
+            put(
+                "sum",
+                buildJsonObject {
+                    put("bills", 100)
+                    put("coins", 0)
+                }
+            )
+            put(
+                "cardPaymentFields",
+                buildJsonObject {
+                    put("posTerminalId", " ")
+                    put("posCardType", "")
+                    put("posAutorizationCode", -1)
+                    put("posRrn", -1L)
+                    put("posReceiptNumber", -5)
+                }
+            )
         }
         val errs3 = validator.validateObject(p3, "$.payment")
         assertTrue(errs3.size >= 5)
@@ -344,13 +396,28 @@ class AdditionalCoverageTest {
         // 1. Missing name and code for commodity
         val item1 = buildJsonObject {
             put("type", "ITEM_TYPE_COMMODITY")
-            put("commodity", buildJsonObject {
-                put("sectionCode", "1")
-                put("quantity", 1)
-                put("price", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("measureUnitCode", "796")
-            })
+            put(
+                "commodity",
+                buildJsonObject {
+                    put("sectionCode", "1")
+                    put("quantity", 1)
+                    put(
+                        "price",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("measureUnitCode", "796")
+                }
+            )
         }
         val errs1 = validator.validate(item1, "$.item")
         assertTrue(errs1.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.item.commodity.code" })
@@ -358,14 +425,29 @@ class AdditionalCoverageTest {
         // 2. Blank name for commodity
         val item2 = buildJsonObject {
             put("type", "ITEM_TYPE_COMMODITY")
-            put("commodity", buildJsonObject {
-                put("name", "   ")
-                put("sectionCode", "1")
-                put("quantity", 1)
-                put("price", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("measureUnitCode", "796")
-            })
+            put(
+                "commodity",
+                buildJsonObject {
+                    put("name", "   ")
+                    put("sectionCode", "1")
+                    put("quantity", 1)
+                    put(
+                        "price",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("measureUnitCode", "796")
+                }
+            )
         }
         val errs2 = validator.validate(item2, "$.item")
         assertTrue(errs2.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.item.commodity.name" })
@@ -373,17 +455,34 @@ class AdditionalCoverageTest {
         // 3. Storno commodity validation path
         val item3 = buildJsonObject {
             put("type", "ITEM_TYPE_STORNO_COMMODITY")
-            put("stornoCommodity", buildJsonObject {
-                put("name", "   ")
-                put("sectionCode", "1")
-                put("quantity", 1)
-                put("price", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("measureUnitCode", "796")
-            })
+            put(
+                "stornoCommodity",
+                buildJsonObject {
+                    put("name", "   ")
+                    put("sectionCode", "1")
+                    put("quantity", 1)
+                    put(
+                        "price",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("measureUnitCode", "796")
+                }
+            )
         }
         val errs3 = validator.validate(item3, "$.item")
-        assertTrue(errs3.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.item.stornoCommodity.name" })
+        assertTrue(
+            errs3.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.item.stornoCommodity.name" }
+        )
 
         // 4. Storno commodity missing block
         val item4 = buildJsonObject {
@@ -395,40 +494,76 @@ class AdditionalCoverageTest {
         // 5. Modifier items (markup, discount, stornoMarkup, stornoDiscount)
         val item5 = buildJsonObject {
             put("type", "ITEM_TYPE_MARKUP")
-            put("markup", buildJsonObject {
-                put("name", "Extra")
-                put("sum", buildJsonObject { put("bills", 10L); put("coins", 0) })
-            })
+            put(
+                "markup",
+                buildJsonObject {
+                    put("name", "Extra")
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 10L)
+                            put("coins", 0)
+                        }
+                    )
+                }
+            )
         }
         val errs5 = validator.validate(item5, "$.item")
         assertTrue(errs5.isEmpty())
 
         val item6 = buildJsonObject {
             put("type", "ITEM_TYPE_STORNO_MARKUP")
-            put("stornoMarkup", buildJsonObject {
-                put("name", "Extra")
-                put("sum", buildJsonObject { put("bills", 10L); put("coins", 0) })
-            })
+            put(
+                "stornoMarkup",
+                buildJsonObject {
+                    put("name", "Extra")
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 10L)
+                            put("coins", 0)
+                        }
+                    )
+                }
+            )
         }
         val errs6 = validator.validate(item6, "$.item")
         assertTrue(errs6.isEmpty())
 
         val item7 = buildJsonObject {
             put("type", "ITEM_TYPE_DISCOUNT")
-            put("discount", buildJsonObject {
-                put("name", "Sale")
-                put("sum", buildJsonObject { put("bills", 10L); put("coins", 0) })
-            })
+            put(
+                "discount",
+                buildJsonObject {
+                    put("name", "Sale")
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 10L)
+                            put("coins", 0)
+                        }
+                    )
+                }
+            )
         }
         val errs7 = validator.validate(item7, "$.item")
         assertTrue(errs7.isEmpty())
 
         val item8 = buildJsonObject {
             put("type", "ITEM_TYPE_STORNO_DISCOUNT")
-            put("stornoDiscount", buildJsonObject {
-                put("name", "Sale")
-                put("sum", buildJsonObject { put("bills", 10L); put("coins", 0) })
-            })
+            put(
+                "stornoDiscount",
+                buildJsonObject {
+                    put("name", "Sale")
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 10L)
+                            put("coins", 0)
+                        }
+                    )
+                }
+            )
         }
         val errs8 = validator.validate(item8, "$.item")
         assertTrue(errs8.isEmpty())
@@ -436,33 +571,88 @@ class AdditionalCoverageTest {
         // 6. Commodity taxes invalid type and duplicates
         val item9 = buildJsonObject {
             put("type", "ITEM_TYPE_COMMODITY")
-            put("commodity", buildJsonObject {
-                put("name", "Item")
-                put("sectionCode", "1")
-                put("quantity", 1)
-                put("price", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("measureUnitCode", "796")
-                put("taxes", 123)
-            })
+            put(
+                "commodity",
+                buildJsonObject {
+                    put("name", "Item")
+                    put("sectionCode", "1")
+                    put("quantity", 1)
+                    put(
+                        "price",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("measureUnitCode", "796")
+                    put("taxes", 123)
+                }
+            )
         }
         val errs9 = validator.validate(item9, "$.item")
         assertTrue(errs9.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.item.commodity.taxes" })
 
         val item10 = buildJsonObject {
             put("type", "ITEM_TYPE_COMMODITY")
-            put("commodity", buildJsonObject {
-                put("name", "Item")
-                put("sectionCode", "1")
-                put("quantity", 1)
-                put("price", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("measureUnitCode", "796")
-                put("taxes", buildJsonArray {
-                    add(buildJsonObject { put("percent", 1200); put("sum", buildJsonObject { put("bills", 10); put("coins", 0) }) })
-                    add(buildJsonObject { put("percent", 1200); put("sum", buildJsonObject { put("bills", 10); put("coins", 0) }) })
-                })
-            })
+            put(
+                "commodity",
+                buildJsonObject {
+                    put("name", "Item")
+                    put("sectionCode", "1")
+                    put("quantity", 1)
+                    put(
+                        "price",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("measureUnitCode", "796")
+                    put(
+                        "taxes",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("percent", 1200)
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 10)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                }
+                            )
+                            add(
+                                buildJsonObject {
+                                    put("percent", 1200)
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 10)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errs10 = validator.validate(item10, "$.item")
         assertTrue(errs10.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.item.commodity.taxes" })
@@ -470,35 +660,74 @@ class AdditionalCoverageTest {
         // 7. Commodity listExciseStamp invalid type and invalid element
         val item11 = buildJsonObject {
             put("type", "ITEM_TYPE_COMMODITY")
-            put("commodity", buildJsonObject {
-                put("name", "Item")
-                put("sectionCode", "1")
-                put("quantity", 1)
-                put("price", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("measureUnitCode", "796")
-                put("listExciseStamp", 123)
-            })
+            put(
+                "commodity",
+                buildJsonObject {
+                    put("name", "Item")
+                    put("sectionCode", "1")
+                    put("quantity", 1)
+                    put(
+                        "price",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("measureUnitCode", "796")
+                    put("listExciseStamp", 123)
+                }
+            )
         }
         val errs11 = validator.validate(item11, "$.item")
-        assertTrue(errs11.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.item.commodity.listExciseStamp" })
+        assertTrue(
+            errs11.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.item.commodity.listExciseStamp" }
+        )
 
         val item12 = buildJsonObject {
             put("type", "ITEM_TYPE_COMMODITY")
-            put("commodity", buildJsonObject {
-                put("name", "Item")
-                put("sectionCode", "1")
-                put("quantity", 1)
-                put("price", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("measureUnitCode", "796")
-                put("listExciseStamp", buildJsonArray {
-                    add("   ")
-                })
-            })
+            put(
+                "commodity",
+                buildJsonObject {
+                    put("name", "Item")
+                    put("sectionCode", "1")
+                    put("quantity", 1)
+                    put(
+                        "price",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("measureUnitCode", "796")
+                    put(
+                        "listExciseStamp",
+                        buildJsonArray {
+                            add("   ")
+                        }
+                    )
+                }
+            )
         }
         val errs12 = validator.validate(item12, "$.item")
-        assertTrue(errs12.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.item.commodity.listExciseStamp[0]" })
+        assertTrue(
+            errs12.any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.item.commodity.listExciseStamp[0]"
+            }
+        )
     }
 
     @Test
@@ -507,7 +736,13 @@ class AdditionalCoverageTest {
         // Taxes not an array
         val m1 = buildJsonObject {
             put("name", "Mod")
-            put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
+            put(
+                "sum",
+                buildJsonObject {
+                    put("bills", 10)
+                    put("coins", 0)
+                }
+            )
             put("taxes", 123)
         }
         val errs1 = validator.validate(buildJsonObject { put("mod", m1) }, "mod", "$.mod")
@@ -516,11 +751,42 @@ class AdditionalCoverageTest {
         // Taxes duplicate percent
         val m2 = buildJsonObject {
             put("name", "Mod")
-            put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-            put("taxes", buildJsonArray {
-                add(buildJsonObject { put("percent", 1200); put("sum", buildJsonObject { put("bills", 1); put("coins", 0) }) })
-                add(buildJsonObject { put("percent", 1200); put("sum", buildJsonObject { put("bills", 1); put("coins", 0) }) })
-            })
+            put(
+                "sum",
+                buildJsonObject {
+                    put("bills", 10)
+                    put("coins", 0)
+                }
+            )
+            put(
+                "taxes",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
+                            put("percent", 1200)
+                            put(
+                                "sum",
+                                buildJsonObject {
+                                    put("bills", 1)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                    add(
+                        buildJsonObject {
+                            put("percent", 1200)
+                            put(
+                                "sum",
+                                buildJsonObject {
+                                    put("bills", 1)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errs2 = validator.validate(buildJsonObject { put("mod", m2) }, "mod", "$.mod")
         assertTrue(errs2.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.mod.taxes" })
@@ -538,7 +804,24 @@ class AdditionalCoverageTest {
     fun testTicketTaxValidatorAllPaths() {
         val validator = TicketTaxValidator()
         // Missing tax percent in container
-        val errs1 = validator.validate(buildJsonObject { put("tax", buildJsonObject { put("sum", buildJsonObject { put("bills", 1); put("coins", 0) }) }) }, "tax", "$.tax")
+        val errs1 = validator.validate(
+            buildJsonObject {
+                put(
+                    "tax",
+                    buildJsonObject {
+                        put(
+                            "sum",
+                            buildJsonObject {
+                                put("bills", 1)
+                                put("coins", 0)
+                            }
+                        )
+                    }
+                )
+            },
+            "tax",
+            "$.tax"
+        )
         assertTrue(errs1.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.tax.percent" })
     }
 
@@ -547,120 +830,257 @@ class AdditionalCoverageTest {
         val validator = RequestValidatorTicket()
 
         // 1. Missing service or ticket
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, buildJsonObject { put("ticket", emptyObj) }).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service" })
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, buildJsonObject { put("service", emptyObj) }).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket" })
+        assertTrue(
+            validator.validate(
+                CommandType.COMMAND_TICKET,
+                buildJsonObject {
+                    put("ticket", emptyObj)
+                }
+            ).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service" }
+        )
+        assertTrue(
+            validator.validate(
+                CommandType.COMMAND_TICKET,
+                buildJsonObject {
+                    put("service", emptyObj)
+                }
+            ).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket" }
+        )
 
         // 2. Ticket items missing, invalid type, empty
         val payload1 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, payload1).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket.items" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_TICKET, payload1).any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket.items"
+            }
+        )
 
         val payload2 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", 123)
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", 123)
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, payload2).any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.items" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_TICKET, payload2).any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.items"
+            }
+        )
 
         // 3. Duplicate payments
         val payload3 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("payments", buildJsonArray {
-                    add(buildJsonObject { put("type", "PAYMENT_CASH"); put("sum", buildJsonObject { put("bills", 100); put("coins", 0) }) })
-                    add(buildJsonObject { put("type", "PAYMENT_CASH"); put("sum", buildJsonObject { put("bills", 100); put("coins", 0) }) })
-                })
-                put("amounts", buildJsonObject {
-                    put("total", buildJsonObject { put("bills", 200); put("coins", 0) })
-                    put("taken", buildJsonObject { put("bills", 200); put("coins", 0) })
-                    put("change", buildJsonObject { put("bills", 0); put("coins", 0) })
-                })
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put(
+                        "payments",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "PAYMENT_CASH")
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 100)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                }
+                            )
+                            add(
+                                buildJsonObject {
+                                    put("type", "PAYMENT_CASH")
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 100)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "amounts",
+                        buildJsonObject {
+                            put(
+                                "total",
+                                buildJsonObject {
+                                    put("bills", 200)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "taken",
+                                buildJsonObject {
+                                    put("bills", 200)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "change",
+                                buildJsonObject {
+                                    put("bills", 0)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, payload3).any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.payments" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_TICKET, payload3).any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.payments"
+            }
+        )
 
         // 4. Invalid payments type (not array)
         val payload4 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("payments", 123)
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put("payments", 123)
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, payload4).any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.ticket.payments" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_TICKET, payload4).any {
+                it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.ticket.payments"
+            }
+        )
 
         // 5. Invalid taxes type (not array)
         val payload5 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("taxes", 123)
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put("taxes", 123)
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, payload5).any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.ticket.taxes" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_TICKET, payload5).any {
+                it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.ticket.taxes"
+            }
+        )
 
         // 6. Duplicate taxes percent
         val payload6 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("taxes", buildJsonArray {
-                    add(buildJsonObject { put("percent", 1200); put("sum", buildJsonObject { put("bills", 10); put("coins", 0) }) })
-                    add(buildJsonObject { put("percent", 1200); put("sum", buildJsonObject { put("bills", 10); put("coins", 0) }) })
-                })
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put(
+                        "taxes",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("percent", 1200)
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 10)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                }
+                            )
+                            add(
+                                buildJsonObject {
+                                    put("percent", 1200)
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 10)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, payload6).any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.taxes" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_TICKET, payload6).any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.taxes"
+            }
+        )
 
         // 7. Invalid extensionOptions type (not object)
         val payload7 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("extensionOptions", 123)
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put("extensionOptions", 123)
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, payload7).any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.ticket.extensionOptions" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_TICKET, payload7).any {
+                it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.ticket.extensionOptions"
+            }
+        )
 
         // 8. Negative integers (offlineTicketNumber, frShiftNumber, shiftDocumentNumber, printedDocumentNumber)
         val payload8 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("offlineTicketNumber", -1)
-                put("frShiftNumber", -1)
-                put("shiftDocumentNumber", -1)
-                put("printedDocumentNumber", -1L)
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put("offlineTicketNumber", -1)
+                    put("frShiftNumber", -1)
+                    put("shiftDocumentNumber", -1)
+                    put("printedDocumentNumber", -1L)
+                }
+            )
         }
         val errs8 = validator.validate(CommandType.COMMAND_TICKET, payload8)
         assertTrue(errs8.any { it.path == "$.payload.ticket.offlineTicketNumber" })
@@ -671,188 +1091,416 @@ class AdditionalCoverageTest {
         // 9. Invalid parentTicket type
         val payload9 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("parentTicket", 123)
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put("parentTicket", 123)
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, payload9).any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.ticket.parentTicket" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_TICKET, payload9).any {
+                it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.ticket.parentTicket"
+            }
+        )
 
         // 10. Operation return but parentTicket null
         val payload10 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL_RETURN")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("amounts", buildJsonObject {
-                    put("total", buildJsonObject { put("bills", 100); put("coins", 0) })
-                })
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL_RETURN")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put(
+                        "amounts",
+                        buildJsonObject {
+                            put(
+                                "total",
+                                buildJsonObject {
+                                    put("bills", 100)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, payload10).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket.parentTicket" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_TICKET, payload10).any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket.parentTicket"
+            }
+        )
 
         // 11. Both ticket-level and item-level taxes present
         val payload11 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildItemWithTaxesJson()) })
-                put("taxes", buildJsonArray {
-                    add(buildJsonObject { put("percent", 1200); put("sum", buildJsonObject { put("bills", 10); put("coins", 0) }) })
-                })
-                put("amounts", buildJsonObject {
-                    put("total", buildJsonObject { put("bills", 100); put("coins", 0) })
-                })
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildItemWithTaxesJson()) })
+                    put(
+                        "taxes",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("percent", 1200)
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 10)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "amounts",
+                        buildJsonObject {
+                            put(
+                                "total",
+                                buildJsonObject {
+                                    put("bills", 100)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, payload11).any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.taxes" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_TICKET, payload11).any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.taxes"
+            }
+        )
 
         // 12. Both markup and discount present in amounts
         val payload12 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("amounts", buildJsonObject {
-                    put("total", buildJsonObject { put("bills", 100); put("coins", 0) })
-                    put("markup", buildJsonObject { put("bills", 10); put("coins", 0) })
-                    put("discount", buildJsonObject { put("bills", 10); put("coins", 0) })
-                })
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put(
+                        "amounts",
+                        buildJsonObject {
+                            put(
+                                "total",
+                                buildJsonObject {
+                                    put("bills", 100)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "markup",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "discount",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_TICKET, payload12).any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.amounts" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_TICKET, payload12).any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.amounts"
+            }
+        )
     }
 
     @Test
     fun testRequestValidatorMoneyPlacementAllPaths() {
         val validator = RequestValidatorMoneyPlacement()
         // Missing service or moneyPlacement
-        assertTrue(validator.validate(CommandType.COMMAND_MONEY_PLACEMENT, buildJsonObject { put("moneyPlacement", emptyObj) }).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service" })
-        assertTrue(validator.validate(CommandType.COMMAND_MONEY_PLACEMENT, buildJsonObject { put("service", emptyObj) }).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.moneyPlacement" })
+        assertTrue(
+            validator.validate(
+                CommandType.COMMAND_MONEY_PLACEMENT,
+                buildJsonObject {
+                    put("moneyPlacement", emptyObj)
+                }
+            ).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service" }
+        )
+        assertTrue(
+            validator.validate(
+                CommandType.COMMAND_MONEY_PLACEMENT,
+                buildJsonObject {
+                    put("service", emptyObj)
+                }
+            ).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.moneyPlacement" }
+        )
 
         // Invalid operation type or value
         val p1 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("moneyPlacement", buildJsonObject {
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("operation", 123)
-            })
+            put(
+                "moneyPlacement",
+                buildJsonObject {
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("operation", 123)
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_MONEY_PLACEMENT, p1).any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.moneyPlacement.operation" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_MONEY_PLACEMENT, p1).any {
+                it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.moneyPlacement.operation"
+            }
+        )
 
         val p2 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("moneyPlacement", buildJsonObject {
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("operation", "INVALID_OP")
-            })
+            put(
+                "moneyPlacement",
+                buildJsonObject {
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("operation", "INVALID_OP")
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_MONEY_PLACEMENT, p2).any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.moneyPlacement.operation" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_MONEY_PLACEMENT, p2).any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.moneyPlacement.operation"
+            }
+        )
 
         // Invalid isOffline type
         val p3 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("moneyPlacement", buildJsonObject {
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("operation", "MONEY_PLACEMENT_DEPOSIT")
-                put("isOffline", 123)
-            })
+            put(
+                "moneyPlacement",
+                buildJsonObject {
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("operation", "MONEY_PLACEMENT_DEPOSIT")
+                    put("isOffline", 123)
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_MONEY_PLACEMENT, p3).any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.moneyPlacement.isOffline" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_MONEY_PLACEMENT, p3).any {
+                it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.moneyPlacement.isOffline"
+            }
+        )
     }
 
     @Test
     fun testRequestValidatorCloseShiftAllPaths() {
         val validator = RequestValidatorCloseShift()
         // Missing service or closeShift
-        assertTrue(validator.validate(CommandType.COMMAND_CLOSE_SHIFT, buildJsonObject { put("closeShift", emptyObj) }).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service" })
-        assertTrue(validator.validate(CommandType.COMMAND_CLOSE_SHIFT, buildJsonObject { put("service", emptyObj) }).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.closeShift" })
+        assertTrue(
+            validator.validate(
+                CommandType.COMMAND_CLOSE_SHIFT,
+                buildJsonObject {
+                    put("closeShift", emptyObj)
+                }
+            ).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service" }
+        )
+        assertTrue(
+            validator.validate(
+                CommandType.COMMAND_CLOSE_SHIFT,
+                buildJsonObject {
+                    put("service", emptyObj)
+                }
+            ).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.closeShift" }
+        )
 
         // Invalid isOffline or withdrawMoney type
         val p1 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("closeShift", buildJsonObject {
-                put("closeTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("zReport", buildValidZReportJson())
-                put("isOffline", 123)
-                put("withdrawMoney", "invalid")
-            })
+            put(
+                "closeShift",
+                buildJsonObject {
+                    put("closeTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("zReport", buildValidZReportJson())
+                    put("isOffline", 123)
+                    put("withdrawMoney", "invalid")
+                }
+            )
         }
         val errs = validator.validate(CommandType.COMMAND_CLOSE_SHIFT, p1)
-        assertTrue(errs.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.closeShift.isOffline" })
-        assertTrue(errs.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.closeShift.withdrawMoney" })
+        assertTrue(
+            errs.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.closeShift.isOffline" }
+        )
+        assertTrue(
+            errs.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.closeShift.withdrawMoney" }
+        )
     }
 
     @Test
     fun testRequestValidatorNomenclatureAllPaths() {
         val validator = RequestValidatorNomenclature()
         // Missing service or nomenclature
-        assertTrue(validator.validate(CommandType.COMMAND_NOMENCLATURE, buildJsonObject { put("nomenclature", emptyObj) }).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service" })
-        assertTrue(validator.validate(CommandType.COMMAND_NOMENCLATURE, buildJsonObject { put("service", emptyObj) }).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature" })
+        assertTrue(
+            validator.validate(
+                CommandType.COMMAND_NOMENCLATURE,
+                buildJsonObject {
+                    put("nomenclature", emptyObj)
+                }
+            ).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service" }
+        )
+        assertTrue(
+            validator.validate(
+                CommandType.COMMAND_NOMENCLATURE,
+                buildJsonObject {
+                    put("service", emptyObj)
+                }
+            ).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature" }
+        )
 
         // Neither currentVersion nor barcode present
         val p1 = buildJsonObject {
             put("service", buildValidServiceJson())
             put("nomenclature", emptyObj)
         }
-        assertTrue(validator.validate(CommandType.COMMAND_NOMENCLATURE, p1).any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.nomenclature" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_NOMENCLATURE, p1).any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.nomenclature"
+            }
+        )
     }
 
     @Test
     fun testRequestValidatorSystemAndInfoAllPaths() {
-        assertTrue(RequestValidatorSystem().validate(CommandType.COMMAND_SYSTEM, emptyObj).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service" })
-        assertTrue(RequestValidatorInfo().validate(CommandType.COMMAND_INFO, emptyObj).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service" })
+        assertTrue(
+            RequestValidatorSystem().validate(CommandType.COMMAND_SYSTEM, emptyObj).any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service"
+            }
+        )
+        assertTrue(
+            RequestValidatorInfo().validate(CommandType.COMMAND_INFO, emptyObj).any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service"
+            }
+        )
     }
 
     @Test
     fun testRequestValidatorReportAllPaths() {
         val validator = RequestValidatorReport()
         // Missing service or report
-        assertTrue(validator.validate(CommandType.COMMAND_REPORT, buildJsonObject { put("report", emptyObj) }).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service" })
-        assertTrue(validator.validate(CommandType.COMMAND_REPORT, buildJsonObject { put("service", emptyObj) }).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.report" })
+        assertTrue(
+            validator.validate(
+                CommandType.COMMAND_REPORT,
+                buildJsonObject {
+                    put("report", emptyObj)
+                }
+            ).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.service" }
+        )
+        assertTrue(
+            validator.validate(
+                CommandType.COMMAND_REPORT,
+                buildJsonObject {
+                    put("service", emptyObj)
+                }
+            ).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.report" }
+        )
 
         // Invalid isOffline type
         val p1 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("report", buildJsonObject {
-                put("reportType", "REPORT_Z")
-                put("dateTime", buildValidDateTimeJson())
-                put("zxReport", buildValidZReportJson())
-                put("isOffline", 123)
-            })
+            put(
+                "report",
+                buildJsonObject {
+                    put("reportType", "REPORT_Z")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("zxReport", buildValidZReportJson())
+                    put("isOffline", 123)
+                }
+            )
         }
-        assertTrue(validator.validate(CommandType.COMMAND_REPORT, p1).any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.report.isOffline" })
+        assertTrue(
+            validator.validate(CommandType.COMMAND_REPORT, p1).any {
+                it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.report.isOffline"
+            }
+        )
     }
 
     @Test
     fun testResponseValidatorsAllPaths() {
         // 1. Missing result
-        assertTrue(ResponseValidatorReport().validate(CommandType.COMMAND_REPORT, emptyObj).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.result" })
+        assertTrue(
+            ResponseValidatorReport().validate(CommandType.COMMAND_REPORT, emptyObj).any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.result"
+            }
+        )
 
         // 2. Success result code (0) but missing specific response blocks
         val rSuccess = buildJsonObject {
-            put("result", buildJsonObject { put("resultCode", 0); put("resultText", "Success") })
+            put(
+                "result",
+                buildJsonObject {
+                    put("resultCode", 0)
+                    put("resultText", "Success")
+                }
+            )
         }
-        assertTrue(ResponseValidatorReport().validate(CommandType.COMMAND_REPORT, rSuccess).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.report" })
-        assertTrue(ResponseValidatorTicket().validate(CommandType.COMMAND_TICKET, rSuccess).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket" })
-        assertTrue(ResponseValidatorNomenclature().validate(CommandType.COMMAND_NOMENCLATURE, rSuccess).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature" })
-        assertTrue(ResponseValidatorCloseShift().validate(CommandType.COMMAND_CLOSE_SHIFT, rSuccess).any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.report" })
+        assertTrue(
+            ResponseValidatorReport().validate(CommandType.COMMAND_REPORT, rSuccess).any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.report"
+            }
+        )
+        assertTrue(
+            ResponseValidatorTicket().validate(CommandType.COMMAND_TICKET, rSuccess).any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket"
+            }
+        )
+        assertTrue(
+            ResponseValidatorNomenclature().validate(CommandType.COMMAND_NOMENCLATURE, rSuccess).any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature"
+            }
+        )
+        assertTrue(
+            ResponseValidatorCloseShift().validate(CommandType.COMMAND_CLOSE_SHIFT, rSuccess).any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.report"
+            }
+        )
 
         assertTrue(ResponseValidatorMoneyPlacement().validate(CommandType.COMMAND_MONEY_PLACEMENT, rSuccess).isEmpty())
         assertTrue(ResponseValidatorSystem().validate(CommandType.COMMAND_SYSTEM, rSuccess).isEmpty())
@@ -861,34 +1509,58 @@ class AdditionalCoverageTest {
         // 3. ResponseValidatorCloseShift error paths
         val rc1 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("report", buildJsonObject {
-                put("reportType", "REPORT_X")
-            })
+            put(
+                "report",
+                buildJsonObject {
+                    put("reportType", "REPORT_X")
+                }
+            )
         }
-        assertTrue(ResponseValidatorCloseShift().validate(CommandType.COMMAND_CLOSE_SHIFT, rc1).any { it.path == "$.payload.report.reportType" })
+        assertTrue(
+            ResponseValidatorCloseShift().validate(CommandType.COMMAND_CLOSE_SHIFT, rc1).any {
+                it.path == "$.payload.report.reportType"
+            }
+        )
 
         // 4. ResponseValidatorNomenclature error paths (createdTime type, parentGroupId negative, measureFractional type, boolean types)
         val rn1 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("nomenclature", buildJsonObject {
-                put("version", 1)
-                put("createdTime", 123)
-                put("result", buildJsonObject { put("code", 0); put("name", "OK") })
-                put("elements", buildJsonArray {
-                    add(buildJsonObject {
-                        put("type", "ITEM")
-                        put("title", "Name")
-                        put("id", 123)
-                        put("parentGroupId", -1)
-                        put("item", buildJsonObject {
-                            put("taxes", 123)
-                            put("measureFractional", 123)
-                            put("isMarkedeac", "not_a_bool")
-                            put("isSocial", "not_a_bool")
-                        })
-                    })
-                })
-            })
+            put(
+                "nomenclature",
+                buildJsonObject {
+                    put("version", 1)
+                    put("createdTime", 123)
+                    put(
+                        "result",
+                        buildJsonObject {
+                            put("code", 0)
+                            put("name", "OK")
+                        }
+                    )
+                    put(
+                        "elements",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM")
+                                    put("title", "Name")
+                                    put("id", 123)
+                                    put("parentGroupId", -1)
+                                    put(
+                                        "item",
+                                        buildJsonObject {
+                                            put("taxes", 123)
+                                            put("measureFractional", 123)
+                                            put("isMarkedeac", "not_a_bool")
+                                            put("isSocial", "not_a_bool")
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errsN = ResponseValidatorNomenclature().validate(CommandType.COMMAND_NOMENCLATURE, rn1)
         assertTrue(errsN.any { it.path == "$.payload.nomenclature.createdTime" })
@@ -906,14 +1578,26 @@ class AdditionalCoverageTest {
         val errs1 = sectionVal.validateList(buildJsonObject { put("sections", 123) }, "sections", "$.sections")
         assertTrue(errs1.any { it.code == ErrorCode.JSON_INVALID_TYPE.name })
 
-        val errs2 = sectionVal.validateList(buildJsonObject { put("sections", buildJsonArray { add(123) }) }, "sections", "$.sections")
+        val errs2 = sectionVal.validateList(
+            buildJsonObject {
+                put("sections", buildJsonArray { add(123) })
+            },
+            "sections",
+            "$.sections"
+        )
         assertTrue(errs2.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.sections[0]" })
 
         val payVal = ZXReportTicketPaymentValidator()
         val errs3 = payVal.validateList(buildJsonObject { put("payments", 123) }, "payments", "$.payments")
         assertTrue(errs3.any { it.code == ErrorCode.JSON_INVALID_TYPE.name })
 
-        val errs4 = payVal.validateList(buildJsonObject { put("payments", buildJsonArray { add(123) }) }, "payments", "$.payments")
+        val errs4 = payVal.validateList(
+            buildJsonObject {
+                put("payments", buildJsonArray { add(123) })
+            },
+            "payments",
+            "$.payments"
+        )
         assertTrue(errs4.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payments[0]" })
     }
 
@@ -954,36 +1638,39 @@ class AdditionalCoverageTest {
             .setTitleKk("TitleKk")
             .setParentGroupId(456)
             .setId(123)
-            .setItem(Nomenclature.NomenclatureResponse.Item.newBuilder()
-                .setArticle("Art")
-                .setBarcode("Bar")
-                .setDescription("Desc")
-                .setPurchasePrice(Common.Money.newBuilder().setBills(10).setCoins(0))
-                .setSellPrice(Common.Money.newBuilder().setBills(12).setCoins(0))
-                .setDiscountPercent(10)
-                .setDiscountSum(Common.Money.newBuilder().setBills(1).setCoins(0))
-                .setMarkupPercent(5)
-                .setMarkupSum(Common.Money.newBuilder().setBills(1).setCoins(0))
-                .addTaxes(Nomenclature.NomenclatureResponse.Tax.newBuilder()
-                    .setTaxationType(Nomenclature.NomenclatureResponse.TaxationTypeEnum.RTS)
-                    .setTaxType(Nomenclature.NomenclatureResponse.TaxTypeEnum.VAT)
-                    .setTaxPercent(1200)
-                )
-                .setMeasureCount(1)
-                .setMeasureTitle("pcs")
-                .setMeasureFractional(false)
-                .setMeasureUnitCode("796")
-                .setNtin("Ntin123")
-                .setIsMarkedeac(true)
-                .setIsSocial(false)
+            .setItem(
+                Nomenclature.NomenclatureResponse.Item.newBuilder()
+                    .setArticle("Art")
+                    .setBarcode("Bar")
+                    .setDescription("Desc")
+                    .setPurchasePrice(Common.Money.newBuilder().setBills(10).setCoins(0))
+                    .setSellPrice(Common.Money.newBuilder().setBills(12).setCoins(0))
+                    .setDiscountPercent(10)
+                    .setDiscountSum(Common.Money.newBuilder().setBills(1).setCoins(0))
+                    .setMarkupPercent(5)
+                    .setMarkupSum(Common.Money.newBuilder().setBills(1).setCoins(0))
+                    .addTaxes(
+                        Nomenclature.NomenclatureResponse.Tax.newBuilder()
+                            .setTaxationType(Nomenclature.NomenclatureResponse.TaxationTypeEnum.RTS)
+                            .setTaxType(Nomenclature.NomenclatureResponse.TaxTypeEnum.VAT)
+                            .setTaxPercent(1200)
+                    )
+                    .setMeasureCount(1)
+                    .setMeasureTitle("pcs")
+                    .setMeasureFractional(false)
+                    .setMeasureUnitCode("796")
+                    .setNtin("Ntin123")
+                    .setIsMarkedeac(true)
+                    .setIsSocial(false)
             )
             .build()
 
         val nomenclatureResponse = Nomenclature.NomenclatureResponse.newBuilder()
             .setVersion(1)
-            .setCreatedTime(Common.DateTime.newBuilder()
-                .setDate(Common.Date.newBuilder().setYear(2024).setMonth(9).setDay(1))
-                .setTime(Common.Time.newBuilder().setHour(12).setMinute(0))
+            .setCreatedTime(
+                Common.DateTime.newBuilder()
+                    .setDate(Common.Date.newBuilder().setYear(2024).setMonth(9).setDay(1))
+                    .setTime(Common.Time.newBuilder().setHour(12).setMinute(0))
             )
             .addElements(element)
             .setResult(Nomenclature.NomenclatureResponse.NomenclatureResultTypeEnum.RESULT_TYPE_OK)
@@ -1008,10 +1695,11 @@ class AdditionalCoverageTest {
 
         val section = Report.ZXReport.Section.newBuilder()
             .setSectionCode("SEC01")
-            .addOperations(Report.ZXReport.Operation.newBuilder()
-                .setOperation(Common.OperationTypeEnum.OPERATION_SELL)
-                .setCount(5)
-                .setSum(money)
+            .addOperations(
+                Report.ZXReport.Operation.newBuilder()
+                    .setOperation(Common.OperationTypeEnum.OPERATION_SELL)
+                    .setCount(5)
+                    .setSum(money)
             )
             .build()
 
@@ -1100,36 +1788,68 @@ class AdditionalCoverageTest {
 
     private fun buildValidServiceJson() = buildJsonObject {
         put("getRegInfo", true)
-        put("offlinePeriod", buildJsonObject {
-            put("beginTime", buildValidDateTimeJson())
-            put("endTime", buildValidDateTimeJson())
-        })
-        put("securityStats", buildJsonObject {
-            put("geoPosition", buildJsonObject {
-                put("latitude", 432156)
-                put("longitude", 765432)
-                put("source", "CELL")
-            })
-        })
-        put("regInfo", buildJsonObject {
-            put("kkm", buildJsonObject {
-                put("fnsKkmId", "391827192812")
-                put("serialNumber", "5465434234")
-                put("kkmId", "201873")
-            })
-            put("org", buildJsonObject {
-                put("title", "Title")
-                put("address", "Addr")
-                put("addressKz", "AddrKz")
-                put("inn", "123456789012")
-                put("okved", "12345")
-            })
-        })
+        put(
+            "offlinePeriod",
+            buildJsonObject {
+                put("beginTime", buildValidDateTimeJson())
+                put("endTime", buildValidDateTimeJson())
+            }
+        )
+        put(
+            "securityStats",
+            buildJsonObject {
+                put(
+                    "geoPosition",
+                    buildJsonObject {
+                        put("latitude", 432156)
+                        put("longitude", 765432)
+                        put("source", "CELL")
+                    }
+                )
+            }
+        )
+        put(
+            "regInfo",
+            buildJsonObject {
+                put(
+                    "kkm",
+                    buildJsonObject {
+                        put("fnsKkmId", "391827192812")
+                        put("serialNumber", "5465434234")
+                        put("kkmId", "201873")
+                    }
+                )
+                put(
+                    "org",
+                    buildJsonObject {
+                        put("title", "Title")
+                        put("address", "Addr")
+                        put("addressKz", "AddrKz")
+                        put("inn", "123456789012")
+                        put("okved", "12345")
+                    }
+                )
+            }
+        )
     }
 
     private fun buildValidDateTimeJson() = buildJsonObject {
-        put("date", buildJsonObject { put("year", 2024); put("month", 9); put("day", 1) })
-        put("time", buildJsonObject { put("hour", 10); put("minute", 30); put("second", 0) })
+        put(
+            "date",
+            buildJsonObject {
+                put("year", 2024)
+                put("month", 9)
+                put("day", 1)
+            }
+        )
+        put(
+            "time",
+            buildJsonObject {
+                put("hour", 10)
+                put("minute", 30)
+                put("second", 0)
+            }
+        )
     }
 
     private fun buildValidOperatorJson() = buildJsonObject {
@@ -1139,39 +1859,98 @@ class AdditionalCoverageTest {
 
     private fun buildValidItemJson() = buildJsonObject {
         put("type", "ITEM_TYPE_COMMODITY")
-        put("commodity", buildJsonObject {
-            put("name", "Item")
-            put("sectionCode", "1")
-            put("quantity", 1000)
-            put("price", buildJsonObject { put("bills", 100); put("coins", 0) })
-            put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-            put("measureUnitCode", "796")
-        })
+        put(
+            "commodity",
+            buildJsonObject {
+                put("name", "Item")
+                put("sectionCode", "1")
+                put("quantity", 1000)
+                put(
+                    "price",
+                    buildJsonObject {
+                        put("bills", 100)
+                        put("coins", 0)
+                    }
+                )
+                put(
+                    "sum",
+                    buildJsonObject {
+                        put("bills", 100)
+                        put("coins", 0)
+                    }
+                )
+                put("measureUnitCode", "796")
+            }
+        )
     }
 
     private fun buildItemWithTaxesJson() = buildJsonObject {
         put("type", "ITEM_TYPE_COMMODITY")
-        put("commodity", buildJsonObject {
-            put("name", "Item")
-            put("sectionCode", "1")
-            put("quantity", 1000)
-            put("price", buildJsonObject { put("bills", 100); put("coins", 0) })
-            put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-            put("measureUnitCode", "796")
-            put("taxes", buildJsonArray {
-                add(buildJsonObject { put("percent", 1200); put("sum", buildJsonObject { put("bills", 10); put("coins", 0) }) })
-            })
-        })
+        put(
+            "commodity",
+            buildJsonObject {
+                put("name", "Item")
+                put("sectionCode", "1")
+                put("quantity", 1000)
+                put(
+                    "price",
+                    buildJsonObject {
+                        put("bills", 100)
+                        put("coins", 0)
+                    }
+                )
+                put(
+                    "sum",
+                    buildJsonObject {
+                        put("bills", 100)
+                        put("coins", 0)
+                    }
+                )
+                put("measureUnitCode", "796")
+                put(
+                    "taxes",
+                    buildJsonArray {
+                        add(
+                            buildJsonObject {
+                                put("percent", 1200)
+                                put(
+                                    "sum",
+                                    buildJsonObject {
+                                        put("bills", 10)
+                                        put("coins", 0)
+                                    }
+                                )
+                            }
+                        )
+                    }
+                )
+            }
+        )
     }
 
     private fun buildValidZReportJson() = buildJsonObject {
         put("dateTime", buildValidDateTimeJson())
         put("shiftNumber", 1)
-        put("cashSum", buildJsonObject { put("bills", 10000); put("coins", 0) })
-        put("revenue", buildJsonObject {
-            put("sum", buildJsonObject { put("bills", 10000); put("coins", 0) })
-            put("isNegative", false)
-        })
+        put(
+            "cashSum",
+            buildJsonObject {
+                put("bills", 10000)
+                put("coins", 0)
+            }
+        )
+        put(
+            "revenue",
+            buildJsonObject {
+                put(
+                    "sum",
+                    buildJsonObject {
+                        put("bills", 10000)
+                        put("coins", 0)
+                    }
+                )
+                put("isNegative", false)
+            }
+        )
         put("openShiftTime", buildValidDateTimeJson())
     }
 
@@ -1213,11 +1992,14 @@ class AdditionalCoverageTest {
             put("protocolVersion", "203")
             put("messageType", "REQUEST")
             put("commandType", "COMMAND_SYSTEM")
-            put("header", buildJsonObject {
-                put("deviceId", 123)
-                put("token", 456)
-                put("reqNum", 1)
-            })
+            put(
+                "header",
+                buildJsonObject {
+                    put("deviceId", 123)
+                    put("token", 456)
+                    put("reqNum", 1)
+                }
+            )
             put("payload", buildJsonObject {})
         }
         val res1 = codec.encode(reqJson)
@@ -1370,80 +2152,151 @@ class AdditionalCoverageTest {
         // 3. Nomenclature createdTime not JsonObject, elements not JsonArray, elements element not JsonObject
         val r3 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("nomenclature", buildJsonObject {
-                put("version", 1)
-                put("createdTime", "not_obj")
-                put("result", buildJsonObject { put("code", 0); put("name", "OK") })
-                put("elements", "not_array")
-            })
+            put(
+                "nomenclature",
+                buildJsonObject {
+                    put("version", 1)
+                    put("createdTime", "not_obj")
+                    put(
+                        "result",
+                        buildJsonObject {
+                            put("code", 0)
+                            put("name", "OK")
+                        }
+                    )
+                    put("elements", "not_array")
+                }
+            )
         }
         val errs3 = validator.validate(CommandType.COMMAND_NOMENCLATURE, r3)
-        assertTrue(errs3.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.nomenclature.createdTime" })
-        assertTrue(errs3.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.nomenclature.elements" })
+        assertTrue(
+            errs3.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.nomenclature.createdTime" }
+        )
+        assertTrue(
+            errs3.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.nomenclature.elements" }
+        )
 
         // 4. Elements element is not JsonObject
         val r4 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("nomenclature", buildJsonObject {
-                put("version", 1)
-                put("result", buildJsonObject { put("code", 0); put("name", "OK") })
-                put("elements", buildJsonArray { add(123) })
-            })
+            put(
+                "nomenclature",
+                buildJsonObject {
+                    put("version", 1)
+                    put(
+                        "result",
+                        buildJsonObject {
+                            put("code", 0)
+                            put("name", "OK")
+                        }
+                    )
+                    put("elements", buildJsonArray { add(123) })
+                }
+            )
         }
         val errs4 = validator.validate(CommandType.COMMAND_NOMENCLATURE, r4)
-        assertTrue(errs4.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.nomenclature.elements[0]" })
+        assertTrue(
+            errs4.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.nomenclature.elements[0]" }
+        )
 
         // 5. Element: missing type, title, id. parentGroupId negative. item missing when type is ITEM.
         val r5 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("nomenclature", buildJsonObject {
-                put("version", 1)
-                put("result", buildJsonObject { put("code", 0); put("name", "OK") })
-                put("elements", buildJsonArray {
-                    add(buildJsonObject {
-                        put("type", "ITEM")
-                        put("parentGroupId", -5L)
-                    })
-                })
-            })
+            put(
+                "nomenclature",
+                buildJsonObject {
+                    put("version", 1)
+                    put(
+                        "result",
+                        buildJsonObject {
+                            put("code", 0)
+                            put("name", "OK")
+                        }
+                    )
+                    put(
+                        "elements",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM")
+                                    put("parentGroupId", -5L)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errs5 = validator.validate(CommandType.COMMAND_NOMENCLATURE, r5)
-        assertTrue(errs5.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature.elements[0].title" })
-        assertTrue(errs5.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature.elements[0].id" })
-        assertTrue(errs5.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.nomenclature.elements[0].parentGroupId" })
-        assertTrue(errs5.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature.elements[0].item" })
+        assertTrue(
+            errs5.any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature.elements[0].title"
+            }
+        )
+        assertTrue(
+            errs5.any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature.elements[0].id"
+            }
+        )
+        assertTrue(
+            errs5.any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.nomenclature.elements[0].parentGroupId"
+            }
+        )
+        assertTrue(
+            errs5.any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature.elements[0].item"
+            }
+        )
 
         // 6. Item: optional fields invalid types / negative / elements list not array
         val r6 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("nomenclature", buildJsonObject {
-                put("version", 1)
-                put("result", buildJsonObject { put("code", 0); put("name", "OK") })
-                put("elements", buildJsonArray {
-                    add(buildJsonObject {
-                        put("type", "ITEM")
-                        put("title", "T")
-                        put("id", 1L)
-                        put("item", buildJsonObject {
-                            put("article", 123)
-                            put("purchasePrice", 123)
-                            put("sellPrice", 123)
-                            put("discountPercent", -1)
-                            put("markupPercent", -1)
-                            put("discountSum", 123)
-                            put("markupSum", 123)
-                            put("taxes", 123)
-                            put("measureCount", -1)
-                            put("measureTitle", 123)
-                            put("measureFractional", 123)
-                            put("measureUnitCode", 123)
-                            put("ntin", 123)
-                            put("isMarkedeac", 123)
-                            put("isSocial", 123)
-                        })
-                    })
-                })
-            })
+            put(
+                "nomenclature",
+                buildJsonObject {
+                    put("version", 1)
+                    put(
+                        "result",
+                        buildJsonObject {
+                            put("code", 0)
+                            put("name", "OK")
+                        }
+                    )
+                    put(
+                        "elements",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM")
+                                    put("title", "T")
+                                    put("id", 1L)
+                                    put(
+                                        "item",
+                                        buildJsonObject {
+                                            put("article", 123)
+                                            put("purchasePrice", 123)
+                                            put("sellPrice", 123)
+                                            put("discountPercent", -1)
+                                            put("markupPercent", -1)
+                                            put("discountSum", 123)
+                                            put("markupSum", 123)
+                                            put("taxes", 123)
+                                            put("measureCount", -1)
+                                            put("measureTitle", 123)
+                                            put("measureFractional", 123)
+                                            put("measureUnitCode", 123)
+                                            put("ntin", 123)
+                                            put("isMarkedeac", 123)
+                                            put("isSocial", 123)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errs6 = validator.validate(CommandType.COMMAND_NOMENCLATURE, r6)
         val basePath = "$.payload.nomenclature.elements[0].item"
@@ -1457,7 +2310,9 @@ class AdditionalCoverageTest {
         assertTrue(errs6.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$basePath.taxes" })
         assertTrue(errs6.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$basePath.measureCount" })
         assertTrue(errs6.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$basePath.measureTitle" })
-        assertTrue(errs6.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$basePath.measureFractional" })
+        assertTrue(
+            errs6.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$basePath.measureFractional" }
+        )
         assertTrue(errs6.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$basePath.measureUnitCode" })
         assertTrue(errs6.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$basePath.ntin" })
         assertTrue(errs6.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$basePath.isMarkedeac" })
@@ -1466,20 +2321,37 @@ class AdditionalCoverageTest {
         // 7. Taxes array elements not object
         val r7 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("nomenclature", buildJsonObject {
-                put("version", 1)
-                put("result", buildJsonObject { put("code", 0); put("name", "OK") })
-                put("elements", buildJsonArray {
-                    add(buildJsonObject {
-                        put("type", "ITEM")
-                        put("title", "T")
-                        put("id", 1L)
-                        put("item", buildJsonObject {
-                            put("taxes", buildJsonArray { add(123) })
-                        })
-                    })
-                })
-            })
+            put(
+                "nomenclature",
+                buildJsonObject {
+                    put("version", 1)
+                    put(
+                        "result",
+                        buildJsonObject {
+                            put("code", 0)
+                            put("name", "OK")
+                        }
+                    )
+                    put(
+                        "elements",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM")
+                                    put("title", "T")
+                                    put("id", 1L)
+                                    put(
+                                        "item",
+                                        buildJsonObject {
+                                            put("taxes", buildJsonArray { add(123) })
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errs7 = validator.validate(CommandType.COMMAND_NOMENCLATURE, r7)
         assertTrue(errs7.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$basePath.taxes[0]" })
@@ -1515,8 +2387,14 @@ class AdditionalCoverageTest {
 
         val r1 = buildJsonObject { put("result", 123) }
         assertTrue(vInfo.validate(CommandType.COMMAND_INFO, r1).any { it.code == ErrorCode.JSON_MISSING_FIELD.name })
-        assertTrue(vSystem.validate(CommandType.COMMAND_SYSTEM, r1).any { it.code == ErrorCode.JSON_MISSING_FIELD.name })
-        assertTrue(vMoney.validate(CommandType.COMMAND_MONEY_PLACEMENT, r1).any { it.code == ErrorCode.JSON_MISSING_FIELD.name })
+        assertTrue(
+            vSystem.validate(CommandType.COMMAND_SYSTEM, r1).any { it.code == ErrorCode.JSON_MISSING_FIELD.name }
+        )
+        assertTrue(
+            vMoney.validate(CommandType.COMMAND_MONEY_PLACEMENT, r1).any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name
+            }
+        )
 
         val r2 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
@@ -1524,7 +2402,9 @@ class AdditionalCoverageTest {
         }
         assertTrue(vInfo.validate(CommandType.COMMAND_INFO, r2).any { it.code == ErrorCode.JSON_INVALID_TYPE.name })
         assertTrue(vSystem.validate(CommandType.COMMAND_SYSTEM, r2).any { it.code == ErrorCode.JSON_INVALID_TYPE.name })
-        assertTrue(vMoney.validate(CommandType.COMMAND_MONEY_PLACEMENT, r2).any { it.code == ErrorCode.JSON_INVALID_TYPE.name })
+        assertTrue(
+            vMoney.validate(CommandType.COMMAND_MONEY_PLACEMENT, r2).any { it.code == ErrorCode.JSON_INVALID_TYPE.name }
+        )
     }
 
     @Test
@@ -1541,9 +2421,12 @@ class AdditionalCoverageTest {
         // 2. zxReport missing
         val r2 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("report", buildJsonObject {
-                put("reportType", "REPORT_Z")
-            })
+            put(
+                "report",
+                buildJsonObject {
+                    put("reportType", "REPORT_Z")
+                }
+            )
         }
         val errs2 = validator.validate(CommandType.COMMAND_REPORT, r2)
         assertTrue(errs2.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.report.zxReport" })
@@ -1563,19 +2446,40 @@ class AdditionalCoverageTest {
         // 2. service present but not JsonObject
         val r2 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("report", buildJsonObject {
-                put("reportType", "REPORT_Z")
-                put("zxReport", buildJsonObject {
-                    put("dateTime", buildValidDateTimeJson())
-                    put("shiftNumber", 10)
-                    put("cashSum", buildJsonObject { put("bills", 1000L); put("coins", 0) })
-                    put("revenue", buildJsonObject {
-                        put("sum", buildJsonObject { put("bills", 1000L); put("coins", 0) })
-                        put("isNegative", false)
-                    })
-                    put("openShiftTime", buildValidDateTimeJson())
-                })
-            })
+            put(
+                "report",
+                buildJsonObject {
+                    put("reportType", "REPORT_Z")
+                    put(
+                        "zxReport",
+                        buildJsonObject {
+                            put("dateTime", buildValidDateTimeJson())
+                            put("shiftNumber", 10)
+                            put(
+                                "cashSum",
+                                buildJsonObject {
+                                    put("bills", 1000L)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "revenue",
+                                buildJsonObject {
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 1000L)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                    put("isNegative", false)
+                                }
+                            )
+                            put("openShiftTime", buildValidDateTimeJson())
+                        }
+                    )
+                }
+            )
             put("service", 123)
         }
         val errs2 = validator.validate(CommandType.COMMAND_CLOSE_SHIFT, r2)
@@ -1591,11 +2495,46 @@ class AdditionalCoverageTest {
         assertTrue(errs1.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.revenue" })
 
         // 2. isNegative == null
-        val errs2 = validator.validate(buildJsonObject { put("revenue", buildJsonObject { put("sum", buildJsonObject { put("bills", 10); put("coins", 0) }) }) }, "revenue", "$.revenue")
+        val errs2 = validator.validate(
+            buildJsonObject {
+                put(
+                    "revenue",
+                    buildJsonObject {
+                        put(
+                            "sum",
+                            buildJsonObject {
+                                put("bills", 10)
+                                put("coins", 0)
+                            }
+                        )
+                    }
+                )
+            },
+            "revenue",
+            "$.revenue"
+        )
         assertTrue(errs2.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.revenue.isNegative" })
 
         // 3. isNegative is not boolean
-        val errs3 = validator.validate(buildJsonObject { put("revenue", buildJsonObject { put("sum", buildJsonObject { put("bills", 10); put("coins", 0) }); put("isNegative", "not_a_bool") }) }, "revenue", "$.revenue")
+        val errs3 = validator.validate(
+            buildJsonObject {
+                put(
+                    "revenue",
+                    buildJsonObject {
+                        put(
+                            "sum",
+                            buildJsonObject {
+                                put("bills", 10)
+                                put("coins", 0)
+                            }
+                        )
+                        put("isNegative", "not_a_bool")
+                    }
+                )
+            },
+            "revenue",
+            "$.revenue"
+        )
         assertTrue(errs3.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.revenue.isNegative" })
     }
 
@@ -1630,11 +2569,26 @@ class AdditionalCoverageTest {
         val rep = buildJsonObject {
             put("dateTime", buildValidDateTimeJson())
             put("shiftNumber", 10)
-            put("cashSum", buildJsonObject { put("bills", 1000L); put("coins", 0) })
-            put("revenue", buildJsonObject {
-                put("sum", buildJsonObject { put("bills", 1000L); put("coins", 0) })
-                put("isNegative", false)
-            })
+            put(
+                "cashSum",
+                buildJsonObject {
+                    put("bills", 1000L)
+                    put("coins", 0)
+                }
+            )
+            put(
+                "revenue",
+                buildJsonObject {
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 1000L)
+                            put("coins", 0)
+                        }
+                    )
+                    put("isNegative", false)
+                }
+            )
             put("openShiftTime", buildValidDateTimeJson())
             put("closeShiftTime", "not_a_date")
             put("checksum", "  ")
@@ -1679,10 +2633,13 @@ class AdditionalCoverageTest {
 
         // 1. isOffline not present, zxReport missing
         val r1 = buildJsonObject {
-            put("report", buildJsonObject {
-                put("reportType", "REPORT_Z")
-                put("dateTime", buildValidDateTimeJson())
-            })
+            put(
+                "report",
+                buildJsonObject {
+                    put("reportType", "REPORT_Z")
+                    put("dateTime", buildValidDateTimeJson())
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> {
             builder.build(r1)
@@ -1696,21 +2653,41 @@ class AdditionalCoverageTest {
         // 1. Call validate with single argument (basePath defaults to "$.payload.service")
         val s1 = buildJsonObject {
             put("getRegInfo", true)
-            put("offlinePeriod", buildJsonObject {
-                put("beginTime", buildValidDateTimeJson())
-                put("endTime", buildValidDateTimeJson())
-            })
-            put("securityStats", buildJsonObject {
-                put("geoPosition", buildJsonObject { put("latitude", 1); put("longitude", 2); put("source", "CELL") })
-            })
-            put("regInfo", buildJsonObject {
-                put("kkm", 123) // invalid type
-                put("org", 123) // invalid type
-            })
+            put(
+                "offlinePeriod",
+                buildJsonObject {
+                    put("beginTime", buildValidDateTimeJson())
+                    put("endTime", buildValidDateTimeJson())
+                }
+            )
+            put(
+                "securityStats",
+                buildJsonObject {
+                    put(
+                        "geoPosition",
+                        buildJsonObject {
+                            put("latitude", 1)
+                            put("longitude", 2)
+                            put("source", "CELL")
+                        }
+                    )
+                }
+            )
+            put(
+                "regInfo",
+                buildJsonObject {
+                    put("kkm", 123) // invalid type
+                    put("org", 123) // invalid type
+                }
+            )
         }
         val errs = validator.validate(s1)
-        assertTrue(errs.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.regInfo.kkm" })
-        assertTrue(errs.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.regInfo.org" })
+        assertTrue(
+            errs.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.regInfo.kkm" }
+        )
+        assertTrue(
+            errs.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.regInfo.org" }
+        )
     }
 
     @Test
@@ -1725,10 +2702,13 @@ class AdditionalCoverageTest {
 
         // 1. zReport missing
         val r1 = buildJsonObject {
-            put("closeShift", buildJsonObject {
-                put("closeTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-            })
+            put(
+                "closeShift",
+                buildJsonObject {
+                    put("closeTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> {
             builder.build(r1)
@@ -1736,10 +2716,13 @@ class AdditionalCoverageTest {
 
         // 2. operator missing
         val r2 = buildJsonObject {
-            put("closeShift", buildJsonObject {
-                put("closeTime", buildValidDateTimeJson())
-                put("zReport", buildValidZReportJson())
-            })
+            put(
+                "closeShift",
+                buildJsonObject {
+                    put("closeTime", buildValidDateTimeJson())
+                    put("zReport", buildValidZReportJson())
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> {
             builder.build(r2)
@@ -1752,13 +2735,19 @@ class AdditionalCoverageTest {
 
         // 1. securityStats missing
         val r1 = buildJsonObject {
-            put("service", buildJsonObject {
-                put("getRegInfo", true)
-                put("offlinePeriod", buildJsonObject {
-                    put("beginTime", buildValidDateTimeJson())
-                    put("endTime", buildValidDateTimeJson())
-                })
-            })
+            put(
+                "service",
+                buildJsonObject {
+                    put("getRegInfo", true)
+                    put(
+                        "offlinePeriod",
+                        buildJsonObject {
+                            put("beginTime", buildValidDateTimeJson())
+                            put("endTime", buildValidDateTimeJson())
+                        }
+                    )
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> {
             builder.build(r1)
@@ -1766,16 +2755,32 @@ class AdditionalCoverageTest {
 
         // 2. regInfo missing
         val r2 = buildJsonObject {
-            put("service", buildJsonObject {
-                put("getRegInfo", true)
-                put("offlinePeriod", buildJsonObject {
-                    put("beginTime", buildValidDateTimeJson())
-                    put("endTime", buildValidDateTimeJson())
-                })
-                put("securityStats", buildJsonObject {
-                    put("geoPosition", buildJsonObject { put("latitude", 1); put("longitude", 2); put("source", "CELL") })
-                })
-            })
+            put(
+                "service",
+                buildJsonObject {
+                    put("getRegInfo", true)
+                    put(
+                        "offlinePeriod",
+                        buildJsonObject {
+                            put("beginTime", buildValidDateTimeJson())
+                            put("endTime", buildValidDateTimeJson())
+                        }
+                    )
+                    put(
+                        "securityStats",
+                        buildJsonObject {
+                            put(
+                                "geoPosition",
+                                buildJsonObject {
+                                    put("latitude", 1)
+                                    put("longitude", 2)
+                                    put("source", "CELL")
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> {
             builder.build(r2)
@@ -1795,11 +2800,14 @@ class AdditionalCoverageTest {
             put("protocolVersion", "203")
             put("messageType", "REQUEST")
             put("commandType", "COMMAND_SYSTEM")
-            put("header", buildJsonObject {
-                put("deviceId", true) // boolean
-                put("token", 123)
-                put("reqNum", 1)
-            })
+            put(
+                "header",
+                buildJsonObject {
+                    put("deviceId", true) // boolean
+                    put("token", 123)
+                    put("reqNum", 1)
+                }
+            )
             put("payload", buildJsonObject {})
         }
         val (_, errors) = JsonMessageMapper.parseEnvelope(badEnv)
@@ -1820,15 +2828,30 @@ class AdditionalCoverageTest {
         // 2. validateTaxes element not JsonObject
         val item2 = buildJsonObject {
             put("type", "ITEM_TYPE_COMMODITY")
-            put("commodity", buildJsonObject {
-                put("name", "T")
-                put("sectionCode", "1")
-                put("quantity", 1)
-                put("price", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("measureUnitCode", "796")
-                put("taxes", buildJsonArray { add(123) })
-            })
+            put(
+                "commodity",
+                buildJsonObject {
+                    put("name", "T")
+                    put("sectionCode", "1")
+                    put("quantity", 1)
+                    put(
+                        "price",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("measureUnitCode", "796")
+                    put("taxes", buildJsonArray { add(123) })
+                }
+            )
         }
         val errs2 = validator.validate(item2, "$.item")
         assertTrue(errs2.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.item.commodity.taxes[0]" })
@@ -1836,18 +2859,37 @@ class AdditionalCoverageTest {
         // 3. validateExciseStampList element not string primitive
         val item3 = buildJsonObject {
             put("type", "ITEM_TYPE_COMMODITY")
-            put("commodity", buildJsonObject {
-                put("name", "T")
-                put("sectionCode", "1")
-                put("quantity", 1)
-                put("price", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("measureUnitCode", "796")
-                put("listExciseStamp", buildJsonArray { add(buildJsonObject {}) })
-            })
+            put(
+                "commodity",
+                buildJsonObject {
+                    put("name", "T")
+                    put("sectionCode", "1")
+                    put("quantity", 1)
+                    put(
+                        "price",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("measureUnitCode", "796")
+                    put("listExciseStamp", buildJsonArray { add(buildJsonObject {}) })
+                }
+            )
         }
         val errs3 = validator.validate(item3, "$.item")
-        assertTrue(errs3.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.item.commodity.listExciseStamp[0]" })
+        assertTrue(
+            errs3.any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.item.commodity.listExciseStamp[0]"
+            }
+        )
     }
 
     @Test
@@ -1857,7 +2899,13 @@ class AdditionalCoverageTest {
         // 1. taxes array element not JsonObject
         val m = buildJsonObject {
             put("name", "M")
-            put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
+            put(
+                "sum",
+                buildJsonObject {
+                    put("bills", 10)
+                    put("coins", 0)
+                }
+            )
             put("taxes", buildJsonArray { add(123) })
         }
         val errs = validator.validate(buildJsonObject { put("key", m) }, "key", "$.key")
@@ -1871,14 +2919,25 @@ class AdditionalCoverageTest {
         // 1. operation missing
         val p = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("moneyPlacement", buildJsonObject {
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-            })
+            put(
+                "moneyPlacement",
+                buildJsonObject {
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                }
+            )
         }
         val errs = validator.validate(CommandType.COMMAND_MONEY_PLACEMENT, p)
-        assertTrue(errs.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.moneyPlacement.operation" })
+        assertTrue(
+            errs.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.moneyPlacement.operation" }
+        )
     }
 
     @Test
@@ -1888,33 +2947,78 @@ class AdditionalCoverageTest {
         // 1. stornoTaxes branch
         val p1 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray {
-                    add(buildJsonObject {
-                        put("type", "ITEM_TYPE_STORNO_COMMODITY")
-                        put("stornoCommodity", buildJsonObject {
-                            put("name", "T")
-                            put("sectionCode", "1")
-                            put("quantity", 1)
-                            put("price", buildJsonObject { put("bills", 100); put("coins", 0) })
-                            put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                            put("measureUnitCode", "796")
-                            put("taxes", buildJsonArray {
-                                add(buildJsonObject {
-                                    put("taxType", 1)
-                                    put("percent", 1200)
-                                    put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                                    put("isInTotalSum", true)
-                                })
-                            })
-                        })
-                    })
-                })
-                put("amounts", buildJsonObject { put("total", buildJsonObject { put("bills", 100); put("coins", 0) }) })
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put(
+                        "items",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM_TYPE_STORNO_COMMODITY")
+                                    put(
+                                        "stornoCommodity",
+                                        buildJsonObject {
+                                            put("name", "T")
+                                            put("sectionCode", "1")
+                                            put("quantity", 1)
+                                            put(
+                                                "price",
+                                                buildJsonObject {
+                                                    put("bills", 100)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                            put(
+                                                "sum",
+                                                buildJsonObject {
+                                                    put("bills", 100)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                            put("measureUnitCode", "796")
+                                            put(
+                                                "taxes",
+                                                buildJsonArray {
+                                                    add(
+                                                        buildJsonObject {
+                                                            put("taxType", 1)
+                                                            put("percent", 1200)
+                                                            put(
+                                                                "sum",
+                                                                buildJsonObject {
+                                                                    put("bills", 10)
+                                                                    put("coins", 0)
+                                                                }
+                                                            )
+                                                            put("isInTotalSum", true)
+                                                        }
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "amounts",
+                        buildJsonObject {
+                            put(
+                                "total",
+                                buildJsonObject {
+                                    put("bills", 100)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errs1 = validator.validate(CommandType.COMMAND_TICKET, p1)
         assertTrue(errs1.isEmpty()) // valid
@@ -1922,30 +3026,63 @@ class AdditionalCoverageTest {
         // 2. payments element not JsonObject
         val p2 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("payments", buildJsonArray { add(123) })
-                put("amounts", buildJsonObject { put("total", buildJsonObject { put("bills", 100); put("coins", 0) }) })
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put("payments", buildJsonArray { add(123) })
+                    put(
+                        "amounts",
+                        buildJsonObject {
+                            put(
+                                "total",
+                                buildJsonObject {
+                                    put("bills", 100)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errs2 = validator.validate(CommandType.COMMAND_TICKET, p2)
-        assertTrue(errs2.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.ticket.payments[0]" })
+        assertTrue(
+            errs2.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.ticket.payments[0]" }
+        )
 
         // 3. hasCashPayment is true but amounts is null
         val p3 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("payments", buildJsonArray {
-                    add(buildJsonObject { put("type", "PAYMENT_CASH"); put("sum", buildJsonObject { put("bills", 100); put("coins", 0) }) })
-                })
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put(
+                        "payments",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "PAYMENT_CASH")
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 100)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errs3 = validator.validate(CommandType.COMMAND_TICKET, p3)
         assertTrue(errs3.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket.amounts" })
@@ -1953,22 +3090,52 @@ class AdditionalCoverageTest {
         // 4. hasCashPayment is true but amounts lacks taken and change
         val p4 = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("payments", buildJsonArray {
-                    add(buildJsonObject { put("type", "PAYMENT_CASH"); put("sum", buildJsonObject { put("bills", 100); put("coins", 0) }) })
-                })
-                put("amounts", buildJsonObject {
-                    put("total", buildJsonObject { put("bills", 100); put("coins", 0) })
-                })
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put(
+                        "payments",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "PAYMENT_CASH")
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 100)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "amounts",
+                        buildJsonObject {
+                            put(
+                                "total",
+                                buildJsonObject {
+                                    put("bills", 100)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errs4 = validator.validate(CommandType.COMMAND_TICKET, p4)
-        assertTrue(errs4.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket.amounts.taken" })
-        assertTrue(errs4.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket.amounts.change" })
+        assertTrue(
+            errs4.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket.amounts.taken" }
+        )
+        assertTrue(
+            errs4.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.ticket.amounts.change" }
+        )
     }
 
     @Test
@@ -1977,153 +3144,349 @@ class AdditionalCoverageTest {
 
         // 1. All optional fields present
         val payload = buildJsonObject {
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray {
-                    add(buildJsonObject {
-                        put("type", "ITEM_TYPE_COMMODITY")
-                        put("commodity", buildJsonObject {
-                            put("name", "Commodity")
-                            put("sectionCode", "1")
-                            put("quantity", 1000)
-                            put("price", buildJsonObject { put("bills", 10); put("coins", 0) })
-                            put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                            put("taxes", buildJsonArray {
-                                add(buildJsonObject {
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put(
+                        "items",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM_TYPE_COMMODITY")
+                                    put(
+                                        "commodity",
+                                        buildJsonObject {
+                                            put("name", "Commodity")
+                                            put("sectionCode", "1")
+                                            put("quantity", 1000)
+                                            put(
+                                                "price",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                            put(
+                                                "sum",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                            put(
+                                                "taxes",
+                                                buildJsonArray {
+                                                    add(
+                                                        buildJsonObject {
+                                                            put("taxType", 1)
+                                                            put("taxationType", 2)
+                                                            put("percent", 1200)
+                                                            put(
+                                                                "sum",
+                                                                buildJsonObject {
+                                                                    put("bills", 1)
+                                                                    put("coins", 0)
+                                                                }
+                                                            )
+                                                            put("isInTotalSum", true)
+                                                        }
+                                                    )
+                                                }
+                                            )
+                                            put("listExciseStamp", buildJsonArray { add("STAMP123") })
+                                            put("physicalLabel", "LABEL")
+                                            put("productId", "PROD")
+                                            put("barcode", "BAR")
+                                            put("measureUnitCode", "796")
+                                            put("ntin", "NTIN")
+                                        }
+                                    )
+                                }
+                            )
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM_TYPE_STORNO_COMMODITY")
+                                    put(
+                                        "stornoCommodity",
+                                        buildJsonObject {
+                                            put("name", "Storno")
+                                            put("sectionCode", "1")
+                                            put("quantity", 1000)
+                                            put(
+                                                "price",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                            put(
+                                                "sum",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                            put(
+                                                "taxes",
+                                                buildJsonArray {
+                                                    add(
+                                                        buildJsonObject {
+                                                            put("taxType", 1)
+                                                            put("percent", 1200)
+                                                            put(
+                                                                "sum",
+                                                                buildJsonObject {
+                                                                    put("bills", 1)
+                                                                    put("coins", 0)
+                                                                }
+                                                            )
+                                                            put("isInTotalSum", true)
+                                                        }
+                                                    )
+                                                }
+                                            )
+                                            put("listExciseStamp", buildJsonArray { add("STAMP456") })
+                                            put("physicalLabel", "LABEL")
+                                            put("productId", "PROD")
+                                            put("barcode", "BAR")
+                                            put("measureUnitCode", "796")
+                                            put("ntin", "NTIN")
+                                        }
+                                    )
+                                }
+                            )
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM_TYPE_MARKUP")
+                                    put(
+                                        "markup",
+                                        buildJsonObject {
+                                            put("name", "Markup")
+                                            put(
+                                                "sum",
+                                                buildJsonObject {
+                                                    put("bills", 1)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                            put(
+                                                "taxes",
+                                                buildJsonArray {
+                                                    add(
+                                                        buildJsonObject {
+                                                            put("taxType", 1)
+                                                            put("percent", 1200)
+                                                            put(
+                                                                "sum",
+                                                                buildJsonObject {
+                                                                    put("bills", 0)
+                                                                    put("coins", 10)
+                                                                }
+                                                            )
+                                                            put("isInTotalSum", true)
+                                                        }
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            )
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM_TYPE_STORNO_MARKUP")
+                                    put(
+                                        "stornoMarkup",
+                                        buildJsonObject {
+                                            put("name", "StornoMarkup")
+                                            put(
+                                                "sum",
+                                                buildJsonObject {
+                                                    put("bills", 1)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            )
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM_TYPE_DISCOUNT")
+                                    put(
+                                        "discount",
+                                        buildJsonObject {
+                                            put("name", "Discount")
+                                            put(
+                                                "sum",
+                                                buildJsonObject {
+                                                    put("bills", 1)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            )
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM_TYPE_STORNO_DISCOUNT")
+                                    put(
+                                        "stornoDiscount",
+                                        buildJsonObject {
+                                            put("name", "StornoDiscount")
+                                            put(
+                                                "sum",
+                                                buildJsonObject {
+                                                    put("bills", 1)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "payments",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "PAYMENT_CARD")
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 10)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                    put(
+                                        "cardPaymentFields",
+                                        buildJsonObject {
+                                            put("posTerminalId", "TERM1")
+                                            put("posCardType", "VISA")
+                                            put("posAutorizationCode", 123)
+                                            put("posRrn", 456L)
+                                            put("posReceiptNumber", 789)
+                                        }
+                                    )
+                                    put(
+                                        "mobilePaymentFields",
+                                        buildJsonObject {
+                                            put("qrType", "QR")
+                                            put("qrId", "QR1")
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "taxes",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
                                     put("taxType", 1)
-                                    put("taxationType", 2)
                                     put("percent", 1200)
-                                    put("sum", buildJsonObject { put("bills", 1); put("coins", 0) })
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 1)
+                                            put("coins", 0)
+                                        }
+                                    )
                                     put("isInTotalSum", true)
-                                })
-                            })
-                            put("listExciseStamp", buildJsonArray { add("STAMP123") })
-                            put("physicalLabel", "LABEL")
-                            put("productId", "PROD")
-                            put("barcode", "BAR")
-                            put("measureUnitCode", "796")
-                            put("ntin", "NTIN")
-                        })
-                    })
-                    add(buildJsonObject {
-                        put("type", "ITEM_TYPE_STORNO_COMMODITY")
-                        put("stornoCommodity", buildJsonObject {
-                            put("name", "Storno")
-                            put("sectionCode", "1")
-                            put("quantity", 1000)
-                            put("price", buildJsonObject { put("bills", 10); put("coins", 0) })
-                            put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                            put("taxes", buildJsonArray {
-                                add(buildJsonObject {
-                                    put("taxType", 1)
-                                    put("percent", 1200)
-                                    put("sum", buildJsonObject { put("bills", 1); put("coins", 0) })
-                                    put("isInTotalSum", true)
-                                })
-                            })
-                            put("listExciseStamp", buildJsonArray { add("STAMP456") })
-                            put("physicalLabel", "LABEL")
-                            put("productId", "PROD")
-                            put("barcode", "BAR")
-                            put("measureUnitCode", "796")
-                            put("ntin", "NTIN")
-                        })
-                    })
-                    add(buildJsonObject {
-                        put("type", "ITEM_TYPE_MARKUP")
-                        put("markup", buildJsonObject {
-                            put("name", "Markup")
-                            put("sum", buildJsonObject { put("bills", 1); put("coins", 0) })
-                            put("taxes", buildJsonArray {
-                                add(buildJsonObject {
-                                    put("taxType", 1)
-                                    put("percent", 1200)
-                                    put("sum", buildJsonObject { put("bills", 0); put("coins", 10) })
-                                    put("isInTotalSum", true)
-                                })
-                            })
-                        })
-                    })
-                    add(buildJsonObject {
-                        put("type", "ITEM_TYPE_STORNO_MARKUP")
-                        put("stornoMarkup", buildJsonObject {
-                            put("name", "StornoMarkup")
-                            put("sum", buildJsonObject { put("bills", 1); put("coins", 0) })
-                        })
-                    })
-                    add(buildJsonObject {
-                        put("type", "ITEM_TYPE_DISCOUNT")
-                        put("discount", buildJsonObject {
-                            put("name", "Discount")
-                            put("sum", buildJsonObject { put("bills", 1); put("coins", 0) })
-                        })
-                    })
-                    add(buildJsonObject {
-                        put("type", "ITEM_TYPE_STORNO_DISCOUNT")
-                        put("stornoDiscount", buildJsonObject {
-                            put("name", "StornoDiscount")
-                            put("sum", buildJsonObject { put("bills", 1); put("coins", 0) })
-                        })
-                    })
-                })
-                put("payments", buildJsonArray {
-                    add(buildJsonObject {
-                        put("type", "PAYMENT_CARD")
-                        put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                        put("cardPaymentFields", buildJsonObject {
-                            put("posTerminalId", "TERM1")
-                            put("posCardType", "VISA")
-                            put("posAutorizationCode", 123)
-                            put("posRrn", 456L)
-                            put("posReceiptNumber", 789)
-                        })
-                        put("mobilePaymentFields", buildJsonObject {
-                            put("qrType", "QR")
-                            put("qrId", "QR1")
-                        })
-                    })
-                })
-                put("taxes", buildJsonArray {
-                    add(buildJsonObject {
-                        put("taxType", 1)
-                        put("percent", 1200)
-                        put("sum", buildJsonObject { put("bills", 1); put("coins", 0) })
-                        put("isInTotalSum", true)
-                    })
-                })
-                put("amounts", buildJsonObject {
-                    put("total", buildJsonObject { put("bills", 10); put("coins", 0) })
-                    put("taken", buildJsonObject { put("bills", 10); put("coins", 0) })
-                    put("change", buildJsonObject { put("bills", 0); put("coins", 0) })
-                    put("markup", buildJsonObject {
-                        put("name", "M")
-                        put("sum", buildJsonObject { put("bills", 1); put("coins", 0) })
-                    })
-                    put("discount", buildJsonObject {
-                        put("name", "D")
-                        put("sum", buildJsonObject { put("bills", 1); put("coins", 0) })
-                    })
-                })
-                put("extensionOptions", buildJsonObject {
-                    put("customerEmail", "email")
-                    put("customerPhone", "phone")
-                    put("customerIinOrBin", "iin")
-                })
-                put("offlineTicketNumber", 100)
-                put("printedTicket", "printed")
-                put("frShiftNumber", 200)
-                put("shiftDocumentNumber", 300)
-                put("printedDocumentNumber", 400L)
-                put("parentTicket", buildJsonObject {
-                    put("parentTicketNumber", "123")
-                    put("parentTicketDateTime", buildValidDateTimeJson())
-                    put("kgdKkmId", "kgd")
-                    put("parentTicketTotal", buildJsonObject { put("bills", 10); put("coins", 0) })
-                    put("parentTicketIsOffline", false)
-                })
-            })
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "amounts",
+                        buildJsonObject {
+                            put(
+                                "total",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "taken",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "change",
+                                buildJsonObject {
+                                    put("bills", 0)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "markup",
+                                buildJsonObject {
+                                    put("name", "M")
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 1)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                }
+                            )
+                            put(
+                                "discount",
+                                buildJsonObject {
+                                    put("name", "D")
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 1)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "extensionOptions",
+                        buildJsonObject {
+                            put("customerEmail", "email")
+                            put("customerPhone", "phone")
+                            put("customerIinOrBin", "iin")
+                        }
+                    )
+                    put("offlineTicketNumber", 100)
+                    put("printedTicket", "printed")
+                    put("frShiftNumber", 200)
+                    put("shiftDocumentNumber", 300)
+                    put("printedDocumentNumber", 400L)
+                    put(
+                        "parentTicket",
+                        buildJsonObject {
+                            put("parentTicketNumber", "123")
+                            put("parentTicketDateTime", buildValidDateTimeJson())
+                            put("kgdKkmId", "kgd")
+                            put(
+                                "parentTicketTotal",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                            put("parentTicketIsOffline", false)
+                        }
+                    )
+                }
+            )
         }
         val ticketProto = builder.build(payload)
         assertEquals(Common.OperationTypeEnum.OPERATION_SELL, ticketProto.operation)
@@ -2131,47 +3494,115 @@ class AdditionalCoverageTest {
 
         // 2. commodity name missing but code present
         val p2 = buildJsonObject {
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray {
-                    add(buildJsonObject {
-                        put("type", "ITEM_TYPE_COMMODITY")
-                        put("commodity", buildJsonObject {
-                            put("code", 12345L) // code instead of name
-                            put("sectionCode", "1")
-                            put("quantity", 1000)
-                            put("price", buildJsonObject { put("bills", 10); put("coins", 0) })
-                            put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                        })
-                    })
-                })
-                put("amounts", buildJsonObject { put("total", buildJsonObject { put("bills", 10); put("coins", 0) }) })
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put(
+                        "items",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM_TYPE_COMMODITY")
+                                    put(
+                                        "commodity",
+                                        buildJsonObject {
+                                            put("code", 12345L) // code instead of name
+                                            put("sectionCode", "1")
+                                            put("quantity", 1000)
+                                            put(
+                                                "price",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                            put(
+                                                "sum",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "amounts",
+                        buildJsonObject {
+                            put(
+                                "total",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val ticket2 = builder.build(p2)
         assertEquals(12345L, ticket2.getItems(0).commodity.code)
 
         // 3. both name and code missing in commodity (throws require)
         val p3 = buildJsonObject {
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray {
-                    add(buildJsonObject {
-                        put("type", "ITEM_TYPE_COMMODITY")
-                        put("commodity", buildJsonObject {
-                            put("sectionCode", "1")
-                            put("quantity", 1000)
-                            put("price", buildJsonObject { put("bills", 10); put("coins", 0) })
-                            put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                        })
-                    })
-                })
-                put("amounts", buildJsonObject { put("total", buildJsonObject { put("bills", 10); put("coins", 0) }) })
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put(
+                        "items",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM_TYPE_COMMODITY")
+                                    put(
+                                        "commodity",
+                                        buildJsonObject {
+                                            put("sectionCode", "1")
+                                            put("quantity", 1000)
+                                            put(
+                                                "price",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                            put(
+                                                "sum",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "amounts",
+                        buildJsonObject {
+                            put(
+                                "total",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> {
             builder.build(p3)
@@ -2186,12 +3617,33 @@ class AdditionalCoverageTest {
         val s1 = buildJsonObject {
             put("dateTime", buildValidDateTimeJson())
             put("shiftNumber", 1)
-            put("cashSum", buildJsonObject { put("bills", 10); put("coins", 0) })
-            put("revenue", buildJsonObject { put("sum", buildJsonObject { put("bills", 10); put("coins", 0) }); put("isNegative", false) })
+            put(
+                "cashSum",
+                buildJsonObject {
+                    put("bills", 10)
+                    put("coins", 0)
+                }
+            )
+            put(
+                "revenue",
+                buildJsonObject {
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 10)
+                            put("coins", 0)
+                        }
+                    )
+                    put("isNegative", false)
+                }
+            )
             put("openShiftTime", buildValidDateTimeJson())
-            put("sections", buildJsonArray {
-                add(buildJsonObject { put("sectionCode", "1") }) // operations missing
-            })
+            put(
+                "sections",
+                buildJsonArray {
+                    add(buildJsonObject { put("sectionCode", "1") }) // operations missing
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> { builder.build(s1) }
 
@@ -2199,12 +3651,38 @@ class AdditionalCoverageTest {
         val s2 = buildJsonObject {
             put("dateTime", buildValidDateTimeJson())
             put("shiftNumber", 1)
-            put("cashSum", buildJsonObject { put("bills", 10); put("coins", 0) })
-            put("revenue", buildJsonObject { put("sum", buildJsonObject { put("bills", 10); put("coins", 0) }); put("isNegative", false) })
+            put(
+                "cashSum",
+                buildJsonObject {
+                    put("bills", 10)
+                    put("coins", 0)
+                }
+            )
+            put(
+                "revenue",
+                buildJsonObject {
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 10)
+                            put("coins", 0)
+                        }
+                    )
+                    put("isNegative", false)
+                }
+            )
             put("openShiftTime", buildValidDateTimeJson())
-            put("taxes", buildJsonArray {
-                add(buildJsonObject { put("taxType", 1); put("percent", 1200) }) // operations missing
-            })
+            put(
+                "taxes",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
+                            put("taxType", 1)
+                            put("percent", 1200)
+                        }
+                    ) // operations missing
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> { builder.build(s2) }
 
@@ -2212,27 +3690,80 @@ class AdditionalCoverageTest {
         val s3 = buildJsonObject {
             put("dateTime", buildValidDateTimeJson())
             put("shiftNumber", 1)
-            put("cashSum", buildJsonObject { put("bills", 10); put("coins", 0) })
-            put("revenue", buildJsonObject { put("sum", buildJsonObject { put("bills", 10); put("coins", 0) }); put("isNegative", false) })
+            put(
+                "cashSum",
+                buildJsonObject {
+                    put("bills", 10)
+                    put("coins", 0)
+                }
+            )
+            put(
+                "revenue",
+                buildJsonObject {
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 10)
+                            put("coins", 0)
+                        }
+                    )
+                    put("isNegative", false)
+                }
+            )
             put("openShiftTime", buildValidDateTimeJson())
-            put("ticketOperations", buildJsonArray {
-                add(buildJsonObject {
-                    put("operation", "OPERATION_SELL")
-                    put("ticketsTotalCount", 1)
-                    put("ticketsCount", 1)
-                    put("ticketsSum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                    put("offlineCount", 0)
-                    put("discountSum", buildJsonObject { put("bills", 0); put("coins", 0) })
-                    put("markupSum", buildJsonObject { put("bills", 0); put("coins", 0) })
-                    put("changeSum", buildJsonObject { put("bills", 0); put("coins", 0) })
-                }) // payments missing
-            })
+            put(
+                "ticketOperations",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
+                            put("operation", "OPERATION_SELL")
+                            put("ticketsTotalCount", 1)
+                            put("ticketsCount", 1)
+                            put(
+                                "ticketsSum",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                            put("offlineCount", 0)
+                            put(
+                                "discountSum",
+                                buildJsonObject {
+                                    put("bills", 0)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "markupSum",
+                                buildJsonObject {
+                                    put("bills", 0)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "changeSum",
+                                buildJsonObject {
+                                    put("bills", 0)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    ) // payments missing
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> { builder.build(s3) }
 
         // 4. DateTimeBuilder build missing date throws exception
         val dt = buildJsonObject {
-            put("time", buildJsonObject { put("hour", 12); put("minute", 0) })
+            put(
+                "time",
+                buildJsonObject {
+                    put("hour", 12)
+                    put("minute", 0)
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> {
             DateTimeBuilder().build(buildJsonObject { put("dt", dt) }, "dt")
@@ -2245,113 +3776,306 @@ class AdditionalCoverageTest {
         val zxReportJson = buildJsonObject {
             put("dateTime", buildValidDateTimeJson())
             put("shiftNumber", 1)
-            put("sections", buildJsonArray {
-                add(buildJsonObject {
-                    put("sectionCode", "1")
-                    put("operations", buildJsonArray {
-                        add(buildJsonObject {
+            put(
+                "sections",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
+                            put("sectionCode", "1")
+                            put(
+                                "operations",
+                                buildJsonArray {
+                                    add(
+                                        buildJsonObject {
+                                            put("operation", "OPERATION_SELL")
+                                            put("count", 1)
+                                            put(
+                                                "sum",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+            put(
+                "operations",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
                             put("operation", "OPERATION_SELL")
                             put("count", 1)
-                            put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                        })
-                    })
-                })
-            })
-            put("operations", buildJsonArray {
-                add(buildJsonObject {
-                    put("operation", "OPERATION_SELL")
-                    put("count", 1)
-                    put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                })
-            })
-            put("discounts", buildJsonArray {
-                add(buildJsonObject {
-                    put("operation", "OPERATION_SELL")
-                    put("count", 1)
-                    put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                })
-            })
-            put("markups", buildJsonArray {
-                add(buildJsonObject {
-                    put("operation", "OPERATION_SELL")
-                    put("count", 1)
-                    put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                })
-            })
-            put("totalResult", buildJsonArray {
-                add(buildJsonObject {
-                    put("operation", "OPERATION_SELL")
-                    put("count", 1)
-                    put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                })
-            })
-            put("taxes", buildJsonArray {
-                add(buildJsonObject {
-                    put("taxType", 1)
-                    put("percent", 1200)
-                    put("operations", buildJsonArray {
-                        add(buildJsonObject {
+                            put(
+                                "sum",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+            put(
+                "discounts",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
                             put("operation", "OPERATION_SELL")
-                            put("turnover", buildJsonObject { put("bills", 10); put("coins", 0) })
-                            put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                            put("turnoverWithoutTax", buildJsonObject { put("bills", 10); put("coins", 0) })
-                        })
-                    })
-                })
-            })
-            put("startShiftNonNullableSums", buildJsonArray {
-                add(buildJsonObject {
-                    put("operation", "OPERATION_SELL")
-                    put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                })
-            })
-            put("ticketOperations", buildJsonArray {
-                add(buildJsonObject {
-                    put("operation", "OPERATION_SELL")
-                    put("ticketsTotalCount", 1)
-                    put("ticketsCount", 1)
-                    put("ticketsSum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                    put("payments", buildJsonArray {
-                        add(buildJsonObject {
-                            put("payment", "PAYMENT_CASH")
-                            put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
                             put("count", 1)
-                        })
-                    })
-                    put("offlineCount", 0)
-                    put("discountSum", buildJsonObject { put("bills", 0); put("coins", 0) })
-                    put("markupSum", buildJsonObject { put("bills", 0); put("coins", 0) })
-                    put("changeSum", buildJsonObject { put("bills", 0); put("coins", 0) })
-                })
-            })
-            put("moneyPlacements", buildJsonArray {
-                add(buildJsonObject {
-                    put("operation", "MONEY_PLACEMENT_DEPOSIT")
-                    put("operationsTotalCount", 1)
-                    put("operationsCount", 1)
-                    put("operationsSum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                    put("offlineCount", 0)
-                })
-            })
-            put("annulledTickets", buildJsonObject {
-                put("annulledTicketsTotalCount", 1)
-                put("annulledTicketsCount", 1)
-                put("annulledOperations", buildJsonArray {
-                    add(buildJsonObject {
-                        put("operation", "OPERATION_SELL")
-                        put("count", 1)
-                        put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                    })
-                })
-            })
-            put("cashSum", buildJsonObject { put("bills", 10); put("coins", 0) })
-            put("revenue", buildJsonObject { put("sum", buildJsonObject { put("bills", 10); put("coins", 0) }); put("isNegative", false) })
-            put("nonNullableSums", buildJsonArray {
-                add(buildJsonObject {
-                    put("operation", "OPERATION_SELL")
-                    put("sum", buildJsonObject { put("bills", 10); put("coins", 0) })
-                })
-            })
+                            put(
+                                "sum",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+            put(
+                "markups",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
+                            put("operation", "OPERATION_SELL")
+                            put("count", 1)
+                            put(
+                                "sum",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+            put(
+                "totalResult",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
+                            put("operation", "OPERATION_SELL")
+                            put("count", 1)
+                            put(
+                                "sum",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+            put(
+                "taxes",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
+                            put("taxType", 1)
+                            put("percent", 1200)
+                            put(
+                                "operations",
+                                buildJsonArray {
+                                    add(
+                                        buildJsonObject {
+                                            put("operation", "OPERATION_SELL")
+                                            put(
+                                                "turnover",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                            put(
+                                                "sum",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                            put(
+                                                "turnoverWithoutTax",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+            put(
+                "startShiftNonNullableSums",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
+                            put("operation", "OPERATION_SELL")
+                            put(
+                                "sum",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+            put(
+                "ticketOperations",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
+                            put("operation", "OPERATION_SELL")
+                            put("ticketsTotalCount", 1)
+                            put("ticketsCount", 1)
+                            put(
+                                "ticketsSum",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "payments",
+                                buildJsonArray {
+                                    add(
+                                        buildJsonObject {
+                                            put("payment", "PAYMENT_CASH")
+                                            put(
+                                                "sum",
+                                                buildJsonObject {
+                                                    put("bills", 10)
+                                                    put("coins", 0)
+                                                }
+                                            )
+                                            put("count", 1)
+                                        }
+                                    )
+                                }
+                            )
+                            put("offlineCount", 0)
+                            put(
+                                "discountSum",
+                                buildJsonObject {
+                                    put("bills", 0)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "markupSum",
+                                buildJsonObject {
+                                    put("bills", 0)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "changeSum",
+                                buildJsonObject {
+                                    put("bills", 0)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+            put(
+                "moneyPlacements",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
+                            put("operation", "MONEY_PLACEMENT_DEPOSIT")
+                            put("operationsTotalCount", 1)
+                            put("operationsCount", 1)
+                            put(
+                                "operationsSum",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                            put("offlineCount", 0)
+                        }
+                    )
+                }
+            )
+            put(
+                "annulledTickets",
+                buildJsonObject {
+                    put("annulledTicketsTotalCount", 1)
+                    put("annulledTicketsCount", 1)
+                    put(
+                        "annulledOperations",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("operation", "OPERATION_SELL")
+                                    put("count", 1)
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 10)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+            put(
+                "cashSum",
+                buildJsonObject {
+                    put("bills", 10)
+                    put("coins", 0)
+                }
+            )
+            put(
+                "revenue",
+                buildJsonObject {
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 10)
+                            put("coins", 0)
+                        }
+                    )
+                    put("isNegative", false)
+                }
+            )
+            put(
+                "nonNullableSums",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
+                            put("operation", "OPERATION_SELL")
+                            put(
+                                "sum",
+                                buildJsonObject {
+                                    put("bills", 10)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
             put("openShiftTime", buildValidDateTimeJson())
             put("closeShiftTime", buildValidDateTimeJson())
         }
@@ -2386,80 +4110,181 @@ class AdditionalCoverageTest {
 
         // 3. regInfo has missing/invalid kkm or org, and pos is not JsonObject
         val s3 = buildJsonObject {
-            put("regInfo", buildJsonObject {
-                put("kkm", 123)
-                put("org", 123)
-                put("pos", 123)
-            })
+            put(
+                "regInfo",
+                buildJsonObject {
+                    put("kkm", 123)
+                    put("org", 123)
+                    put("pos", 123)
+                }
+            )
         }
         val errs3 = validator.validate(s3)
-        assertTrue(errs3.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.regInfo.kkm" })
-        assertTrue(errs3.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.regInfo.org" })
-        assertTrue(errs3.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.regInfo.pos" })
+        assertTrue(
+            errs3.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.regInfo.kkm" }
+        )
+        assertTrue(
+            errs3.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.regInfo.org" }
+        )
+        assertTrue(
+            errs3.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.regInfo.pos" }
+        )
 
         // 4. ticketAds is not an array, pos has invalid fields
         val s4 = buildJsonObject {
-            put("regInfo", buildJsonObject {
-                put("kkm", buildJsonObject {
-                    put("fnsKkmId", "fns")
-                    put("serialNumber", "sn")
-                    put("kkmId", "id")
-                })
-                put("org", buildJsonObject {
-                    put("title", "org")
-                    put("address", "addr")
-                    put("addressKz", "addrKz")
-                    put("inn", "inn")
-                })
-                put("pos", buildJsonObject {
-                    put("title", " ")
-                    put("address", "")
-                    put("addressKz", " ")
-                    put("latitude", -1)
-                    put("longitude", -2)
-                })
-            })
+            put(
+                "regInfo",
+                buildJsonObject {
+                    put(
+                        "kkm",
+                        buildJsonObject {
+                            put("fnsKkmId", "fns")
+                            put("serialNumber", "sn")
+                            put("kkmId", "id")
+                        }
+                    )
+                    put(
+                        "org",
+                        buildJsonObject {
+                            put("title", "org")
+                            put("address", "addr")
+                            put("addressKz", "addrKz")
+                            put("inn", "inn")
+                        }
+                    )
+                    put(
+                        "pos",
+                        buildJsonObject {
+                            put("title", " ")
+                            put("address", "")
+                            put("addressKz", " ")
+                            put("latitude", -1)
+                            put("longitude", -2)
+                        }
+                    )
+                }
+            )
             put("ticketAds", 123)
         }
         val errs4 = validator.validate(s4)
-        assertTrue(errs4.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.regInfo.pos.title" })
-        assertTrue(errs4.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.regInfo.pos.address" })
-        assertTrue(errs4.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.regInfo.pos.addressKz" })
-        assertTrue(errs4.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.regInfo.pos.latitude" })
-        assertTrue(errs4.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.regInfo.pos.longitude" })
-        assertTrue(errs4.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.ticketAds" })
+        assertTrue(
+            errs4.any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.regInfo.pos.title"
+            }
+        )
+        assertTrue(
+            errs4.any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.regInfo.pos.address"
+            }
+        )
+        assertTrue(
+            errs4.any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.regInfo.pos.addressKz"
+            }
+        )
+        assertTrue(
+            errs4.any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.regInfo.pos.latitude"
+            }
+        )
+        assertTrue(
+            errs4.any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.regInfo.pos.longitude"
+            }
+        )
+        assertTrue(
+            errs4.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.ticketAds" }
+        )
 
         // 5. ticketAds is array with non-JsonObject elements
         val s5 = buildJsonObject {
-            put("regInfo", buildJsonObject {
-                put("kkm", buildJsonObject { put("fnsKkmId", "a"); put("serialNumber", "b"); put("kkmId", "c") })
-                put("org", buildJsonObject { put("title", "a"); put("address", "b"); put("addressKz", "c"); put("inn", "d") })
-            })
+            put(
+                "regInfo",
+                buildJsonObject {
+                    put(
+                        "kkm",
+                        buildJsonObject {
+                            put("fnsKkmId", "a")
+                            put("serialNumber", "b")
+                            put("kkmId", "c")
+                        }
+                    )
+                    put(
+                        "org",
+                        buildJsonObject {
+                            put("title", "a")
+                            put("address", "b")
+                            put("addressKz", "c")
+                            put("inn", "d")
+                        }
+                    )
+                }
+            )
             put("ticketAds", buildJsonArray { add(123) })
         }
         val errs5 = validator.validate(s5)
-        assertTrue(errs5.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.ticketAds[0]" })
+        assertTrue(
+            errs5.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.service.ticketAds[0]" }
+        )
 
         // 6. ticketAds elements with invalid info/text
         val s6 = buildJsonObject {
-            put("regInfo", buildJsonObject {
-                put("kkm", buildJsonObject { put("fnsKkmId", "a"); put("serialNumber", "b"); put("kkmId", "c") })
-                put("org", buildJsonObject { put("title", "a"); put("address", "b"); put("addressKz", "c"); put("inn", "d") })
-            })
-            put("ticketAds", buildJsonArray {
-                add(buildJsonObject {
-                    put("info", buildJsonObject {
-                        put("type", "")
-                        put("version", -1L)
-                    })
-                    put("text", " ")
-                })
-            })
+            put(
+                "regInfo",
+                buildJsonObject {
+                    put(
+                        "kkm",
+                        buildJsonObject {
+                            put("fnsKkmId", "a")
+                            put("serialNumber", "b")
+                            put("kkmId", "c")
+                        }
+                    )
+                    put(
+                        "org",
+                        buildJsonObject {
+                            put("title", "a")
+                            put("address", "b")
+                            put("addressKz", "c")
+                            put("inn", "d")
+                        }
+                    )
+                }
+            )
+            put(
+                "ticketAds",
+                buildJsonArray {
+                    add(
+                        buildJsonObject {
+                            put(
+                                "info",
+                                buildJsonObject {
+                                    put("type", "")
+                                    put("version", -1L)
+                                }
+                            )
+                            put("text", " ")
+                        }
+                    )
+                }
+            )
         }
         val errs6 = validator.validate(s6)
-        assertTrue(errs6.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.ticketAds[0].info.type" })
-        assertTrue(errs6.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.ticketAds[0].info.version" })
-        assertTrue(errs6.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.ticketAds[0].text" })
+        assertTrue(
+            errs6.any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.ticketAds[0].info.type"
+            }
+        )
+        assertTrue(
+            errs6.any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.ticketAds[0].info.version"
+            }
+        )
+        assertTrue(
+            errs6.any {
+                it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.service.ticketAds[0].text"
+            }
+        )
     }
 
     @Test
@@ -2475,7 +4300,10 @@ class AdditionalCoverageTest {
         val err2 = ValidationError("c", "p", "ru", "kk", "en", mapOf("x" to "y"))
         assertEquals(err1, err2)
         assertEquals(err1.hashCode(), err2.hashCode())
-        assertEquals("ValidationError(code=c, path=p, messageRu=ru, messageKk=kk, messageEn=en, params={x=y})", err1.toString())
+        assertEquals(
+            "ValidationError(code=c, path=p, messageRu=ru, messageKk=kk, messageEn=en, params={x=y})",
+            err1.toString()
+        )
         val copied = err1.copy(code = "c2")
         assertEquals("c2", copied.code)
     }
@@ -2497,11 +4325,14 @@ class AdditionalCoverageTest {
 
         // 2. Missing sum
         val p1 = buildJsonObject {
-            put("moneyPlacement", buildJsonObject {
-                put("dateTime", buildValidDateTimeJson())
-                put("operation", "MONEY_PLACEMENT_DEPOSIT")
-                put("operator", buildValidOperatorJson())
-            })
+            put(
+                "moneyPlacement",
+                buildJsonObject {
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operation", "MONEY_PLACEMENT_DEPOSIT")
+                    put("operator", buildValidOperatorJson())
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> {
             builder.build(p1)
@@ -2509,11 +4340,20 @@ class AdditionalCoverageTest {
 
         // 3. Missing operator
         val p2 = buildJsonObject {
-            put("moneyPlacement", buildJsonObject {
-                put("dateTime", buildValidDateTimeJson())
-                put("operation", "MONEY_PLACEMENT_DEPOSIT")
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-            })
+            put(
+                "moneyPlacement",
+                buildJsonObject {
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operation", "MONEY_PLACEMENT_DEPOSIT")
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> {
             builder.build(p2)
@@ -2521,15 +4361,24 @@ class AdditionalCoverageTest {
 
         // 4. Test optional fields coverage (isOffline, frShiftNumber, printedDocumentNumber)
         val p3 = buildJsonObject {
-            put("moneyPlacement", buildJsonObject {
-                put("dateTime", buildValidDateTimeJson())
-                put("operation", "MONEY_PLACEMENT_DEPOSIT")
-                put("sum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                put("operator", buildValidOperatorJson())
-                put("isOffline", true)
-                put("frShiftNumber", 5)
-                put("printedDocumentNumber", 10L)
-            })
+            put(
+                "moneyPlacement",
+                buildJsonObject {
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operation", "MONEY_PLACEMENT_DEPOSIT")
+                    put(
+                        "sum",
+                        buildJsonObject {
+                            put("bills", 100)
+                            put("coins", 0)
+                        }
+                    )
+                    put("operator", buildValidOperatorJson())
+                    put("isOffline", true)
+                    put("frShiftNumber", 5)
+                    put("printedDocumentNumber", 10L)
+                }
+            )
         }
         val proto = builder.build(p3)
         assertTrue(proto.isOffline)
@@ -2540,9 +4389,10 @@ class AdditionalCoverageTest {
     @Test
     fun testResponseDeserializerServiceAndTicket() {
         val ad = Common.TicketAd.newBuilder()
-            .setInfo(Common.TicketAdInfo.newBuilder()
-                .setType(Common.TicketAdTypeEnum.TICKET_AD_INFO)
-                .setVersion(1L)
+            .setInfo(
+                Common.TicketAdInfo.newBuilder()
+                    .setType(Common.TicketAdTypeEnum.TICKET_AD_INFO)
+                    .setVersion(1L)
             )
             .setText("Ad Text")
             .build()
@@ -2573,10 +4423,11 @@ class AdditionalCoverageTest {
 
         val service = Service.ServiceResponse.newBuilder()
             .addTicketAds(ad)
-            .setRegInfo(Service.ServiceResponse.RegInfo.newBuilder()
-                .setKkm(kkm)
-                .setOrg(org)
-                .setPos(pos)
+            .setRegInfo(
+                Service.ServiceResponse.RegInfo.newBuilder()
+                    .setKkm(kkm)
+                    .setOrg(org)
+                    .setPos(pos)
             )
             .build()
 
@@ -2611,16 +4462,21 @@ class AdditionalCoverageTest {
             put("protocolVersion", "203")
             put("messageType", "REQUEST")
             put("commandType", "COMMAND_TICKET")
-            put("header", buildJsonObject {
-                put("deviceId", 123)
-                put("token", 456)
-                put("reqNum", 1)
-            })
+            put(
+                "header",
+                buildJsonObject {
+                    put("deviceId", 123)
+                    put("token", 456)
+                    put("reqNum", 1)
+                }
+            )
             put("payload", buildJsonObject {})
         }
         val res1 = codec.encode(badEnv)
         assertTrue(res1.isFailure)
-        assertTrue((res1.exceptionOrNull() as OfdCodecException).errors.any { it.code == ErrorCode.PROTOCOL_UNSUPPORTED.name })
+        assertTrue(
+            (res1.exceptionOrNull() as OfdCodecException).errors.any { it.code == ErrorCode.PROTOCOL_UNSUPPORTED.name }
+        )
 
         // 2. Encode with messageType != REQUEST (e.g. RESPONSE)
         val badMsgType = buildJsonObject {
@@ -2628,16 +4484,23 @@ class AdditionalCoverageTest {
             put("protocolVersion", "203")
             put("messageType", "RESPONSE")
             put("commandType", "COMMAND_TICKET")
-            put("header", buildJsonObject {
-                put("deviceId", 123)
-                put("token", 456)
-                put("reqNum", 1)
-            })
+            put(
+                "header",
+                buildJsonObject {
+                    put("deviceId", 123)
+                    put("token", 456)
+                    put("reqNum", 1)
+                }
+            )
             put("payload", buildJsonObject {})
         }
         val res2 = codec.encode(badMsgType)
         assertTrue(res2.isFailure)
-        assertTrue((res2.exceptionOrNull() as OfdCodecException).errors.any { it.code == ErrorCode.ENCODE_UNSUPPORTED_MESSAGE_TYPE.name })
+        assertTrue(
+            (res2.exceptionOrNull() as OfdCodecException).errors.any {
+                it.code == ErrorCode.ENCODE_UNSUPPORTED_MESSAGE_TYPE.name
+            }
+        )
 
         // 3. Decode with response validation errors
         val customRegistry = OfdRegistry()
@@ -2693,50 +4556,92 @@ class AdditionalCoverageTest {
         // 2. Missing nomenclature.result and invalid element.type (missing and non-string)
         val r2 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("nomenclature", buildJsonObject {
-                put("version", 1)
-                put("elements", buildJsonArray {
-                    add(buildJsonObject {
-                        put("type", 123)
-                        put("title", "T")
-                        put("id", 1L)
-                    })
-                    add(buildJsonObject {
-                        put("title", "T")
-                        put("id", 1L)
-                    })
-                })
-            })
+            put(
+                "nomenclature",
+                buildJsonObject {
+                    put("version", 1)
+                    put(
+                        "elements",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", 123)
+                                    put("title", "T")
+                                    put("id", 1L)
+                                }
+                            )
+                            add(
+                                buildJsonObject {
+                                    put("title", "T")
+                                    put("id", 1L)
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errs2 = validator.validate(CommandType.COMMAND_NOMENCLATURE, r2)
-        assertTrue(errs2.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature.result" })
-        assertTrue(errs2.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.nomenclature.elements[0].type" })
-        assertTrue(errs2.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature.elements[1].type" })
+        assertTrue(
+            errs2.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature.result" }
+        )
+        assertTrue(
+            errs2.any {
+                it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.nomenclature.elements[0].type"
+            }
+        )
+        assertTrue(
+            errs2.any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature.elements[1].type"
+            }
+        )
 
         // 3. Elements item taxes object is not JsonObject, and invalid tax fields
         val r3 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("nomenclature", buildJsonObject {
-                put("version", 1)
-                put("result", buildJsonObject { put("code", 0); put("name", "OK") })
-                put("elements", buildJsonArray {
-                    add(buildJsonObject {
-                        put("type", "ITEM")
-                        put("title", "T")
-                        put("id", 1L)
-                        put("item", buildJsonObject {
-                            put("taxes", buildJsonArray {
-                                add(123)
-                                add(buildJsonObject {
-                                    put("taxationType", -1)
-                                    put("taxType", -1)
-                                    put("taxPercent", -1)
-                                })
-                            })
-                        })
-                    })
-                })
-            })
+            put(
+                "nomenclature",
+                buildJsonObject {
+                    put("version", 1)
+                    put(
+                        "result",
+                        buildJsonObject {
+                            put("code", 0)
+                            put("name", "OK")
+                        }
+                    )
+                    put(
+                        "elements",
+                        buildJsonArray {
+                            add(
+                                buildJsonObject {
+                                    put("type", "ITEM")
+                                    put("title", "T")
+                                    put("id", 1L)
+                                    put(
+                                        "item",
+                                        buildJsonObject {
+                                            put(
+                                                "taxes",
+                                                buildJsonArray {
+                                                    add(123)
+                                                    add(
+                                                        buildJsonObject {
+                                                            put("taxationType", -1)
+                                                            put("taxType", -1)
+                                                            put("taxPercent", -1)
+                                                        }
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errs3 = validator.validate(CommandType.COMMAND_NOMENCLATURE, r3)
         val basePath = "$.payload.nomenclature.elements[0].item.taxes"
@@ -2753,14 +4658,21 @@ class AdditionalCoverageTest {
         // 1. resultCode != 0 and ticket present with invalid fields
         val r1 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 1) })
-            put("ticket", buildJsonObject {
-                put("ticketNumber", " ")
-                put("qrCodeBase64", " ")
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("ticketNumber", " ")
+                    put("qrCodeBase64", " ")
+                }
+            )
         }
         val errs1 = validator.validate(CommandType.COMMAND_TICKET, r1)
-        assertTrue(errs1.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.ticketNumber" })
-        assertTrue(errs1.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.qrCodeBase64" })
+        assertTrue(
+            errs1.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.ticketNumber" }
+        )
+        assertTrue(
+            errs1.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$.payload.ticket.qrCodeBase64" }
+        )
     }
 
     @Test
@@ -2768,16 +4680,40 @@ class AdditionalCoverageTest {
         val validator = ResponseValidatorCloseShift()
         val r = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("report", buildJsonObject {
-                put("reportType", "REPORT_Z")
-                put("zxReport", buildJsonObject {
-                    put("dateTime", buildValidDateTimeJson())
-                    put("shiftNumber", 1)
-                    put("cashSum", buildJsonObject { put("bills", 100); put("coins", 0) })
-                    put("revenue", buildJsonObject { put("sum", buildJsonObject { put("bills", 100); put("coins", 0) }); put("isNegative", false) })
-                    put("openShiftTime", buildValidDateTimeJson())
-                })
-            })
+            put(
+                "report",
+                buildJsonObject {
+                    put("reportType", "REPORT_Z")
+                    put(
+                        "zxReport",
+                        buildJsonObject {
+                            put("dateTime", buildValidDateTimeJson())
+                            put("shiftNumber", 1)
+                            put(
+                                "cashSum",
+                                buildJsonObject {
+                                    put("bills", 100)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "revenue",
+                                buildJsonObject {
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 100)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                    put("isNegative", false)
+                                }
+                            )
+                            put("openShiftTime", buildValidDateTimeJson())
+                        }
+                    )
+                }
+            )
             put("service", 123)
         }
         val errs = validator.validate(CommandType.COMMAND_CLOSE_SHIFT, r)
@@ -2788,10 +4724,13 @@ class AdditionalCoverageTest {
     fun testCloseShiftRequestBuilderMissingOperator() {
         val builder = CloseShiftRequestBuilder()
         val p = buildJsonObject {
-            put("closeShift", buildJsonObject {
-                put("closeTime", buildValidDateTimeJson())
-                put("zReport", buildValidZReportJson())
-            })
+            put(
+                "closeShift",
+                buildJsonObject {
+                    put("closeTime", buildValidDateTimeJson())
+                    put("zReport", buildValidZReportJson())
+                }
+            )
         }
         val ex = assertFailsWith<IllegalArgumentException> {
             builder.build(p)
@@ -2812,11 +4751,14 @@ class AdditionalCoverageTest {
             put("ofdId", "kazakhtelecom")
             put("messageType", "REQUEST")
             put("commandType", "COMMAND_SYSTEM")
-            put("header", buildJsonObject {
-                put("deviceId", 123)
-                put("token", 456)
-                put("reqNum", 1)
-            })
+            put(
+                "header",
+                buildJsonObject {
+                    put("deviceId", 123)
+                    put("token", 456)
+                    put("reqNum", 1)
+                }
+            )
             put("payload", buildJsonObject {})
         }
         val (parsed, errors) = JsonMessageMapper.parseEnvelope(env)
@@ -2830,23 +4772,43 @@ class AdditionalCoverageTest {
 
         val p = buildJsonObject {
             put("service", buildValidServiceJson())
-            put("ticket", buildJsonObject {
-                put("operation", "OPERATION_SELL_RETURN")
-                put("dateTime", buildValidDateTimeJson())
-                put("operator", buildValidOperatorJson())
-                put("items", buildJsonArray { add(buildValidItemJson()) })
-                put("amounts", buildJsonObject { put("total", buildJsonObject { put("bills", 100); put("coins", 0) }) })
-                put("extensionOptions", buildJsonObject {
-                    put("customerEmail", " ")
-                    put("customerPhone", " ")
-                    put("customerIinOrBin", " ")
-                })
-                put("parentTicket", buildJsonObject {
-                    put("parentTicketNumber", " ")
-                    put("kgdKkmId", "")
-                    put("parentTicketIsOffline", 123)
-                })
-            })
+            put(
+                "ticket",
+                buildJsonObject {
+                    put("operation", "OPERATION_SELL_RETURN")
+                    put("dateTime", buildValidDateTimeJson())
+                    put("operator", buildValidOperatorJson())
+                    put("items", buildJsonArray { add(buildValidItemJson()) })
+                    put(
+                        "amounts",
+                        buildJsonObject {
+                            put(
+                                "total",
+                                buildJsonObject {
+                                    put("bills", 100)
+                                    put("coins", 0)
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "extensionOptions",
+                        buildJsonObject {
+                            put("customerEmail", " ")
+                            put("customerPhone", " ")
+                            put("customerIinOrBin", " ")
+                        }
+                    )
+                    put(
+                        "parentTicket",
+                        buildJsonObject {
+                            put("parentTicketNumber", " ")
+                            put("kgdKkmId", "")
+                            put("parentTicketIsOffline", 123)
+                        }
+                    )
+                }
+            )
         }
         val errs = validator.validate(CommandType.COMMAND_TICKET, p)
         val pathOpt = "$.payload.ticket.extensionOptions"
@@ -2854,9 +4816,13 @@ class AdditionalCoverageTest {
         assertTrue(errs.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$pathOpt.customerEmail" })
         assertTrue(errs.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$pathOpt.customerPhone" })
         assertTrue(errs.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$pathOpt.customerIinOrBin" })
-        assertTrue(errs.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$pathParent.parentTicketNumber" })
+        assertTrue(
+            errs.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$pathParent.parentTicketNumber" }
+        )
         assertTrue(errs.any { it.code == ErrorCode.JSON_INVALID_VALUE.name && it.path == "$pathParent.kgdKkmId" })
-        assertTrue(errs.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$pathParent.parentTicketIsOffline" })
+        assertTrue(
+            errs.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$pathParent.parentTicketIsOffline" }
+        )
     }
 
     @Test
@@ -2895,17 +4861,24 @@ class AdditionalCoverageTest {
             put("protocolVersion", "203")
             put("messageType", "REQUEST")
             put("commandType", "COMMAND_SYSTEM")
-            put("header", buildJsonObject {
-                put("deviceId", 123)
-                put("token", 456)
-                put("reqNum", 1)
-            })
+            put(
+                "header",
+                buildJsonObject {
+                    put("deviceId", 123)
+                    put("token", 456)
+                    put("reqNum", 1)
+                }
+            )
             put("payload", buildJsonObject {})
         }
         val res1 = codec1.encode(envelope1)
         assertTrue(res1.isFailure)
         val ex1 = res1.exceptionOrNull() as OfdCodecException
-        assertTrue(ex1.errors.any { it.code == ErrorCode.SERIALIZATION_FAILED.name && it.params["reason"] == "RuntimeException" })
+        assertTrue(
+            ex1.errors.any {
+                it.code == ErrorCode.SERIALIZATION_FAILED.name && it.params["reason"] == "RuntimeException"
+            }
+        )
 
         // 3. OfdCodec: Deserialization failed with null message exception -> Line 140(partly)
         val customRegistry2 = OfdRegistry()
@@ -2941,25 +4914,45 @@ class AdditionalCoverageTest {
         val res2 = codec2.decode(bytes)
         assertTrue(res2.isFailure)
         val ex2 = res2.exceptionOrNull() as OfdCodecException
-        assertTrue(ex2.errors.any { it.code == ErrorCode.DESERIALIZATION_FAILED.name && it.params["reason"] == "RuntimeException" })
+        assertTrue(
+            ex2.errors.any {
+                it.code == ErrorCode.DESERIALIZATION_FAILED.name && it.params["reason"] == "RuntimeException"
+            }
+        )
 
         // 4. ResponseValidatorNomenclature: resultCodeValue not primitive/integer, createdTime valid JsonObject -> Line 43(partly), 72(partly), 73
         val valNomenclature = ResponseValidatorNomenclature()
         val rNomenclature1 = buildJsonObject {
-            put("result", buildJsonObject {
-                put("resultCode", buildJsonObject {}) // not primitive
-            })
+            put(
+                "result",
+                buildJsonObject {
+                    put("resultCode", buildJsonObject {}) // not primitive
+                }
+            )
         }
         val errsNomenclature1 = valNomenclature.validate(CommandType.COMMAND_NOMENCLATURE, rNomenclature1)
-        assertTrue(errsNomenclature1.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature" })
+        assertTrue(
+            errsNomenclature1.any {
+                it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.nomenclature"
+            }
+        )
 
         val rNomenclature2 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("nomenclature", buildJsonObject {
-                put("version", 1)
-                put("createdTime", buildValidDateTimeJson()) // valid JsonObject
-                put("result", buildJsonObject { put("code", 0); put("name", "OK") })
-            })
+            put(
+                "nomenclature",
+                buildJsonObject {
+                    put("version", 1)
+                    put("createdTime", buildValidDateTimeJson()) // valid JsonObject
+                    put(
+                        "result",
+                        buildJsonObject {
+                            put("code", 0)
+                            put("name", "OK")
+                        }
+                    )
+                }
+            )
         }
         val errsNomenclature2 = valNomenclature.validate(CommandType.COMMAND_NOMENCLATURE, rNomenclature2)
         assertTrue(errsNomenclature2.isEmpty())
@@ -2968,34 +4961,55 @@ class AdditionalCoverageTest {
         val valMoney = ResponseValidatorMoneyPlacement()
         val rMoney = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("service", buildJsonObject {
-                put("getRegInfo", true)
-                put("offlinePeriod", buildJsonObject {
-                    put("beginTime", buildValidDateTimeJson())
-                    put("endTime", buildValidDateTimeJson())
-                })
-                put("securityStats", buildJsonObject {
-                    put("geoPosition", buildJsonObject {
-                        put("latitude", 123)
-                        put("longitude", 456)
-                        put("source", "CELL")
-                    })
-                })
-                put("regInfo", buildJsonObject {
-                    put("kkm", buildJsonObject {
-                        put("fnsKkmId", "fns")
-                        put("serialNumber", "serial")
-                        put("kkmId", "kkmId")
-                    })
-                    put("org", buildJsonObject {
-                        put("title", "org")
-                        put("address", "address")
-                        put("addressKz", "addressKz")
-                        put("inn", "inn")
-                        put("okved", "okved")
-                    })
-                })
-            })
+            put(
+                "service",
+                buildJsonObject {
+                    put("getRegInfo", true)
+                    put(
+                        "offlinePeriod",
+                        buildJsonObject {
+                            put("beginTime", buildValidDateTimeJson())
+                            put("endTime", buildValidDateTimeJson())
+                        }
+                    )
+                    put(
+                        "securityStats",
+                        buildJsonObject {
+                            put(
+                                "geoPosition",
+                                buildJsonObject {
+                                    put("latitude", 123)
+                                    put("longitude", 456)
+                                    put("source", "CELL")
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "regInfo",
+                        buildJsonObject {
+                            put(
+                                "kkm",
+                                buildJsonObject {
+                                    put("fnsKkmId", "fns")
+                                    put("serialNumber", "serial")
+                                    put("kkmId", "kkmId")
+                                }
+                            )
+                            put(
+                                "org",
+                                buildJsonObject {
+                                    put("title", "org")
+                                    put("address", "address")
+                                    put("addressKz", "addressKz")
+                                    put("inn", "inn")
+                                    put("okved", "okved")
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errsMoney = valMoney.validate(CommandType.COMMAND_MONEY_PLACEMENT, rMoney)
         assertTrue(errsMoney.isEmpty())
@@ -3003,65 +5017,119 @@ class AdditionalCoverageTest {
         // 6. ResponseValidatorCloseShift: resultCodeValue/reportTypeValue not primitive, service as valid JsonObject -> Line 42(partly), 54(partly), 68
         val valCloseShift = ResponseValidatorCloseShift()
         val rCloseShift1 = buildJsonObject {
-            put("result", buildJsonObject {
-                put("resultCode", buildJsonObject {}) // not primitive
-            })
+            put(
+                "result",
+                buildJsonObject {
+                    put("resultCode", buildJsonObject {}) // not primitive
+                }
+            )
         }
         val errsCloseShift1 = valCloseShift.validate(CommandType.COMMAND_CLOSE_SHIFT, rCloseShift1)
-        assertTrue(errsCloseShift1.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.report" })
+        assertTrue(
+            errsCloseShift1.any { it.code == ErrorCode.JSON_MISSING_FIELD.name && it.path == "$.payload.report" }
+        )
 
         val rCloseShift2 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("report", buildJsonObject {
-                put("reportType", true) // primitive but not string
-            })
+            put(
+                "report",
+                buildJsonObject {
+                    put("reportType", true) // primitive but not string
+                }
+            )
         }
         val errsCloseShift2 = valCloseShift.validate(CommandType.COMMAND_CLOSE_SHIFT, rCloseShift2)
-        assertTrue(errsCloseShift2.any { it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.report.reportType" })
+        assertTrue(
+            errsCloseShift2.any {
+                it.code == ErrorCode.JSON_INVALID_TYPE.name && it.path == "$.payload.report.reportType"
+            }
+        )
 
         val rCloseShift3 = buildJsonObject {
             put("result", buildJsonObject { put("resultCode", 0) })
-            put("report", buildJsonObject {
-                put("reportType", "REPORT_Z")
-                put("zxReport", buildJsonObject {
-                    put("dateTime", buildValidDateTimeJson())
-                    put("shiftNumber", 1)
-                    put("cashSum", buildJsonObject { put("bills", 10000); put("coins", 0) })
-                    put("revenue", buildJsonObject {
-                        put("sum", buildJsonObject { put("bills", 10000); put("coins", 0) })
-                        put("isNegative", false)
-                    })
-                    put("openShiftTime", buildValidDateTimeJson())
-                })
-            })
-            put("service", buildJsonObject {
-                put("getRegInfo", true)
-                put("offlinePeriod", buildJsonObject {
-                    put("beginTime", buildValidDateTimeJson())
-                    put("endTime", buildValidDateTimeJson())
-                })
-                put("securityStats", buildJsonObject {
-                    put("geoPosition", buildJsonObject {
-                        put("latitude", 123)
-                        put("longitude", 456)
-                        put("source", "CELL")
-                    })
-                })
-                put("regInfo", buildJsonObject {
-                    put("kkm", buildJsonObject {
-                        put("fnsKkmId", "fns")
-                        put("serialNumber", "serial")
-                        put("kkmId", "kkmId")
-                    })
-                    put("org", buildJsonObject {
-                        put("title", "org")
-                        put("address", "address")
-                        put("addressKz", "addressKz")
-                        put("inn", "inn")
-                        put("okved", "okved")
-                    })
-                })
-            })
+            put(
+                "report",
+                buildJsonObject {
+                    put("reportType", "REPORT_Z")
+                    put(
+                        "zxReport",
+                        buildJsonObject {
+                            put("dateTime", buildValidDateTimeJson())
+                            put("shiftNumber", 1)
+                            put(
+                                "cashSum",
+                                buildJsonObject {
+                                    put("bills", 10000)
+                                    put("coins", 0)
+                                }
+                            )
+                            put(
+                                "revenue",
+                                buildJsonObject {
+                                    put(
+                                        "sum",
+                                        buildJsonObject {
+                                            put("bills", 10000)
+                                            put("coins", 0)
+                                        }
+                                    )
+                                    put("isNegative", false)
+                                }
+                            )
+                            put("openShiftTime", buildValidDateTimeJson())
+                        }
+                    )
+                }
+            )
+            put(
+                "service",
+                buildJsonObject {
+                    put("getRegInfo", true)
+                    put(
+                        "offlinePeriod",
+                        buildJsonObject {
+                            put("beginTime", buildValidDateTimeJson())
+                            put("endTime", buildValidDateTimeJson())
+                        }
+                    )
+                    put(
+                        "securityStats",
+                        buildJsonObject {
+                            put(
+                                "geoPosition",
+                                buildJsonObject {
+                                    put("latitude", 123)
+                                    put("longitude", 456)
+                                    put("source", "CELL")
+                                }
+                            )
+                        }
+                    )
+                    put(
+                        "regInfo",
+                        buildJsonObject {
+                            put(
+                                "kkm",
+                                buildJsonObject {
+                                    put("fnsKkmId", "fns")
+                                    put("serialNumber", "serial")
+                                    put("kkmId", "kkmId")
+                                }
+                            )
+                            put(
+                                "org",
+                                buildJsonObject {
+                                    put("title", "org")
+                                    put("address", "address")
+                                    put("addressKz", "addressKz")
+                                    put("inn", "inn")
+                                    put("okved", "okved")
+                                }
+                            )
+                        }
+                    )
+                }
+            )
         }
         val errsCloseShift3 = valCloseShift.validate(CommandType.COMMAND_CLOSE_SHIFT, rCloseShift3)
         assertTrue(errsCloseShift3.isEmpty())
@@ -3069,15 +5137,17 @@ class AdditionalCoverageTest {
         // 7. CloseShiftRequestBuilder: operator is primitive -> Line 39(partly), 40
         val builderCloseShift = CloseShiftRequestBuilder()
         val pCloseShift = buildJsonObject {
-            put("closeShift", buildJsonObject {
-                put("closeTime", buildValidDateTimeJson())
-                put("zReport", buildValidZReportJson())
-                put("operator", 123) // primitive instead of JsonObject
-            })
+            put(
+                "closeShift",
+                buildJsonObject {
+                    put("closeTime", buildValidDateTimeJson())
+                    put("zReport", buildValidZReportJson())
+                    put("operator", 123) // primitive instead of JsonObject
+                }
+            )
         }
         assertFailsWith<IllegalArgumentException> {
             builderCloseShift.build(pCloseShift)
         }
     }
 }
-
