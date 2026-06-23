@@ -43,7 +43,7 @@ style:
   WildcardImport:
     active: true
     excludes: ['**/test/**', '**/*Test.kt']
-    excludeImports: ['kotlin.test.*', 'kotlinx.serialization.json.*', 'java.util.*', 'kz.mybrain.superkassa.core.domain.model.*', 'kz.mybrain.superkassa.core.domain.port.*', 'org.springframework.web.bind.annotation.*', 'kz.mybrain.superkassa.core.application.model.*', 'kz.mybrain.superkassa.core.application.model.receipt.*', 'androidx.room.*']
+    excludeImports: ['kotlin.test.*', 'kotlinx.serialization.json.*', 'java.util.*']
   MaxLineLength:
     active: true
     maxLineLength: 180
@@ -54,16 +54,15 @@ style:
     excludes: ['**/test/**', '**/*Test.kt']
   FunctionOnlyReturningConstant:
     active: true
-    excludes: ['**/ErrorMessages.kt', '**/ZxTaxBlockBuilder.kt']
   ThrowsCount:
     active: true
     max: 10
   UnusedPrivateMember:
     active: true
-    allowedNames: '(_.*|authorization|counters|queuePort|ofdConfig|pinHasher|clock|ofd)'
+    allowedNames: '(_.*)'
   UnusedPrivateProperty:
     active: true
-    allowedNames: '(_.*|authorization|counters|queuePort|ofdConfig|pinHasher|clock|ofd)'
+    allowedNames: '(_.*)'
   UnusedImports:
     active: true
 
@@ -88,10 +87,9 @@ exceptions:
     excludes: ['**/test/**', '**/*Test.kt']
   SwallowedException:
     active: true
-    excludes: ['**/OfdInfoCountersSnapshotParser.kt', '**/OfdResponseUtils.kt', '**/OfdManagerAdapter.kt', '**/DeliveryPortAdapter.kt', '**/ReceiptHtmlRenderer.kt', '**/ConsoleLoader.kt', '**/*Controller.kt', '**/*Mapper.kt', '**/*Indicator.kt', '**/*Delegate.kt', '**/*Repository.kt', '**/*Session.kt', '**/*HealthChecker.kt', '**/*Adapter.kt']
   TooGenericExceptionCaught:
     active: true
-    excludes: ['**/OfdCodec.kt', '**/OfdInfoCountersSnapshotParser.kt', '**/OfdQueueCommandHandler.kt', '**/OfdResponseUtils.kt', '**/OfdManagerAdapter.kt', '**/Base64TokenCodecPort.kt', '**/ResilienceOfdManagerPortAdapter.kt', '**/DeliveryPortAdapter.kt', '**/ReceiptHtmlRenderer.kt', '**/ConsoleLoader.kt', '**/*Controller.kt', '**/*Mapper.kt', '**/*Indicator.kt', '**/*Delegate.kt', '**/*Repository.kt', '**/*Session.kt', '**/*HealthChecker.kt', '**/*Adapter.kt']
+    excludes: ['**/OfdCodec.kt']
 
 formatting:
   active: true
