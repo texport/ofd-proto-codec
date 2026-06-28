@@ -15,6 +15,12 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
+    - name: Checkout ofd-kt-proto
+      uses: actions/checkout@v4
+      with:
+        repository: texport/ofd-kt-proto
+        path: ofd-kt-proto
+
     - name: Checkout ofd-network-client
       uses: actions/checkout@v4
       with:
@@ -28,9 +34,12 @@ jobs:
         distribution: 'temurin'
         cache: 'gradle'
 
-    - name: Build & Publish ofd-network-client to Maven Local
+    - name: Build & Publish dependencies to Maven Local
       run: |
-        cd ofd-network-client
+        cd ofd-kt-proto
+        chmod +x gradlew
+        ./gradlew publishToMavenLocal
+        cd ../ofd-network-client
         chmod +x gradlew
         ./gradlew publishToMavenLocal
         cd ..
