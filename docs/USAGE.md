@@ -489,3 +489,40 @@ Key rules for `COMMAND_TICKET`: / Ключевые правила для `COMMAN
   "nonNullableSums": [ { "operation": "OPERATION_SELL", "sum": { "bills": 100, "coins": 0 } } ]
 }
 ```
+
+---
+
+## Kotlin Multiplatform & Swift Integration / Интеграция в Kotlin Multiplatform и Swift
+
+`ofd-proto-codec` is a Kotlin Multiplatform (KMP) library compiling to JVM, Android, and Apple targets (`iosArm64`, `iosX64`, `iosSimulatorArm64`).
+
+### Kotlin Multiplatform (KMP) usage
+In `commonMain`, you can instantiate the codec and pass `kotlinx.serialization.json.JsonElement` objects:
+
+```kotlin
+import kotlinx.serialization.json.Json
+import kz.mybrain.ofdcodec.application.OfdCodec
+import kz.mybrain.ofdcodec.application.DefaultRegistry
+
+val registry = DefaultRegistry.create()
+val codec = OfdCodec(registry)
+
+val jsonInput = Json.parseToJsonElement("""{"ofdId": "kazakhtelecom", ...}""")
+val encodeResult = codec.encode(jsonInput)
+if (encodeResult.isSuccess) {
+    val jsonResponse = encodeResult.getOrNull()
+    val base64Bytes = jsonResponse?.get("messageBase64")
+}
+```
+
+### Swift (iOS/macOS) integration via SPM
+In Swift, import the package `OfdProtoCodec` and use the class helper to serialize or deserialize. Because Kotlin's `Result` and `kotlinx.serialization` types are exported to Objective-C interfaces, we recommend calling the codec from your shared Kotlin module (`commonMain`) and presenting a simplified Swift-friendly API to Xcode.
+
+If you instantiate it directly in Swift:
+```swift
+import OfdProtoCodec
+
+let registry = DefaultRegistry.companion.create()
+let codec = OfdCodec(registry: registry, ofdResolver: OfdCodecKt.defaultResolver())
+```
+

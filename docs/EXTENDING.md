@@ -4,9 +4,9 @@ The `ofd-proto-codec` library is designed following the principles of Clean Arch
 / Библиотека `ofd-proto-codec` спроектирована по принципам Чистой Архитектуры и SOLID, что позволяет легко добавлять поддержку новых версий протокола ОФД или новых провайдеров (например, Транстелеком, Казахтелеком v3.0.0 и т.д.) без изменения ядра кодека.
 
 > [!IMPORTANT]
-> All port interfaces (`Validator`, `Serializer`, `Deserializer`) and the registry `OfdRegistry` are declared with `internal` visibility to prevent leakage of implementation details outside the library. Adding new protocols and OFD providers must be done by creating corresponding packages directly within the source code of this library (in the directory `src/main/kotlin/kz/mybrain/ofdcodec/ofd/`).
+> All port interfaces (`Validator`, `Serializer`, `Deserializer`) and the registry `OfdRegistry` are declared with `internal` visibility to prevent leakage of implementation details outside the library. Adding new protocols and OFD providers must be done by creating corresponding packages directly within the source code of this library (in the directory `src/commonMain/kotlin/kz/mybrain/ofdcodec/ofd/`).
 >
-> Все интерфейсы портов (`Validator`, `Serializer`, `Deserializer`) и реестр `OfdRegistry` объявлены с видимостью `internal` для предотвращения утечки деталей реализации наружу библиотеки. Добавление новых протоколов и ОФД должно производиться путем создания соответствующих пакетов непосредственно внутри исходного кода этой библиотеки (в папке `src/main/kotlin/kz/mybrain/ofdcodec/ofd/`).
+> Все интерфейсы портов (`Validator`, `Serializer`, `Deserializer`) и реестр `OfdRegistry` объявлены с видимостью `internal` для предотвращения утечки деталей реализации наружу библиотеки. Добавление новых протоколов и ОФД должно производиться путем создания соответствующих пакетов непосредственно внутри исходного кода этой библиотеки (в папке `src/commonMain/kotlin/kz/mybrain/ofdcodec/ofd/`).
 
 ---
 
