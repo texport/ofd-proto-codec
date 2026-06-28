@@ -5,23 +5,19 @@ detekt = "1.23.8"
 ofdNetworkClient = "1.1.0"
 serialization = "1.11.0"
 coroutines = "1.11.0"
-protobufJava = "4.35.1"
 nmcp = "1.4.4"
 wire = "5.1.0"
 javaTargetCore = "17"
 
-
 [libraries]
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 ofd-kt-proto = { group = "io.github.texport", name = "ofd-kt-proto", version.ref = "ofdKtProto" }
-protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobufJava" }
 ofd-network-client = { group = "io.github.texport", name = "ofd-network-client", version.ref = "ofdNetworkClient" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 wire-runtime = { group = "com.squareup.wire", name = "wire-runtime", version.ref = "wire" }
 
 [plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
