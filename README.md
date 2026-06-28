@@ -1,7 +1,7 @@
 # ofd-proto-codec
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.texport/ofd-proto-codec.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.texport/ofd-proto-codec)
-[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/texport/ofd-proto-codec/releases)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/texport/ofd-proto-codec/releases)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![CI Build](https://img.shields.io/github/actions/workflow/status/texport/ofd-proto-codec/ci.yml?branch=main&label=CI%20Build)](https://github.com/texport/ofd-proto-codec/actions)
 
@@ -32,7 +32,7 @@ Currently, it fully implements KazakhTelecom OFD protocol version 2.0.3 (v203).
 
 ### Installation
 
-#### Via Maven Central (Recommended)
+#### Kotlin Multiplatform & Android
 Add the dependency to your shared `commonMain` source set inside `build.gradle.kts`:
 
 ```kotlin
@@ -40,12 +40,18 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("io.github.texport:ofd-proto-codec:1.0.1")
+                implementation("io.github.texport:ofd-proto-codec:1.1.0")
             }
         }
     }
 }
 ```
+
+#### Apple Swift Package Manager (SPM)
+You can integrate this library directly into your iOS project using Xcode's Swift Package Manager:
+1. In Xcode, select **File ➔ Add Package Dependencies...**
+2. Enter the repository URL: `https://github.com/texport/ofd-proto-codec.git`
+3. Set the version rules to **Up to Next Major** starting with `1.1.0`.
 
 ---
 
@@ -63,7 +69,7 @@ kotlin {
 
 ### Подключение библиотеки
 
-#### Через Maven Central (Рекомендуемый способ)
+#### В Kotlin Multiplatform и Android
 Добавьте зависимость в ваш общий набор исходников `commonMain` в `build.gradle.kts`:
 
 ```kotlin
@@ -71,9 +77,16 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("io.github.texport:ofd-proto-codec:1.0.1")
+                implementation("io.github.texport:ofd-proto-codec:1.1.0")
             }
         }
     }
 }
+```
+
+#### В Apple iOS проектах (через SPM)
+Вы можете подключить библиотеку непосредственно в iOS приложение с помощью Swift Package Manager в Xcode:
+1. Выберите в Xcode: **File ➔ Add Package Dependencies...**
+2. Введите URL репозитория: `https://github.com/texport/ofd-proto-codec.git`
+3. Установите правило версии **Up to Next Major** начиная с `1.1.0`.
 ```
