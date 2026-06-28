@@ -2,7 +2,7 @@
 kotlin = "2.4.0"
 ofdKtProto = "2.0.3"
 detekt = "1.23.8"
-ofdNetworkClient = "1.0.0"
+ofdNetworkClient = "1.1.0"
 serialization = "1.11.0"
 coroutines = "1.11.0"
 protobufJava = "4.35.1"
