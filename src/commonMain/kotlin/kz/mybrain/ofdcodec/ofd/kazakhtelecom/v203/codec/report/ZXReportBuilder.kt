@@ -1,22 +1,18 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.report
 
-import kz.kazakhtelecom.proto.v203.*
-
 import kotlinx.serialization.json.JsonObject
-import kz.mybrain.ofdcodec.infrastructure.json.readBool
-import kz.mybrain.ofdcodec.infrastructure.json.readInt
-import kz.mybrain.ofdcodec.infrastructure.json.readLong
+import kz.kazakhtelecom.proto.v203.*
 import kz.mybrain.ofdcodec.infrastructure.json.readBoolRequired
 import kz.mybrain.ofdcodec.infrastructure.json.readIntRequired
 import kz.mybrain.ofdcodec.infrastructure.json.readObject
 import kz.mybrain.ofdcodec.infrastructure.json.readObjectList
 import kz.mybrain.ofdcodec.infrastructure.json.readObjectRequired
 import kz.mybrain.ofdcodec.infrastructure.json.readStringRequired
+import kz.mybrain.ofdcodec.infrastructure.util.Crc32
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common.DateTimeBuilder
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common.MoneyBuilder
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.enums.OperationTypeBuilder
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.enums.PaymentTypeBuilder
-import kz.mybrain.ofdcodec.infrastructure.util.Crc32
 
 /**
  * Сборщик ZXReport из JSON-структуры.
@@ -41,7 +37,9 @@ internal class ZXReportBuilder {
         val markups = zxReportJson.readObjectList("markups")?.map { buildOperation(it) } ?: emptyList()
         val totalResult = zxReportJson.readObjectList("totalResult")?.map { buildOperation(it) } ?: emptyList()
         val taxes = zxReportJson.readObjectList("taxes")?.map { buildTax(it) } ?: emptyList()
-        val startShiftNonNullableSums = zxReportJson.readObjectList("startShiftNonNullableSums")?.map { buildNonNullableSum(it) } ?: emptyList()
+        val startShiftNonNullableSums = zxReportJson.readObjectList("startShiftNonNullableSums")?.map {
+            buildNonNullableSum(it)
+        } ?: emptyList()
         val ticketOperations = zxReportJson.readObjectList("ticketOperations")?.map { buildTicketOperation(it) } ?: emptyList()
         val moneyPlacements = zxReportJson.readObjectList("moneyPlacements")?.map { buildMoneyPlacement(it) } ?: emptyList()
         val annulledTickets = zxReportJson.readObject("annulledTickets")?.let { buildAnnulledTickets(it) }
@@ -49,7 +47,9 @@ internal class ZXReportBuilder {
         val revenue = buildRevenue(zxReportJson.readObjectRequired("revenue"))
         val nonNullableSums = zxReportJson.readObjectList("nonNullableSums")?.map { buildNonNullableSum(it) } ?: emptyList()
         val openShiftTime = dateTimeBuilder.build(zxReportJson, "openShiftTime")
-        val closeShiftTime = zxReportJson.readObject("closeShiftTime")?.let { dateTimeBuilder.build(zxReportJson, "closeShiftTime") }
+        val closeShiftTime = zxReportJson.readObject("closeShiftTime")?.let {
+            dateTimeBuilder.build(zxReportJson, "closeShiftTime")
+        }
 
         val reportWithoutChecksum = ZXReport(
             date_time = dateTime,

@@ -43,7 +43,7 @@ style:
   WildcardImport:
     active: true
     excludes: ['**/test/**', '**/*Test.kt']
-    excludeImports: ['kotlin.test.*', 'kotlinx.serialization.json.*', 'java.util.*']
+    excludeImports: ['kotlin.test.*', 'kotlinx.serialization.json.*', 'java.util.*', 'kz.kazakhtelecom.proto.v203.*']
   MaxLineLength:
     active: true
     maxLineLength: 180
@@ -97,3 +97,5 @@ formatting:
   MaximumLineLength:
     active: true
     maxLineLength: 180
+  NoWildcardImports:
+    active: false

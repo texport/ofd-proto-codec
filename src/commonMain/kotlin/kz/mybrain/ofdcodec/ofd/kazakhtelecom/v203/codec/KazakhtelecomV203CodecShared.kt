@@ -1,10 +1,9 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec
 
-import kz.kazakhtelecom.proto.v203.*
-
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
+import kz.kazakhtelecom.proto.v203.*
 
 internal fun buildMoney(money: Money): JsonObject {
     return buildJsonObject {

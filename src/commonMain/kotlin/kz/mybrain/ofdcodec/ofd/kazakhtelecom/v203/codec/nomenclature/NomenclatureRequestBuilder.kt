@@ -1,9 +1,7 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.nomenclature
 
-import kz.kazakhtelecom.proto.v203.*
-
 import kotlinx.serialization.json.JsonObject
-
+import kz.kazakhtelecom.proto.v203.*
 import kz.mybrain.ofdcodec.infrastructure.json.readInt
 import kz.mybrain.ofdcodec.infrastructure.json.readString
 

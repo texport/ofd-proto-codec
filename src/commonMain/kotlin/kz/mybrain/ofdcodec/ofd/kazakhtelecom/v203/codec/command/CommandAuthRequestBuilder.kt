@@ -1,8 +1,8 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command
 
-import kz.kazakhtelecom.proto.v203.*
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kz.kazakhtelecom.proto.v203.*
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.service.ServiceRequestBuilder
 
 /**
