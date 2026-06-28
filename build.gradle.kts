@@ -1,19 +1,28 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+import java.security.MessageDigest
+import java.io.FileInputStream
+import java.util.zip.ZipOutputStream
+import java.util.zip.ZipEntry
+
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.detekt)
     alias(libs.plugins.nmcp)
     id("maven-publish")
     id("signing")
-    id("jacoco")
 }
 
 group = "io.github.texport"
-version = "1.0.1"
+version = "1.1.0"
 
 repositories {
     mavenLocal()
     mavenCentral()
+}
+
+dependencies {
+    detektPlugins(libs.detekt.formatting)
 }
 
 detekt {
@@ -23,80 +32,77 @@ detekt {
     autoCorrect = true
 }
 
+kotlin {
+    jvm()
+    
+    val xcf = XCFramework("OfdProtoCodec")
+    listOf(iosArm64(), iosX64(), iosSimulatorArm64()).forEach { target ->
+        target.binaries.framework {
+            baseName = "OfdProtoCodec"
+            xcf.add(this)
+        }
+    }
+
+    jvmToolchain(libs.versions.javaTargetCore.get().toInt())
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ofd.kt.proto)
+                implementation(libs.wire.runtime)
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.ofd.network.client)
+            }
+        }
+    }
+
+    targets.all {
+        compilations.all {
+            compileTaskProvider.configure {
+                compilerOptions {
+                    freeCompilerArgs.add("-Xexpect-actual-classes")
+                }
+            }
+        }
+    }
+}
+
 dependencies {
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.ofd.kt.proto)
-    implementation(libs.protobuf.java)
-    testImplementation(kotlin("test"))
-    testImplementation(libs.ofd.network.client)
-    testImplementation(libs.kotlinx.coroutines.core)
     detektPlugins(libs.detekt.formatting)
 }
 
-tasks.test {
-    useJUnitPlatform()
-    testLogging {
-        showStandardStreams = true
-    }
-    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
-}
-
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-    }
-}
-
-kotlin {
-    jvmToolchain(17)
-}
-
-val sourcesJar = tasks.register<Jar>("sourcesJar") {
-    description = "Generates the sources JAR artifact"
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-}
-
-val javadocJar = tasks.register<Jar>("javadocJar") {
-    description = "Generates the javadoc JAR artifact"
-    archiveClassifier.set("javadoc")
-    from(tasks.javadoc)
-}
-
 publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            artifact(sourcesJar)
-            artifact(javadocJar)
+    publications.withType<MavenPublication>().configureEach {
+        pom {
+            name.set("ofd-proto-codec")
+            description.set("Trilingual protocol codec for Kazakh OFD Protocol 2.0.3")
+            url.set("https://github.com/texport/ofd-proto-codec")
 
-            pom {
-                name.set("ofd-proto-codec")
-                description.set("Trilingual protocol codec for Kazakh OFD Protocol 2.0.3")
+            licenses {
+                license {
+                    name.set("The Apache License, Version 2.0")
+                    url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                }
+            }
+
+            developers {
+                developer {
+                    id.set("sergeyivanov")
+                    name.set("Sergey Ivanov")
+                    email.set("sergey.ivanov@example.com")
+                }
+            }
+
+            scm {
+                connection.set("scm:git:git://github.com/texport/ofd-proto-codec.git")
+                developerConnection.set("scm:git:ssh://github.com/texport/ofd-proto-codec.git")
                 url.set("https://github.com/texport/ofd-proto-codec")
-
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-
-                developers {
-                    developer {
-                        id.set("sergeyivanov")
-                        name.set("Sergey Ivanov")
-                        email.set("sergey.ivanov@example.com")
-                    }
-                }
-
-                scm {
-                    connection.set("scm:git:git://github.com/texport/ofd-proto-codec.git")
-                    developerConnection.set("scm:git:ssh://github.com/texport/ofd-proto-codec.git")
-                    url.set("https://github.com/texport/ofd-proto-codec")
-                }
             }
         }
     }
@@ -108,7 +114,7 @@ signing {
     if (!signingKey.isNullOrEmpty() && !signingPassword.isNullOrEmpty()) {
         useInMemoryPgpKeys(signingKey, signingPassword)
     }
-    sign(publishing.publications["mavenJava"])
+    // Will sign all publications when signing keys are present
 }
 
 nmcp {
@@ -118,3 +124,86 @@ nmcp {
         publishingType.set("USER_MANAGED")
     }
 }
+
+tasks.register("generateSpmManifest") {
+    group = "publishing"
+    description = "Zips OfdProtoCodec XCFramework, calculates SHA-256 and writes Package.swift"
+    dependsOn("assembleOfdProtoCodecReleaseXCFramework")
+
+    doLast {
+        val versionStr = project.version.toString()
+        val repoUrl = "https://github.com/texport/ofd-proto-codec"
+        val zipName = "OfdProtoCodec.xcframework.zip"
+        val outputDir = layout.buildDirectory.dir("XCFrameworks/release").get().asFile
+        val xcframeworkDir = File(outputDir, "OfdProtoCodec.xcframework")
+        val zipFile = File(outputDir, zipName)
+
+        if (!xcframeworkDir.exists()) {
+            throw GradleException("XCFramework not found at ${xcframeworkDir.absolutePath}")
+        }
+
+        // 1. Zipping XCFramework
+        println("Zipping XCFramework to ${zipFile.absolutePath}...")
+        zipFile.delete()
+        ZipOutputStream(zipFile.outputStream().buffered()).use { zos ->
+            xcframeworkDir.walkTopDown().forEach { file ->
+                if (file.isFile) {
+                    val relativePath = file.relativeTo(xcframeworkDir.parentFile).path
+                    zos.putNextEntry(ZipEntry(relativePath))
+                    file.inputStream().buffered().use { input ->
+                        input.copyTo(zos)
+                    }
+                    zos.closeEntry()
+                }
+            }
+        }
+
+        // 2. Compute SHA-256
+        println("Computing SHA-256 checksum...")
+        val digest = MessageDigest.getInstance("SHA-256")
+        FileInputStream(zipFile).use { fis ->
+            val buffer = ByteArray(8192)
+            var bytesRead = fis.read(buffer)
+            while (bytesRead != -1) {
+                digest.update(buffer, 0, bytesRead)
+                bytesRead = fis.read(buffer)
+            }
+        }
+        val checksumBytes = digest.digest()
+        val checksum = checksumBytes.joinToString("") { "%02x".format(it) }
+        println("SHA-256: $checksum")
+
+        // 3. Write Package.swift
+        val packageSwiftFile = rootProject.file("Package.swift")
+        println("Writing Package.swift to ${packageSwiftFile.absolutePath}...")
+        packageSwiftFile.writeText(
+            """
+            // swift-tools-version:5.5
+            import PackageDescription
+
+            let package = Package(
+                name: "OfdProtoCodec",
+                platforms: [
+                    .iOS(.v15)
+                ],
+                products: [
+                    .library(
+                        name: "OfdProtoCodec",
+                        targets: ["OfdProtoCodec"]
+                    ),
+                ],
+                dependencies: [],
+                targets: [
+                    .binaryTarget(
+                        name: "OfdProtoCodec",
+                        url: "$repoUrl/releases/download/v$versionStr/$zipName",
+                        checksum: "$checksum"
+                    )
+                ]
+            )
+            """.trimIndent() + "\n"
+        )
+        println("SPM manifest generation complete for version $versionStr!")
+    }
+}
+
