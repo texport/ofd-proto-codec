@@ -1,4 +1,4 @@
-    // swift-tools-version:5.5
+// swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
@@ -17,7 +17,7 @@ let package = Package(
         .binaryTarget(
             name: "OfdProtoCodec",
             url: "https://github.com/texport/ofd-proto-codec/releases/download/v1.1.0/OfdProtoCodec.xcframework.zip",
-            checksum: "274cc92e63b4209e38725f6d2105947fa692c5084f6de6cca0e4121b8855a4c6"
+            checksum: "50132342b0b5175205c4bb60599cf7d23e28542da03f6f51458f230487b456ce"
         )
     ]
 )
