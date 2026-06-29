@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.nmcp)
     id("maven-publish")
     id("signing")
+    jacoco
 }
 
 group = "io.github.texport"
@@ -74,12 +75,13 @@ kotlin {
     }
 }
 
-dependencies {
-    detektPlugins(libs.detekt.formatting)
-}
-
 publishing {
     publications.withType<MavenPublication>().configureEach {
+        val javadocJarTask = tasks.register<org.gradle.api.tasks.bundling.Jar>("${name}JavadocJar") {
+            archiveClassifier.set("javadoc")
+            archiveAppendix.set(this@configureEach.name)
+        }
+        artifact(javadocJarTask)
         pom {
             name.set("ofd-proto-codec")
             description.set("Trilingual protocol codec for Kazakh OFD Protocol 2.0.3")
@@ -115,7 +117,24 @@ signing {
     if (!signingKey.isNullOrEmpty() && !signingPassword.isNullOrEmpty()) {
         useInMemoryPgpKeys(signingKey, signingPassword)
     }
-    // Will sign all publications when signing keys are present
+    isRequired = false
+    sign(publishing.publications)
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+val jacocoTestReport = tasks.register<JacocoReport>("jacocoTestReport") {
+    description = "Generates Jacoco code coverage report for the JVM target."
+    dependsOn(tasks.named("jvmTest"))
+    classDirectories.setFrom(files(tasks.named("compileKotlinJvm")))
+    sourceDirectories.setFrom(files("src/commonMain/kotlin", "src/jvmMain/kotlin"))
+    executionData.setFrom(files(layout.buildDirectory.file("jacoco/jvmTest.exec")))
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
 }
 
 nmcp {
