@@ -1,11 +1,11 @@
 [versions]
 kotlin = "2.4.0"
-ofdKtProto = "2.0.3"
+ofdKtProto = "2.0.3-2"
 detekt = "1.23.8"
 ofdNetworkClient = "1.1.0"
 serialization = "1.11.0"
 coroutines = "1.11.0"
-nmcp = "1.4.4"
+nmcp = "1.5.0"
 wire = "5.1.0"
 javaTargetCore = "17"
 
