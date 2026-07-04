@@ -59,6 +59,7 @@ This document describes the JSON formats for encode (REQUEST) and decode (RESPON
 - `messageType` is always `REQUEST` for encode and `RESPONSE` for decode. / `messageType` всегда `REQUEST` для encode и `RESPONSE` для decode.
 - `header.size` and `messageBase64` are returned only from `encode`. / `header.size` и `messageBase64` возвращаются только из `encode`.
 - `appCode` is **not passed** in JSON and is **not returned** in JSON. / `appCode` **не передается** в JSON и **не возвращается** в JSON.
+- `header.reqNum` must fit the unsigned 16-bit request number range `0..65535`. / `header.reqNum` должен находиться в диапазоне unsigned 16-bit номера запроса `0..65535`.
 
 ## Token Rotation / Токен и его смена
 
@@ -85,7 +86,7 @@ To avoid validation errors:
 - не путайте типы (`string` вместо `number` и наоборот),
 - следуйте диапазонам (`uint32`, `uint64`) из протокола.
 
-## Supported Commands (v203) / Поддерживаемые команды (v203)
+## Supported Commands (KazakhTelecom v203) / Поддерживаемые команды (KazakhTelecom v203)
 
 - `COMMAND_AUTH`
 - `COMMAND_SYSTEM`
@@ -95,6 +96,14 @@ To avoid validation errors:
 - `COMMAND_REPORT`
 - `COMMAND_TICKET`
 - `COMMAND_CLOSE_SHIFT`
+
+## Supported Targets / Поддерживаемые платформы
+
+The published KMP library is intended for JVM, Android, and Apple/iOS targets. Android support is a real Gradle target and is published as an Android artifact; no Android-specific production API is required because codec behavior stays in `commonMain`.
+/ Опубликованная KMP-библиотека предназначена для JVM, Android и Apple/iOS. Android поддерживается как полноценная Gradle target и публикуется как Android artifact; отдельный Android production API не нужен, потому что логика кодека остается в `commonMain`.
+
+Network exchange is not part of this library. Use `ofd-network-client` or another transport implementation outside the codec boundary.
+/ Сетевой обмен не входит в ответственность этой библиотеки. Используйте `ofd-network-client` или другую транспортную реализацию вне границ кодека.
 
 ## Payload: Command-specific structures / Payload: структура по командам
 
@@ -525,4 +534,3 @@ import OfdProtoCodec
 let registry = DefaultRegistry.companion.create()
 let codec = OfdCodec(registry: registry, ofdResolver: OfdCodecKt.defaultResolver())
 ```
-

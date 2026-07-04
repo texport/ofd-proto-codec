@@ -3,6 +3,9 @@
 The `ofd-proto-codec` library is designed following the principles of Clean Architecture and SOLID. This allows for easy addition of new OFD protocol versions or new providers (e.g. Transtelecom, KazakhTelecom v3.0.0, etc.) without modifying the core codec logic.
 / Библиотека `ofd-proto-codec` спроектирована по принципам Чистой Архитектуры и SOLID, что позволяет легко добавлять поддержку новых версий протокола ОФД или новых провайдеров (например, Транстелеком, Казахтелеком v3.0.0 и т.д.) без изменения ядра кодека.
 
+The existing `kazakhtelecom/v203` module is treated as stable/frozen. Do not refactor it just to add another provider or protocol version; add a new isolated provider/version module and register it.
+/ Существующий модуль `kazakhtelecom/v203` считается стабильным/замороженным. Не рефакторьте его только ради добавления другого ОФД или версии протокола; добавляйте новый изолированный модуль ОФД/версии и регистрируйте его.
+
 > [!IMPORTANT]
 > All port interfaces (`Validator`, `Serializer`, `Deserializer`) and the registry `OfdRegistry` are declared with `internal` visibility to prevent leakage of implementation details outside the library. Adding new protocols and OFD providers must be done by creating corresponding packages directly within the source code of this library (in the directory `src/commonMain/kotlin/kz/mybrain/ofdcodec/ofd/`).
 >
@@ -44,6 +47,9 @@ graph TD
 
 Suppose we need to add support for a new OFD `"transtelecom"` with protocol version `"300"`.
 / Допустим, необходимо добавить поддержку нового ОФД `"transtelecom"` с версией протокола `"300"`.
+
+Before changing protobuf models or protocol assumptions, cross-check the CPCR/protocol knowledge base or the official provider specification. Existing `kazakhtelecom/v203` behavior should stay unchanged unless the task explicitly fixes that module.
+/ Перед изменением protobuf-моделей или протокольных допущений сверьтесь с базой знаний CPCR/протокола или официальной спецификацией провайдера. Поведение существующего `kazakhtelecom/v203` не должно меняться, если задача явно не исправляет этот модуль.
 
 ### Step 1: Connect Generated Protobuf Classes / Шаг 1: Подключение сгенерированных Protobuf классов
 Ensure that the Java/Kotlin classes generated from `.proto` files are available in the project (typically added via a dependency like `ofd-kt-proto` or compiled by the `protobuf` Gradle plugin).

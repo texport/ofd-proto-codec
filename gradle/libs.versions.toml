@@ -2,12 +2,15 @@
 kotlin = "2.4.0"
 ofdKtProto = "2.0.3-2"
 detekt = "1.23.8"
-ofdNetworkClient = "1.1.0"
+ofdNetworkClient = "1.2.0"
 serialization = "1.11.0"
 coroutines = "1.11.0"
 nmcp = "1.5.0"
 wire = "5.1.0"
 javaTargetCore = "17"
+androidGradlePlugin = "9.2.1"
+androidCompileSdk = "37"
+androidMinSdk = "23"
 
 [libraries]
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
@@ -19,6 +22,7 @@ wire-runtime = { group = "com.squareup.wire", name = "wire-runtime", version.ref
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidGradlePlugin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 nmcp = { id = "com.gradleup.nmcp", version.ref = "nmcp" }

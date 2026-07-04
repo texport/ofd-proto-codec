@@ -1,6 +1,8 @@
 # Gradle
 .gradle/
 **/build/
+local.properties
+AGENTS.md
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
 !**/src/main/**/build/

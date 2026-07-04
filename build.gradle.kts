@@ -4,8 +4,11 @@ import java.io.FileInputStream
 import java.util.zip.ZipOutputStream
 import java.util.zip.ZipEntry
 
+val reproducibleZipEntryTime = 0L
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.detekt)
     alias(libs.plugins.nmcp)
@@ -15,10 +18,11 @@ plugins {
 }
 
 group = "io.github.texport"
-version = "1.1.1"
+version = "1.2.0"
 
 repositories {
     mavenLocal()
+    google()
     mavenCentral()
 }
 
@@ -31,11 +35,18 @@ detekt {
     buildUponDefaultConfig = true
     allRules = true
     autoCorrect = true
-    source.setFrom(files("src/commonMain/kotlin", "src/jvmMain/kotlin", "src/iosMain/kotlin"))
+    source.setFrom(files("src/commonMain/kotlin", "src/jvmMain/kotlin", "src/androidMain/kotlin", "src/iosMain/kotlin"))
 }
 
 kotlin {
     jvm()
+    android {
+        namespace = "kz.mybrain.ofdcodec"
+        compileSdk = libs.versions.androidCompileSdk.get().toInt()
+        minSdk = libs.versions.androidMinSdk.get().toInt()
+
+        withHostTest {}
+    }
     
     val xcf = XCFramework("OfdProtoCodec")
     listOf(iosArm64(), iosX64(), iosSimulatorArm64()).forEach { target ->
@@ -85,7 +96,7 @@ publishing {
         artifact(javadocJarTask)
         pom {
             name.set("ofd-proto-codec")
-            description.set("Trilingual protocol codec for Kazakh OFD Protocol 2.0.3")
+            description.set("Trilingual CPCR/OFD protocol codec with provider/version modules")
             url.set("https://github.com/texport/ofd-proto-codec")
 
             licenses {
@@ -151,11 +162,14 @@ tasks.register("generateSpmManifest") {
     description = "Zips OfdProtoCodec XCFramework, calculates SHA-256 and writes Package.swift"
     dependsOn("assembleOfdProtoCodecReleaseXCFramework")
 
+    val versionStr = version.toString()
+    val packageSwiftFile = rootProject.file("Package.swift")
+    val outputDirectory = layout.buildDirectory.dir("XCFrameworks/release")
+
     doLast {
-        val versionStr = project.version.toString()
         val repoUrl = "https://github.com/texport/ofd-proto-codec"
         val zipName = "OfdProtoCodec.xcframework.zip"
-        val outputDir = layout.buildDirectory.dir("XCFrameworks/release").get().asFile
+        val outputDir = outputDirectory.get().asFile
         val xcframeworkDir = File(outputDir, "OfdProtoCodec.xcframework")
         val zipFile = File(outputDir, zipName)
 
@@ -167,16 +181,20 @@ tasks.register("generateSpmManifest") {
         println("Zipping XCFramework to ${zipFile.absolutePath}...")
         zipFile.delete()
         ZipOutputStream(zipFile.outputStream().buffered()).use { zos ->
-            xcframeworkDir.walkTopDown().forEach { file ->
-                if (file.isFile) {
+            xcframeworkDir.walkTopDown()
+                .filter { it.isFile }
+                .sortedBy { it.relativeTo(xcframeworkDir.parentFile).path }
+                .forEach { file ->
                     val relativePath = file.relativeTo(xcframeworkDir.parentFile).path
-                    zos.putNextEntry(ZipEntry(relativePath))
+                    val entry = ZipEntry(relativePath).apply {
+                        time = reproducibleZipEntryTime
+                    }
+                    zos.putNextEntry(entry)
                     file.inputStream().buffered().use { input ->
                         input.copyTo(zos)
                     }
                     zos.closeEntry()
                 }
-            }
         }
 
         // 2. Compute SHA-256
@@ -195,7 +213,6 @@ tasks.register("generateSpmManifest") {
         println("SHA-256: $checksum")
 
         // 3. Write Package.swift
-        val packageSwiftFile = rootProject.file("Package.swift")
         println("Writing Package.swift to ${packageSwiftFile.absolutePath}...")
         packageSwiftFile.writeText(
             """
@@ -227,4 +244,3 @@ tasks.register("generateSpmManifest") {
         println("SPM manifest generation complete for version $versionStr!")
     }
 }
-

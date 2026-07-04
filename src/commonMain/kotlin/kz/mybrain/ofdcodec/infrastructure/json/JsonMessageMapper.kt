@@ -48,6 +48,9 @@ internal data class ParsedEnvelope(
  * Поле header.size не требуется при кодировании, вычисляется автоматически.
  */
 internal object JsonMessageMapper {
+    private const val MIN_REQ_NUM = 0L
+    private const val MAX_REQ_NUM = 65_535L
+
     fun parseEnvelope(
         json: JsonElement
     ): Pair<ParsedEnvelope?, List<ValidationError>> {
@@ -262,6 +265,16 @@ internal object JsonMessageMapper {
         errors: MutableList<ValidationError>
     ): Int? {
         val value = readLong(json, JsonKeys.REQ_NUM, errors) ?: return null
+        if (value !in MIN_REQ_NUM..MAX_REQ_NUM) {
+            errors.add(
+                ErrorFactory.error(
+                    ErrorCode.JSON_INVALID_VALUE,
+                    "$.${JsonKeys.REQ_NUM}",
+                    mapOf("field" to JsonKeys.REQ_NUM)
+                )
+            )
+            return null
+        }
         return value.toInt()
     }
 }
