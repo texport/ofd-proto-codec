@@ -8,7 +8,7 @@
 
 ---
 
-### [Documentation in English](#documentation-in-english) &middot; [Документация на русском языке](#документация-на-русском-языке) &middot; [Usage](docs/USAGE.md) &middot; [Extending Guide](docs/EXTENDING.md) &middot; [Release Checklist](docs/RELEASING.md)
+### [Documentation in English](#documentation-in-english) &middot; [Документация на русском языке](#документация-на-русском-языке) &middot; [Usage](docs/USAGE.md) &middot; [Extending Guide](docs/EXTENDING.md)
 
 ---
 
@@ -59,12 +59,6 @@ You can integrate this library directly into your iOS project using Xcode's Swif
 2. Enter the repository URL: `https://github.com/texport/ofd-proto-codec.git`
 3. Set the version rules to **Up to Next Major** starting with `1.2.0`.
 
-### Release 1.2.0
-- Adds the Android KMP target and Android AAR publication.
-- Updates test integration dependency `ofd-network-client` to `1.2.0`.
-- Hardens JSON envelope validation for `header.reqNum` (`0..65535`).
-- Documents the provider/version extension policy and keeps `kazakhtelecom/v203` stable.
-
 ---
 
 ## Документация на русском языке
@@ -106,9 +100,3 @@ kotlin {
 1. Выберите в Xcode: **File ➔ Add Package Dependencies...**
 2. Введите URL репозитория: `https://github.com/texport/ofd-proto-codec.git`
 3. Установите правило версии **Up to Next Major** начиная с `1.2.0`.
-
-### Релиз 1.2.0
-- Добавлена Android KMP target и публикация Android AAR.
-- Тестовая интеграционная зависимость `ofd-network-client` обновлена до `1.2.0`.
-- Усилена валидация JSON-конверта для `header.reqNum` (`0..65535`).
-- Зафиксирована политика расширения через отдельные provider/version модули; `kazakhtelecom/v203` остается стабильным.
