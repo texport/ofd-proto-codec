@@ -5,7 +5,7 @@ import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 
 /**
- * Валидация TicketAdInfo для ответов ОФД Казахтелеком v203.
+ * Валидация TicketAdInfo для ответов текущего provider module v203.
  */
 internal class TicketAdInfoValidator {
     /**

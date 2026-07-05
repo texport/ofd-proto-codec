@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.DateTimeVali
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.MoneyValidator
 
 /**
- * Валидация ZXReport для протокола Казахтелеком v203.
+ * Валидация ZXReport для текущего provider module v203.
  */
 internal class ZXReportValidator {
     private val dateTimeValidator = DateTimeValidator()

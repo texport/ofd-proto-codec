@@ -5,7 +5,7 @@ import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 
 /**
- * Валидация структуры Money для протокола Казахтелеком v203.
+ * Валидация структуры Money для текущего provider module v203.
  *
  * Оба поля обязательны: bills (uint64) и coins (uint32).
  */

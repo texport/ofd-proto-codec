@@ -13,9 +13,9 @@
 ---
 
 > [!IMPORTANT]
-> **Disclaimer:** This is an unofficial, community-maintained library. It is not officially endorsed by, affiliated with, or sponsored by JSC "KazakhTelecom", the State Revenue Committee of the Republic of Kazakhstan, or any official OFD provider.
+> **Disclaimer:** This is an unofficial, community-maintained library. It is not officially endorsed by, affiliated with, or sponsored by the State Revenue Committee of the Republic of Kazakhstan or any official OFD provider.
 >
-> **Дисклеймер:** Данный проект является неофициальной библиотекой, поддерживаемой сообществом. Он не связан, не спонсируется и не утверждался АО «Казахтелеком», Комитетом государственных доходов РК или любыми другими официальными провайдерами ОФД.
+> **Дисклеймер:** Данный проект является неофициальной библиотекой, поддерживаемой сообществом. Он не связан, не спонсируется и не утверждался Комитетом государственных доходов РК или любыми официальными провайдерами ОФД.
 
 ---
 
@@ -23,7 +23,7 @@
 
 A lightweight, robust, and clean-architecture Kotlin Multiplatform (KMP) library for serializing JSON objects into raw CPCR/OFD protocol format (header + payload) and deserializing raw byte arrays back to structured JSON according to provider-specific KKM-to-OFD protocol modules.
 
-The library is provider/version oriented. At the moment, the only implemented provider module is KazakhTelecom OFD protocol version 2.0.3 (v203); future OFD providers or protocol versions should be added as separate modules without changing the core codec facade.
+The library is provider/version oriented. At the moment, the only implemented provider module is `kazakhtelecom/v203`; future OFD providers or protocol versions should be added as separate modules without changing the core codec facade.
 
 ### Supported Matrix
 - **Targets**: JVM, Android, iOS device, and iOS simulator.
@@ -65,7 +65,7 @@ You can integrate this library directly into your iOS project using Xcode's Swif
 
 Легковесная библиотека на Kotlin Multiplatform (KMP) для сериализации JSON-объектов в сырой формат протокола CPCR/OFD (заголовок + полезная нагрузка) и обратной десериализации байтовых массивов в структурированный JSON через provider-specific модули протокола обмена ККМ → ОФД.
 
-Библиотека спроектирована вокруг отдельных модулей ОФД/версий протокола. На данный момент реализован только модуль протокола Казахтелеком версии 2.0.3 (v203); новые ОФД или версии протокола должны добавляться отдельными модулями без изменения ядра кодека.
+Библиотека спроектирована вокруг отдельных модулей ОФД/версий протокола. На данный момент реализован только модуль `kazakhtelecom/v203`; новые ОФД или версии протокола должны добавляться отдельными модулями без изменения ядра кодека.
 
 ### Матрица поддержки
 - **Платформы**: JVM, Android, iOS device и iOS simulator.

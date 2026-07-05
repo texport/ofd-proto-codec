@@ -86,7 +86,7 @@ To avoid validation errors:
 - не путайте типы (`string` вместо `number` и наоборот),
 - следуйте диапазонам (`uint32`, `uint64`) из протокола.
 
-## Supported Commands (KazakhTelecom v203) / Поддерживаемые команды (KazakhTelecom v203)
+## Supported Commands (`kazakhtelecom/v203`) / Поддерживаемые команды (`kazakhtelecom/v203`)
 
 - `COMMAND_AUTH`
 - `COMMAND_SYSTEM`

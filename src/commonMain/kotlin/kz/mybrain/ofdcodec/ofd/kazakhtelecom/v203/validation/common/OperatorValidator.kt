@@ -5,7 +5,7 @@ import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 
 /**
- * Валидация структуры Operator для протокола Казахтелеком v203.
+ * Валидация структуры Operator для текущего provider module v203.
  *
  * code обязателен, name опционален (если указан — не пустой).
  */

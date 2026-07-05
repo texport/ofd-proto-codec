@@ -10,7 +10,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.model.ResultType
 import kotlin.io.encoding.Base64
 
 /**
- * Десериализация ответов ОФД для протокола Казахтелеком 2.0.3.
+ * Десериализация ответов ОФД для текущего provider module 2.0.3.
  */
 internal class KazakhtelecomV203ResponseDeserializer : Deserializer {
     /**

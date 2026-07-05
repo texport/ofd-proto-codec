@@ -5,7 +5,7 @@ import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 
 /**
- * Валидация SecurityStats и GeoPosition для протокола Казахтелеком v203.
+ * Валидация SecurityStats и GeoPosition для текущего provider module v203.
  */
 internal class SecurityStatsValidator {
     /**

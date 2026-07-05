@@ -5,7 +5,7 @@ import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 
 /**
- * Валидация PosRegInfo для ответов ОФД Казахтелеком v203.
+ * Валидация PosRegInfo для ответов текущего provider module v203.
  */
 internal class PosRegInfoValidator {
     /**

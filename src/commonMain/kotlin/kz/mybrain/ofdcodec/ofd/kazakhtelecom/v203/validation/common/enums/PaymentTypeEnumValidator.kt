@@ -6,7 +6,7 @@ import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 
 /**
- * Валидация PaymentTypeEnum для протокола Казахтелеком v203.
+ * Валидация PaymentTypeEnum для текущего provider module v203.
  */
 internal class PaymentTypeEnumValidator {
     /**

@@ -7,7 +7,7 @@ import kz.mybrain.ofdcodec.domain.port.Serializer
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.command.CommandRequestBuilder
 
 /**
- * Сериализация запросов ККМ для протокола Казахтелеком 2.0.3.
+ * Сериализация запросов ККМ для текущего provider module 2.0.3.
  */
 internal class KazakhtelecomV203RequestSerializer(
     private val builders: Map<CommandType, CommandRequestBuilder>

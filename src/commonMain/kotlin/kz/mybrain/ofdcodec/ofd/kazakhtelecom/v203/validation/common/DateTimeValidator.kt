@@ -5,7 +5,7 @@ import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 
 /**
- * Валидация DateTime/Date/Time для протокола Казахтелеком v203.
+ * Валидация DateTime/Date/Time для текущего provider module v203.
  */
 internal class DateTimeValidator {
     /**

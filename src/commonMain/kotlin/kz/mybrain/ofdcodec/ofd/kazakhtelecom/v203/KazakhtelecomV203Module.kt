@@ -33,7 +33,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response.ResponseVa
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response.ResponseValidatorTicket
 
 /**
- * Регистрация обработчика для ОФД Казахтелеком, версия протокола 203.
+ * Регистрация обработчика текущего OFD provider module, версия протокола 203.
  * Реальные валидаторы/сериализаторы подключаются отдельно.
  */
 object KazakhtelecomV203Module {

@@ -1,7 +1,7 @@
 # Library Extension Guide (Adding new OFDs and protocols) / Руководство по расширению библиотеки (Добавление новых ОФД и протоколов)
 
-The `ofd-proto-codec` library is designed following the principles of Clean Architecture and SOLID. This allows for easy addition of new OFD protocol versions or new providers (e.g. Transtelecom, KazakhTelecom v3.0.0, etc.) without modifying the core codec logic.
-/ Библиотека `ofd-proto-codec` спроектирована по принципам Чистой Архитектуры и SOLID, что позволяет легко добавлять поддержку новых версий протокола ОФД или новых провайдеров (например, Транстелеком, Казахтелеком v3.0.0 и т.д.) без изменения ядра кодека.
+The `ofd-proto-codec` library is designed following the principles of Clean Architecture and SOLID. This allows for easy addition of new OFD protocol versions or new providers without modifying the core codec logic.
+/ Библиотека `ofd-proto-codec` спроектирована по принципам Чистой Архитектуры и SOLID, что позволяет легко добавлять поддержку новых версий протокола ОФД или новых провайдеров без изменения ядра кодека.
 
 The existing `kazakhtelecom/v203` module is treated as stable/frozen. Do not refactor it just to add another provider or protocol version; add a new isolated provider/version module and register it.
 / Существующий модуль `kazakhtelecom/v203` считается стабильным/замороженным. Не рефакторьте его только ради добавления другого ОФД или версии протокола; добавляйте новый изолированный модуль ОФД/версии и регистрируйте его.

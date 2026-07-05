@@ -1,7 +1,7 @@
 package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.model
 
 /**
- * Коды статуса ответа сервера для протокола Казахтелеком 2.0.3.
+ * Коды статуса ответа сервера для текущего provider module 2.0.3.
  */
 internal enum class ResultType(
     val code: Int,

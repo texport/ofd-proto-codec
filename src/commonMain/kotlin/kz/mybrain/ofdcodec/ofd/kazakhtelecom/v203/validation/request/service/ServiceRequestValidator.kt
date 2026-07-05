@@ -8,7 +8,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.service.KkmR
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.service.OrgRegInfoValidator
 
 /**
- * Базовая валидация ServiceRequest для протокола Казахтелеком v203.
+ * Базовая валидация ServiceRequest для текущего provider module v203.
  * Обязательные поля берутся из документа протокола.
  */
 internal class ServiceRequestValidator {

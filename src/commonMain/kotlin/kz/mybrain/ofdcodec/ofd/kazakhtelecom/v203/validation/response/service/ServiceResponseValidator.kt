@@ -10,7 +10,7 @@ import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.common.service.PosR
 import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.validation.response.TicketAdValidator
 
 /**
- * Валидация ServiceResponse для ответов ОФД Казахтелеком v203.
+ * Валидация ServiceResponse для ответов текущего provider module v203.
  */
 internal class ServiceResponseValidator {
     private val kkmValidator = KkmRegInfoValidator()

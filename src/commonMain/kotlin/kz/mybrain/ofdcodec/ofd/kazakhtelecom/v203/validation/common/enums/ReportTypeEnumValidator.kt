@@ -6,7 +6,7 @@ import kz.mybrain.ofdcodec.domain.model.ValidationError
 import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
 
 /**
- * Валидация ReportTypeEnum для протокола Казахтелеком v203.
+ * Валидация ReportTypeEnum для текущего provider module v203.
  */
 internal class ReportTypeEnumValidator {
     /**
