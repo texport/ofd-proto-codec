@@ -19,10 +19,13 @@ internal class CommandAuthRequestBuilder : CommandRequestBuilder {
         val authJson = json["auth"] as? JsonObject
             ?: throw IllegalArgumentException("Missing auth / Отсутствует блок auth / auth блогы жетіспейді")
 
-        val login = (authJson["login"] as? JsonPrimitive)?.content
+        val loginPrimitive = authJson["login"] as? JsonPrimitive
             ?: throw IllegalArgumentException("Missing login in auth / Отсутствует login в auth / auth ішіндегі login жетіспейді")
-        val password = (authJson["password"] as? JsonPrimitive)?.content
+        val login = loginPrimitive.content
+
+        val passwordPrimitive = authJson["password"] as? JsonPrimitive
             ?: throw IllegalArgumentException("Missing password in auth / Отсутствует password в auth / auth ішіндегі password жетіспейді")
+        val password = passwordPrimitive.content
 
         val authRequest = AuthRequest(
             login = login,

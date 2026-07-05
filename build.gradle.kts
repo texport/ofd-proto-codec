@@ -3,6 +3,7 @@ import java.security.MessageDigest
 import java.io.FileInputStream
 import java.util.zip.ZipOutputStream
 import java.util.zip.ZipEntry
+import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
 
 val reproducibleZipEntryTime = 0L
 
@@ -11,14 +12,15 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.kover)
     alias(libs.plugins.nmcp)
-    id("maven-publish")
-    id("signing")
-    jacoco
+    alias(libs.plugins.nmcp.aggregation)
+    `maven-publish`
+    signing
 }
 
 group = "io.github.texport"
-version = "1.2.0"
+version = "1.2.1"
 
 repositories {
     mavenLocal()
@@ -28,6 +30,7 @@ repositories {
 
 dependencies {
     detektPlugins(libs.detekt.formatting)
+    add("nmcpAggregation", dependencies.project(mapOf("path" to ":")))
 }
 
 detekt {
@@ -75,12 +78,15 @@ kotlin {
         }
     }
 
-    targets.all {
-        compilations.all {
-            compileTaskProvider.configure {
-                compilerOptions {
-                    freeCompilerArgs.add("-Xexpect-actual-classes")
-                }
+    tasks.withType<Test>().configureEach {
+        useJUnitPlatform()
+    }
+
+    tasks.withType<Javadoc>().configureEach {
+        options {
+            encoding = "UTF-8"
+            if (this is StandardJavadocDocletOptions) {
+                addStringOption("Xdoclint:none", "-quiet")
             }
         }
     }
@@ -133,24 +139,39 @@ signing {
     sign(publishing.publications)
 }
 
-jacoco {
-    toolVersion = "0.8.12"
-}
-
-val jacocoTestReport = tasks.register<JacocoReport>("jacocoTestReport") {
-    description = "Generates Jacoco code coverage report for the JVM target."
-    dependsOn(tasks.named("jvmTest"))
-    classDirectories.setFrom(files(tasks.named("compileKotlinJvm")))
-    sourceDirectories.setFrom(files("src/commonMain/kotlin", "src/jvmMain/kotlin"))
-    executionData.setFrom(files(layout.buildDirectory.file("jacoco/jvmTest.exec")))
+kover {
     reports {
-        xml.required.set(true)
-        html.required.set(true)
+        verify {
+            rule {
+                bound {
+                    coverageUnits = CoverageUnit.INSTRUCTION
+                    minValue = 90
+                }
+                bound {
+                    coverageUnits = CoverageUnit.BRANCH
+                    minValue = 94
+                }
+                bound {
+                    coverageUnits = CoverageUnit.LINE
+                    minValue = 99
+                }
+            }
+        }
     }
 }
 
-nmcp {
-    publishAllPublicationsToCentralPortal {
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+}
+
+tasks.named("check") {
+    dependsOn("koverVerify")
+}
+
+nmcpAggregation {
+    centralPortal {
         username.set(project.findProperty("ossrhUsername")?.toString() ?: System.getenv("OSSRH_USERNAME"))
         password.set(project.findProperty("ossrhPassword")?.toString() ?: System.getenv("OSSRH_PASSWORD"))
         publishingType.set("USER_MANAGED")

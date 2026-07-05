@@ -24,6 +24,16 @@ import kotlin.io.encoding.Base64
 
 /**
  * Фасад библиотеки: кодирование запросов и декодирование ответов.
+ *
+ * Предоставляет унифицированный интерфейс для сериализации и валидации запросов от кассы к ОФД,
+ * а также для десериализации и валидации ответов от ОФД.
+ *
+ * Thread-safety: Этот класс является потокобезопасным (Thread-safe) и может использоваться
+ * параллельно несколькими потоками, так как он не содержит изменяемого внутреннего состояния
+ * (за исключением реестра протоколов [OfdRegistry], который должен быть инициализирован до использования).
+ *
+ * @param registry Реестр поддерживаемых протоколов ОФД.
+ * @param ofdResolver Механизм определения конкретного ОФД по заголовку сообщения.
  */
 class OfdCodec(
     private val registry: OfdRegistry,
@@ -31,9 +41,15 @@ class OfdCodec(
 ) {
     /**
      * Кодирование запроса от кассы (REQUEST) в байтовое сообщение.
-     * В случае ошибок возвращает Result.failure с OfdCodecException.
      *
-     * Результат: JSON с полями size и messageBase64.
+     * Проверяет структуру входного JSON-конверта, ищет подходящий обработчик протокола,
+     * валидирует бизнес-поля запроса, сериализует в бинарный формат Protobuf/Wire
+     * и формирует бинарный пакет с заголовком сообщения.
+     *
+     * @param json Входной JSON-конверт запроса с полями ofdId, protocolVersion, messageType, commandType, header, payload.
+     * @return [Result] с [JsonObject] содержащим размер закодированного сообщения (`size`) и само сообщение в Base64 (`messageBase64`) в случае успеха,
+     *         или failure с [OfdCodecException] в случае ошибок валидации, сериализации или неподдерживаемых параметров.
+     * @throws OfdCodecException Не выбрасывается напрямую (ошибки возвращаются упакованными в [Result.failure]).
      */
     fun encode(json: JsonElement): Result<JsonObject> {
         val (parsed, errors) = JsonMessageMapper.parseEnvelope(json)
@@ -98,7 +114,15 @@ class OfdCodec(
 
     /**
      * Декодирование ответа от ОФД в JSON-представление.
-     * В случае ошибок возвращает Result.failure с OfdCodecException.
+     *
+     * Считывает бинарный заголовок сообщения, определяет конкретный ОФД с помощью [OfdResolver],
+     * десериализует полезную нагрузку из бинарного формата Protobuf/Wire в JSON,
+     * валидирует бизнес-поля ответа и упаковывает результат в стандартный JSON-конверт.
+     *
+     * @param bytes Сырой бинарный пакет ответа от ОФД (включая заголовок и полезную нагрузку).
+     * @return [Result] с [JsonObject] конверта ответа в случае успеха,
+     *         или failure с [OfdCodecException] в случае ошибок структуры, десериализации или валидации полей.
+     * @throws OfdCodecException Не выбрасывается напрямую (ошибки возвращаются упакованными в [Result.failure]).
      */
     fun decode(bytes: ByteArray): Result<JsonObject> {
         val headerResult = HeaderCodec.decode(bytes)

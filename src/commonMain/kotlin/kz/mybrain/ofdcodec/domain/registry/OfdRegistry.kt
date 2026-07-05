@@ -24,14 +24,13 @@ class OfdRegistry {
     /**
      * Список поддерживаемых версий для заданного ОФД.
      */
-    @Suppress("unused")
     internal fun supportedVersions(ofdId: String): Set<String> {
-        return handlers[ofdId]?.keys ?: emptySet()
+        val versions = handlers[ofdId]
+        return if (versions != null) versions.keys else emptySet()
     }
 
     /**
      * Список всех зарегистрированных ОФД.
      */
-    @Suppress("unused")
     internal fun ofdIds(): Set<String> = handlers.keys
 }
