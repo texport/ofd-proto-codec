@@ -17,7 +17,7 @@ let package = Package(
         .binaryTarget(
             name: "OfdProtoCodec",
             url: "https://github.com/texport/ofd-proto-codec/releases/download/v1.2.0/OfdProtoCodec.xcframework.zip",
-            checksum: "e4f523c4b4e5b5392b3e5086dc233907558d47d3febf0a6d2c651f0012adf82b"
+            checksum: "53baed82f4586165e9a342f6aad5d4caca760c25c3a4b9dddbebcb578a534554"
         )
     ]
 )
