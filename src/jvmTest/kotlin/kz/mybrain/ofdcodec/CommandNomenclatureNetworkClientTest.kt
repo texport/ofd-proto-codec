@@ -36,6 +36,24 @@ class CommandNomenclatureNetworkClientTest {
         )
     }
 
+    @Test
+    fun shouldSendCommandNomenclatureWith5449000176431Barcode() = runBlocking {
+        sendAndCheck(
+            currentVersion = 1,
+            barcode = "5449000176431",
+            reqNum = TestReqNum.value(42)
+        )
+    }
+
+    @Test
+    fun shouldSendCommandNomenclatureWithMarkingCode() = runBlocking {
+        sendAndCheck(
+            currentVersion = 1,
+            barcode = "0104820024700016215N39N41355416",
+            reqNum = TestReqNum.value(43)
+        )
+    }
+
     private suspend fun sendAndCheck(currentVersion: Int, barcode: String?, reqNum: Int) {
         val host = System.getenv("OFD_TEST_HOST") ?: System.getProperty("OFD_TEST_HOST")
         val port = (System.getenv("OFD_TEST_PORT") ?: System.getProperty("OFD_TEST_PORT"))?.toIntOrNull()
@@ -57,7 +75,7 @@ class CommandNomenclatureNetworkClientTest {
               "messageType": "REQUEST",
               "commandType": "COMMAND_NOMENCLATURE",
               "header": {
-                "deviceId": 201873,
+                "deviceId": 203605,
                 "token": $token,
                 "reqNum": $reqNum
               },
@@ -66,33 +84,33 @@ class CommandNomenclatureNetworkClientTest {
                   "getRegInfo": true,
                   "offlinePeriod": {
                     "beginTime": {
-                      "date": { "year": 2024, "month": 9, "day": 1 },
+                      "date": { "year": 2026, "month": 7, "day": 8 },
                       "time": { "hour": 10, "minute": 30, "second": 0 }
                     },
                     "endTime": {
-                      "date": { "year": 2024, "month": 9, "day": 1 },
+                      "date": { "year": 2026, "month": 7, "day": 8 },
                       "time": { "hour": 10, "minute": 40, "second": 0 }
                     }
                   },
                   "securityStats": {
                     "geoPosition": {
-                      "latitude": 432156,
-                      "longitude": 765432,
+                      "latitude": 511629,
+                      "longitude": 714463,
                       "source": "CELL"
                     }
                   },
                   "regInfo": {
                     "kkm": {
-                      "fnsKkmId": "391827192812",
-                      "serialNumber": "5465434234",
-                      "kkmId": "201873"
+                      "fnsKkmId": "620300013016",
+                      "serialNumber": "34523452345345345",
+                      "kkmId": "203605"
                     },
                     "org": {
                       "title": "ИП МИЧКА ПАВЕЛ АНДРЕЕВИЧ",
-                      "address": "обл. Павлодарская, Ауэзова 88",
-                      "addressKz": "Республика Қазақстан, обл. Павлодарская, қ. Екібастұз, Ауэзова 88",
+                      "address": "г. Астана, р-н Сарыарка,  г. Астана, пр. Бөгенбай Батыр д. 44",
+                      "addressKz": "Республика Қазақстан, қ. Астана, ауд. Сарыарқа, пр. Бөгенбай Батыр д. 44",
                       "inn": "960624350642",
-                      "okved": "47301"
+                      "okved": "47110"
                     }
                   }
                 },
