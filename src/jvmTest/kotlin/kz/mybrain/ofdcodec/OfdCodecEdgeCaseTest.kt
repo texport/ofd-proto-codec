@@ -213,7 +213,7 @@ class OfdCodecEdgeCaseTest {
 
     @Test
     fun decodeFailsWhenProtocolVersionIsNotRegistered() {
-        val bytes = validHeaderBytes(payloadSize = 0, protocolVersion = 204)
+        val bytes = validHeaderBytes(payloadSize = 0, protocolVersion = 205)
 
         val result = codec.decode(bytes)
 

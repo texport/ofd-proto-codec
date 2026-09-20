@@ -1,11 +1,12 @@
-package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.service
+package kz.mybrain.ofdcodec.ofd.bfd.v204.codec.service
 
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
-import kz.kazakhtelecom.proto.v203.*
+import kz.bfd.proto.v204.ServiceRequest
+import kz.bfd.proto.v204.TicketAdInfo
 import kz.mybrain.ofdcodec.infrastructure.json.readBoolRequired
 import kz.mybrain.ofdcodec.infrastructure.json.readInt
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common.DateTimeBuilder
+import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.common.DateTimeBuilder
 
 /**
  * Построение ServiceRequest для команд, где он обязателен или допускается.
@@ -59,8 +60,8 @@ internal class ServiceRequestBuilder {
             )
 
             // Версии рекламных текстов, которые уже есть у кассы: по ним
-            // сервер решает, что ей прислать. Пока список собирался пустым,
-            // сравнивать было не с чем, и реклама не доходила вовсе.
+            // сервер решает, что ей прислать. Поле необязательное, но пока
+            // оно не собиралось вовсе, реклама не доходила ни до одной кассы.
             ticketAdInfos = ticketAdInfoBuilder.build(serviceJson["ticketAdInfos"] as? JsonArray)
         }
 
@@ -70,7 +71,9 @@ internal class ServiceRequestBuilder {
             nomenclature_version = nomenclatureVersion,
             offline_period = offlinePeriod,
             security_stats = securityStats,
-            reg_info = regInfo,
+            // В 204 сведения о регистрации обязательны.
+            reg_info = regInfo
+                ?: throw IllegalArgumentException("Missing regInfo / Отсутствует regInfo"),
             ticket_ad_infos = ticketAdInfos,
             auxiliary = emptyList()
         )

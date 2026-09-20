@@ -26,6 +26,27 @@ internal fun JsonObject.readIntRequired(key: String): Int {
     return readInt(key) ?: throw IllegalArgumentException("Missing $key / Отсутствует $key / $key өрісі жетіспейді")
 }
 
+/**
+ * Читает поле, объявленное в протоколе как uint32.
+ *
+ * Диапазон такого поля — 0..4294967295, тогда как Int вмещает лишь половину.
+ * Значение возвращается в дополнительном коде: именно так его кладёт в кадр
+ * сгенерированный protobuf, и на приёмной стороне оно читается обратно
+ * без потерь. Раньше номер автономного документа выше 2147483647 отвергался
+ * как «неверный тип поля», хотя спецификация прямо разрешает брать под него
+ * младшие четыре байта unixtime.
+ */
+internal fun JsonObject.readUInt32(key: String): Int? {
+    val value = readLong(key) ?: return null
+    require(value in 0..UINT32_MAX) {
+        "Value $value is out of uint32 range / Значение $value вне диапазона uint32 / " +
+            "$value мәні uint32 ауқымынан тыс"
+    }
+    return value.toInt()
+}
+
+private const val UINT32_MAX = 4_294_967_295L
+
 internal fun JsonObject.readLong(key: String): Long? {
     val element = this[key] as? JsonPrimitive ?: return null
     return element.longOrNull

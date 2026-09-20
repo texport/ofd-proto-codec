@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "io.github.texport"
-version = "1.2.1"
+version = "1.3.0"
 
 repositories {
     mavenLocal()
@@ -66,6 +66,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ofd.kt.proto)
+                implementation(libs.ofd.kt.proto.v204)
                 implementation(libs.wire.runtime)
             }
         }

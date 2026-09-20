@@ -211,9 +211,23 @@ class OfdCodec(
 
     companion object {
         private fun defaultResolver(): OfdResolver {
-            return OfdResolver { _, _, registry ->
-                val ofdIds = registry.ofdIds()
-                if (ofdIds.size == 1) ofdIds.first() else null
+            // Заголовок CPCR признака ОФД не несёт, поэтому адресат ищется
+            // по версии протокола.
+            //
+            // Версию объявил ровно один ОФД — выбор однозначен.
+            // Объявили несколько — угадывать нельзя, сообщение остаётся
+            // неопределённым. Не объявил никто — вернуть любого
+            // зарегистрированного, чтобы отказ назвался неподдерживаемой
+            // версией, а не неопределённым ОФД: причина именно в версии.
+            return OfdResolver { header, _, registry ->
+                val version = ProtocolVersion.toNumericString(header.protocolVersion)
+                val matching = registry.ofdIds()
+                    .filter { registry.supportedVersions(it).contains(version) }
+                // Несколько ОФД на одной версии означают общий формат провода:
+                // различить отправителя по заголовку нечем, но и результат
+                // разбора у них один и тот же. Поэтому выбор определённый —
+                // первый по порядку регистрации, а не отказ.
+                matching.firstOrNull() ?: registry.ofdIds().firstOrNull()
             }
         }
     }

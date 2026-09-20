@@ -113,8 +113,18 @@ internal class RequestValidatorTicket : Validator {
                 if (percents.size != percents.toSet().size) {
                     errors.add(ValidationUtils.invalidValue("$.payload.ticket.taxes"))
                 }
-                taxesElement.forEachIndexed { index, _ ->
-                    errors.addAll(taxValidator.validate(ticket, "taxes[$index]", "$.payload.ticket.taxes[$index]"))
+                // Элемент массива проверяется как объект. Прежний вызов искал
+                // в чеке ключ с буквальным именем «taxes[0]», которого там
+                // никогда нет: налоги на уровне чека не проверялись вовсе,
+                // а сам чек отвергался выдуманной нехваткой поля.
+                taxesElement.forEachIndexed { index, element ->
+                    val path = "$.payload.ticket.taxes[$index]"
+                    val taxObject = element as? JsonObject
+                    if (taxObject == null) {
+                        errors.add(ValidationUtils.invalidType(path))
+                    } else {
+                        errors.addAll(taxValidator.validateObject(taxObject, path))
+                    }
                 }
             }
         }
@@ -131,22 +141,18 @@ internal class RequestValidatorTicket : Validator {
         }
 
         if (ticket["offlineTicketNumber"] != null) {
-            ValidationUtils.requireIntInRange(
+            ValidationUtils.requireUInt32(
                 ticket,
                 "offlineTicketNumber",
-                0,
-                Int.MAX_VALUE,
                 "$.payload.ticket.offlineTicketNumber",
                 errors
             )
         }
         ValidationUtils.optionalNonBlankString(ticket, "printedTicket", "$.payload.ticket.printedTicket", errors)
         if (ticket["frShiftNumber"] != null) {
-            ValidationUtils.requireIntInRange(
+            ValidationUtils.requireUInt32(
                 ticket,
                 "frShiftNumber",
-                0,
-                Int.MAX_VALUE,
                 "$.payload.ticket.frShiftNumber",
                 errors
             )

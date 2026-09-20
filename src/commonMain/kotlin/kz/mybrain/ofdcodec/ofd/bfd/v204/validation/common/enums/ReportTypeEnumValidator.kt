@@ -1,0 +1,23 @@
+package kz.mybrain.ofdcodec.ofd.bfd.v204.validation.common.enums
+
+import kotlinx.serialization.json.JsonObject
+import kz.bfd.proto.v204.ReportTypeEnum
+import kz.mybrain.ofdcodec.domain.model.ValidationError
+import kz.mybrain.ofdcodec.domain.validation.ValidationUtils
+
+/**
+ * Валидация ReportTypeEnum для текущего provider module v203.
+ */
+internal class ReportTypeEnumValidator {
+    /**
+     * Валидирует enum по ключу в контейнере.
+     * Проверяет JSON и собирает все ошибки по полям без остановки на первой.
+     */
+    fun validate(container: JsonObject, key: String, path: String): List<ValidationError> {
+        return ValidationUtils.validateEnum(container, key, path, ALLOWED)
+    }
+
+    companion object {
+        private val ALLOWED = ReportTypeEnum.entries.map { it.name }.toSet()
+    }
+}

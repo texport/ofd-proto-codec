@@ -806,7 +806,8 @@ class RulesComplianceAdditionalTest {
         val exception0 = result0.exceptionOrNull() as OfdCodecException
         assertTrue(exception0.errors.any { it.code == ErrorCode.MESSAGE_UNDETERMINED_OFD.name })
 
-        // 2. Multiple OFD IDs
+        // 2. Несколько ОФД на одной версии: формат провода общий, поэтому
+        // разбор идёт первым подходящим обработчиком, а не отвергается.
         val registry2 = OfdRegistry()
         KazakhtelecomV203Module.register(registry2, "kazakhtelecom")
         KazakhtelecomV203Module.register(registry2, "other_ofd")
@@ -814,7 +815,7 @@ class RulesComplianceAdditionalTest {
         val result2 = codec2.decode(bytes)
         assertTrue(result2.isFailure)
         val exception2 = result2.exceptionOrNull() as OfdCodecException
-        assertTrue(exception2.errors.any { it.code == ErrorCode.MESSAGE_UNDETERMINED_OFD.name })
+        assertTrue(exception2.errors.none { it.code == ErrorCode.MESSAGE_UNDETERMINED_OFD.name })
     }
 
     @Test

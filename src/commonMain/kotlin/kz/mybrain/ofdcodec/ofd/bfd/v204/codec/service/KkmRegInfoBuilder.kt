@@ -1,0 +1,21 @@
+package kz.mybrain.ofdcodec.ofd.bfd.v204.codec.service
+
+import kotlinx.serialization.json.JsonObject
+import kz.bfd.proto.v204.KkmRegInfo
+import kz.mybrain.ofdcodec.infrastructure.json.readString
+import kz.mybrain.ofdcodec.infrastructure.json.readStringRequired
+
+/**
+ * Сборщик proto KkmRegInfo из JSON-структуры.
+ */
+internal class KkmRegInfoBuilder {
+    fun build(json: JsonObject): KkmRegInfo {
+        return KkmRegInfo(
+            point_of_payment_number = json.readString("pointOfPaymentNumber"),
+            terminal_number = json.readString("terminalNumber"),
+            fns_kkm_id = json.readStringRequired("fnsKkmId"),
+            serial_number = json.readStringRequired("serialNumber"),
+            kkm_id = json.readStringRequired("kkmId")
+        )
+    }
+}

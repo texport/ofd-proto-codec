@@ -1,7 +1,10 @@
-package kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.ticket
+package kz.mybrain.ofdcodec.ofd.bfd.v204.codec.ticket
 
 import kotlinx.serialization.json.JsonObject
-import kz.kazakhtelecom.proto.v203.*
+import kz.bfd.proto.v204.DomainTypeEnum
+import kz.bfd.proto.v204.TaxTypeEnum
+import kz.bfd.proto.v204.TaxationTypeEnum
+import kz.bfd.proto.v204.TicketRequest
 import kz.mybrain.ofdcodec.infrastructure.json.readArray
 import kz.mybrain.ofdcodec.infrastructure.json.readArrayRequired
 import kz.mybrain.ofdcodec.infrastructure.json.readBoolRequired
@@ -16,19 +19,18 @@ import kz.mybrain.ofdcodec.infrastructure.json.readStringElement
 import kz.mybrain.ofdcodec.infrastructure.json.readStringRequired
 import kz.mybrain.ofdcodec.infrastructure.json.readUInt32
 import kz.mybrain.ofdcodec.infrastructure.json.requireObject
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common.DateTimeBuilder
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common.MoneyBuilder
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.common.OperatorBuilder
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.enums.OperationTypeBuilder
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.enums.PaymentTypeBuilder
-import kz.mybrain.ofdcodec.ofd.kazakhtelecom.v203.codec.enums.TicketItemTypeBuilder
+import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.common.DateTimeBuilder
+import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.common.MoneyBuilder
+import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.common.OperatorBuilder
+import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.enums.OperationTypeBuilder
+import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.enums.PaymentTypeBuilder
+import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.enums.TicketItemTypeBuilder
 
 /**
  * Сборщик TicketRequest из JSON-структуры.
  *
  * Ожидает в payload объект "ticket" и строит protobuf TicketRequest.
- * Отраслевые реквизиты передаются: блок объявлен в схеме 2.0.3 и проверяется
- * получателем. Отсутствие блока допустимо — поле необязательное.
+ * Вид отрасли в 2.0.4 обязателен: при отсутствии в JSON подставляется торговля.
  */
 internal class TicketRequestBuilder {
     private val domainBuilder = DomainBuilder()
@@ -52,11 +54,23 @@ internal class TicketRequestBuilder {
         val extensionOptions = ticketJson.readObject("extensionOptions")?.let { buildExtensionOptions(it) }
         val parentTicket = ticketJson.readObject("parentTicket")?.let { buildParentTicket(it) }
 
+        // Налог стоит либо у позиций, либо у чека: касса парка отвечает на
+        // чек с обоими уровнями отказом
+        // `items_taxes_and_ticket_taxes_are_mutually_exclusive`, и ОФД
+        // такой чек не примет. Отказ здесь, а не после отправки.
+        require(taxes.isEmpty() || !itemsCarryTaxes(ticketJson)) {
+            "Item taxes and ticket taxes are mutually exclusive / " +
+                "Налоги позиций и налоги чека взаимоисключающие / " +
+                "Позиция салықтары мен чек салықтары бір-бірін жоққа шығарады"
+        }
+
         return TicketRequest(
             operation = operationTypeBuilder.readRequired(ticketJson, "operation"),
             date_time = dateTimeBuilder.build(ticketJson, "dateTime"),
             operator_ = operatorBuilder.build(ticketJson.readObjectRequired("operator")),
-            domain = domainBuilder.build(ticketJson.readObject("domain")),
+            // В 204 вид отрасли обязателен; без явного указания это торговля.
+            domain = domainBuilder.build(ticketJson.readObject("domain"))
+                ?: TicketRequest.Domain(type = DomainTypeEnum.DOMAIN_TRADING),
             items = items,
             payments = payments,
             taxes = taxes,
@@ -65,7 +79,6 @@ internal class TicketRequestBuilder {
             offline_ticket_number = ticketJson.readUInt32("offlineTicketNumber"),
             printed_ticket = ticketJson.readString("printedTicket"),
             fr_shift_number = ticketJson.readInt("frShiftNumber"),
-            shift_document_number = ticketJson.readInt("shiftDocumentNumber"),
             printed_document_number = ticketJson.readLong("printedDocumentNumber"),
             parent_ticket = parentTicket
         )
@@ -132,7 +145,7 @@ internal class TicketRequestBuilder {
             physical_label = commodityJson.readString("physicalLabel"),
             product_id = commodityJson.readString("productId"),
             barcode = commodityJson.readString("barcode"),
-            measure_unit_code = commodityJson.readString("measureUnitCode"),
+            measure_unit_code = commodityJson.readStringRequired("measureUnitCode"),
             list_excise_stamp = listExciseStamp,
             ntin = commodityJson.readString("ntin")
         )
@@ -155,7 +168,7 @@ internal class TicketRequestBuilder {
             physical_label = stornoJson.readString("physicalLabel"),
             product_id = stornoJson.readString("productId"),
             barcode = stornoJson.readString("barcode"),
-            measure_unit_code = stornoJson.readString("measureUnitCode"),
+            measure_unit_code = stornoJson.readStringRequired("measureUnitCode"),
             list_excise_stamp = listExciseStamp,
             ntin = stornoJson.readString("ntin")
         )
@@ -177,9 +190,11 @@ internal class TicketRequestBuilder {
      * Строит Tax для TicketRequest.
      */
     private fun buildTax(taxJson: JsonObject): TicketRequest.Tax {
+        val taxType = taxJson.readIntRequired("taxType")
         return TicketRequest.Tax(
-            tax_type = taxJson.readIntRequired("taxType"),
-            taxation_type = taxJson.readInt("taxationType"),
+            type = TaxTypeEnum.fromValue(taxType)
+                ?: throw IllegalArgumentException("Unknown tax type " + taxType),
+            taxation_type = taxJson.readInt("taxationType")?.let { TaxationTypeEnum.fromValue(it) },
             percent = taxJson.readIntRequired("percent"),
             sum = moneyBuilder.build(taxJson.readObjectRequired("sum")),
             is_in_total_sum = taxJson.readBoolRequired("isInTotalSum")
@@ -209,7 +224,7 @@ internal class TicketRequestBuilder {
             pos_card_type = json.readString("posCardType"),
             pos_autorization_code = json.readInt("posAutorizationCode"),
             pos_rrn = json.readLong("posRrn"),
-            pos_receipt_number = json.readInt("posReceiptNumber")
+            pos_receipt_number = json.readLong("posReceiptNumber")
         )
     }
 
@@ -265,3 +280,17 @@ internal class TicketRequestBuilder {
         )
     }
 }
+
+/**
+ * Несут ли позиции собственные налоги.
+ *
+ * Смотрится присланный JSON, а не собранный объект: у позиции четыре
+ * возможных раздела — товар, сторно, наценка, скидка, — и правило одно
+ * на все, каким бы разделом позиция ни оказалась.
+ */
+private fun itemsCarryTaxes(ticketJson: JsonObject): Boolean =
+    ticketJson.readArrayRequired("items").any { item ->
+        item.requireObject("items").values.any { part ->
+            (part as? JsonObject)?.get("taxes") != null
+        }
+    }

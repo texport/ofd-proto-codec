@@ -140,6 +140,35 @@ internal object ValidationUtils {
     /**
      * Проверяет целое значение и диапазон.
      */
+    /**
+     * Проверяет поле, объявленное в протоколе как uint32.
+     *
+     * Диапазон берётся из спецификации — 0..4294967295, — а не из знакового
+     * Int, который вмещает лишь половину. Раньше номер автономного документа
+     * выше 2147483647 отвергался как «неверный тип поля», хотя спецификация
+     * прямо предлагает брать под него младшие четыре байта unixtime.
+     */
+    fun requireUInt32(
+        json: JsonObject,
+        key: String,
+        path: String,
+        errors: MutableList<ValidationError>
+    ) {
+        val element = json[key] as? JsonPrimitive
+        if (element == null) {
+            errors.add(missingField(path))
+            return
+        }
+        val value = element.longOrNull
+        if (value == null) {
+            errors.add(invalidType(path))
+            return
+        }
+        if (value !in 0..UINT32_MAX) {
+            errors.add(invalidValue(path))
+        }
+    }
+
     fun requireIntInRange(
         json: JsonObject,
         key: String,
@@ -241,4 +270,7 @@ internal object ValidationUtils {
         }
         return errors
     }
+
+    /** Наибольшее значение беззнакового 32-битного поля протокола. */
+    private const val UINT32_MAX = 4_294_967_295L
 }

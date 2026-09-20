@@ -1,6 +1,7 @@
 [versions]
 kotlin = "2.4.0"
 ofdKtProto = "2.0.3-2"
+ofdKtProtoV204 = "2.0.4-1"
 detekt = "1.23.8"
 ofdNetworkClient = "1.2.1"
 serialization = "1.11.0"
@@ -16,6 +17,7 @@ androidMinSdk = "23"
 [libraries]
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 ofd-kt-proto = { group = "io.github.texport", name = "ofd-kt-proto", version.ref = "ofdKtProto" }
+ofd-kt-proto-v204 = { group = "io.github.texport", name = "ofd-kt-proto-v204", version.ref = "ofdKtProtoV204" }
 ofd-network-client = { group = "io.github.texport", name = "ofd-network-client", version.ref = "ofdNetworkClient" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
