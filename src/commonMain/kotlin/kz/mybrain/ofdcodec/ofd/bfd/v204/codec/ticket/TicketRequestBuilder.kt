@@ -22,6 +22,7 @@ import kz.mybrain.ofdcodec.infrastructure.json.requireObject
 import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.common.DateTimeBuilder
 import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.common.MoneyBuilder
 import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.common.OperatorBuilder
+import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.enums.CommodityTypeBuilder
 import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.enums.OperationTypeBuilder
 import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.enums.PaymentTypeBuilder
 import kz.mybrain.ofdcodec.ofd.bfd.v204.codec.enums.TicketItemTypeBuilder
@@ -37,6 +38,7 @@ internal class TicketRequestBuilder {
     private val dateTimeBuilder = DateTimeBuilder()
     private val moneyBuilder = MoneyBuilder()
     private val operatorBuilder = OperatorBuilder()
+    private val commodityTypeBuilder = CommodityTypeBuilder()
     private val operationTypeBuilder = OperationTypeBuilder()
     private val paymentTypeBuilder = PaymentTypeBuilder()
     private val itemTypeBuilder = TicketItemTypeBuilder()
@@ -147,7 +149,8 @@ internal class TicketRequestBuilder {
             barcode = commodityJson.readString("barcode"),
             measure_unit_code = commodityJson.readStringRequired("measureUnitCode"),
             list_excise_stamp = listExciseStamp,
-            ntin = commodityJson.readString("ntin")
+            ntin = commodityJson.readString("ntin"),
+            commodity_type = commodityTypeBuilder.read(commodityJson, "commodityType")
         )
     }
 
@@ -170,7 +173,8 @@ internal class TicketRequestBuilder {
             barcode = stornoJson.readString("barcode"),
             measure_unit_code = stornoJson.readStringRequired("measureUnitCode"),
             list_excise_stamp = listExciseStamp,
-            ntin = stornoJson.readString("ntin")
+            ntin = stornoJson.readString("ntin"),
+            commodity_type = commodityTypeBuilder.read(stornoJson, "commodityType")
         )
     }
 
