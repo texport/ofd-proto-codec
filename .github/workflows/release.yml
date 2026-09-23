@@ -1,32 +1,81 @@
-# Выпуск по метке v<версия>; метка обязана совпасть с версией в сборке.
+# Выпуск кодека на GitHub и в Maven Central.
 #
-# Порядок: проверки (ci.yml) и сборка файлов → выпуск на GitHub → Maven
-# Central. Упала любая ступень — следующие не запускаются.
+# Сам: после зелёного CI на main каждый ещё не выпущенный коммит выпускается
+# под следующим номером своей линии (val versionLine в build.gradle.kts):
+# v1.3.0, v1.3.1, … Метку ставит сам выпуск. Переменная репозитория
+# AUTO_RELEASE=false это выключает.
+#
+# Руками: метка v<линия>.<номер> выпускает помеченный коммит.
+#
+# Порядок: файлы → выпуск на GitHub → Maven Central. Упала ступень —
+# следующие не запускаются. Без секретов Central выгрузка пропускается
+# с уведомлением в сводке запуска.
 #
 # Файлы выпуска: jar для JVM, aar для Android и OfdProtoCodec.xcframework.zip
-# для iOS (Swift Package Manager берёт его по ссылке из Package.swift).
+# для iOS; строка binaryTarget для Package.swift с его суммой — в заметках.
 name: Release
 
 on:
   push:
     tags: [ 'v*' ]
+  workflow_run:
+    workflows: [ 'CI Build' ]
+    types: [ completed ]
+    branches: [ main ]
 
 permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release
   cancel-in-progress: false
 
 jobs:
+  plan:
+    if: >-
+      github.event_name == 'push' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.plan.outputs.release }}
+      version: ${{ steps.plan.outputs.version }}
+      tag: ${{ steps.plan.outputs.tag }}
+      sha: ${{ steps.plan.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+
+      - id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          AUTO_RELEASE: ${{ vars.AUTO_RELEASE || 'true' }}
+          LINE_FILE: build.gradle.kts
+        run: |
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          bash .github/scripts/release-plan.sh
+
+  # По ручной метке проверка ещё не шла; после CI на main она уже зелёная.
   checks:
+    needs: plan
+    if: github.event_name == 'push' && needs.plan.outputs.release == 'true'
     uses: ./.github/workflows/ci.yml
 
   artifacts:
-    # XCFramework собирается только на macOS.
+    needs: [ plan, checks ]
+    if: >-
+      !cancelled() && needs.plan.outputs.release == 'true' &&
+      (needs.checks.result == 'success' || needs.checks.result == 'skipped')
     runs-on: macos-latest
+    env:
+      VERSION: ${{ needs.plan.outputs.version }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
 
       - uses: actions/setup-java@v4
         with:
@@ -37,37 +86,20 @@ jobs:
 
       - uses: ./.github/actions/siblings
 
-      # Метка v1.3.1 при версии 1.3.0 в сборке выложила бы под чужим номером
-      # другой код — и в Central его уже не заменить.
-      - name: Метка совпадает с версией
-        run: |
-          version=$(./gradlew -q properties --property version | sed -n 's/^version: //p')
-          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
-            echo "::error::Метка $GITHUB_REF_NAME, а версия в сборке $version"
-            exit 1
-          fi
-          case "$version" in *SNAPSHOT*) echo "::error::SNAPSHOT не выпускается"; exit 1 ;; esac
-
+      # generateSpmManifest собирает XCFramework, упаковывает его в zip
+      # и считает сумму; Package.swift, который она переписывает, остаётся
+      # на раннере.
       - name: Собрать jar, aar и XCFramework
-        run: ./gradlew jvmJar bundleAndroidMainAar generateSpmManifest
+        run: ./gradlew jvmJar bundleAndroidMainAar generateSpmManifest -PreleaseVersion="$VERSION"
 
-      # Package.swift в метке ссылается на архив этого выпуска и его сумму.
-      # Сумма считается с архива, собранного здесь; если сборка Kotlin/Native
-      # дала другой архив, чем у владельца, SPM по метке его не примет —
-      # верная строка binaryTarget есть в заметках выпуска.
       - name: Сложить файлы выпуска
         run: |
-          version="${GITHUB_REF_NAME#v}"
           mkdir -p dist
-          cp "build/libs/ofd-proto-codec-jvm-$version.jar" dist/
-          cp build/outputs/aar/*.aar "dist/ofd-proto-codec-android-$version.aar"
+          cp "build/libs/ofd-proto-codec-jvm-$VERSION.jar" dist/
+          cp build/outputs/aar/*.aar "dist/ofd-proto-codec-android-$VERSION.aar"
           zip=build/XCFrameworks/release/OfdProtoCodec.xcframework.zip
           cp "$zip" dist/
-          sum=$(shasum -a 256 "$zip" | cut -d' ' -f1)
-          echo "$sum" > dist/OfdProtoCodec.xcframework.zip.sha256
-          if ! git show HEAD:Package.swift | grep -q "$sum"; then
-            echo "::warning::Package.swift в метке несёт другую сумму XCFramework; правильная: $sum"
-          fi
+          shasum -a 256 "$zip" | cut -d' ' -f1 > dist/OfdProtoCodec.xcframework.zip.sha256
           ls -l dist
 
       - uses: actions/upload-artifact@v4
@@ -77,14 +109,19 @@ jobs:
           if-no-files-found: error
 
   github-release:
-    needs: [ checks, artifacts ]
+    needs: [ plan, artifacts ]
+    if: ${{ !cancelled() && needs.artifacts.result == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      TAG: ${{ needs.plan.outputs.tag }}
+      SHA: ${{ needs.plan.outputs.sha }}
     steps:
       # Вся история с метками — для заметок о выпуске.
       - uses: actions/checkout@v4
         with:
+          ref: ${{ needs.plan.outputs.sha }}
           fetch-depth: 0
 
       - uses: actions/download-artifact@v4
@@ -92,20 +129,9 @@ jobs:
           name: release-files
           path: dist
 
-      # Заметки: файл RELEASE_NOTES.md в метке, а без него — сообщения
-      # коммитов от предыдущей метки v*. Ниже — строка для Package.swift.
       - name: Заметки о выпуске
         run: |
-          if [ -f RELEASE_NOTES.md ]; then
-            cp RELEASE_NOTES.md notes.md
-          else
-            prev=$(git describe --tags --abbrev=0 --match 'v*' "${GITHUB_REF_NAME}^" 2>/dev/null || true)
-            {
-              if [ -n "$prev" ]; then echo "Изменения с $prev:"; else echo "Изменения:"; fi
-              echo
-              git log --no-merges --format='- %s' "${prev:+$prev..}${GITHUB_REF_NAME}"
-            } > notes.md
-          fi
+          bash .github/scripts/release-notes.sh
           sum=$(cat dist/OfdProtoCodec.xcframework.zip.sha256)
           cat >> notes.md <<NOTES
 
@@ -114,34 +140,37 @@ jobs:
           \`\`\`swift
           .binaryTarget(
               name: "OfdProtoCodec",
-              url: "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/OfdProtoCodec.xcframework.zip",
+              url: "https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/OfdProtoCodec.xcframework.zip",
               checksum: "${sum}"
           )
           \`\`\`
           NOTES
           cat notes.md
 
-      # Выпуск мог быть заведён руками до сборки — тогда файлы докладываются
-      # в него поверх прежних, а заметки остаются те, что написаны руками.
+      # Выпуск мог быть заведён руками — тогда файлы докладываются в него
+      # поверх прежних, а заметки остаются те, что написаны руками. Иначе
+      # выпуск создаётся вместе с меткой на выпускаемом коммите.
       - name: Выпуск на GitHub
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --clobber dist/*
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber dist/*
           else
-            gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag \
-              --title "ofd-proto-codec $GITHUB_REF_NAME" --notes-file notes.md dist/*
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target "$SHA" \
+              --title "ofd-proto-codec $TAG" --notes-file notes.md dist/*
           fi
+          echo "- Выпуск на GitHub: $TAG" >> "$GITHUB_STEP_SUMMARY"
 
-  # В Central — только после проверок и созданного выпуска на GitHub.
-  # Без секретов работа падает с перечнем недостающих, выпуск на GitHub
-  # при этом уже создан и не трогается; после заведения секретов её
-  # достаточно перезапустить (Re-run failed jobs).
+  # В Central — только после выпуска на GitHub. Без секретов выгрузка
+  # пропускается с уведомлением, запуск остаётся зелёным; когда секреты
+  # заведены, выгрузка идёт сама со следующим выпуском.
   maven-central:
-    needs: [ checks, artifacts, github-release ]
+    needs: [ plan, github-release ]
+    if: ${{ !cancelled() && needs.github-release.result == 'success' }}
     runs-on: macos-latest
     env:
+      VERSION: ${{ needs.plan.outputs.version }}
       OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
       OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
       SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
@@ -149,26 +178,38 @@ jobs:
       SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
     steps:
       - name: Секреты на месте
+        id: secrets
         run: |
           missing=""
           for name in OSSRH_USERNAME OSSRH_PASSWORD SIGNING_KEY SIGNING_PASSWORD; do
             [ -n "${!name}" ] || missing="$missing $name"
           done
           if [ -n "$missing" ]; then
-            echo "::error title=Maven Central::Не заведены секреты репозитория:$missing. Выпуск на GitHub создан и не тронут; заведите секреты и перезапустите эту работу."
-            exit 1
+            message="Maven Central пропущен: не заведены секреты репозитория$missing. Выпуск на GitHub создан."
+            echo "::notice title=Maven Central::$message"
+            echo "- $message" >> "$GITHUB_STEP_SUMMARY"
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: actions/checkout@v4
+      - if: steps.secrets.outputs.present == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
 
-      - uses: actions/setup-java@v4
+      - if: steps.secrets.outputs.present == 'true'
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - uses: gradle/actions/setup-gradle@v4
+      - if: steps.secrets.outputs.present == 'true'
+        uses: gradle/actions/setup-gradle@v4
 
-      - uses: ./.github/actions/siblings
+      - if: steps.secrets.outputs.present == 'true'
+        uses: ./.github/actions/siblings
 
       - name: Выгрузить в Maven Central
-        run: ./gradlew publishAggregationToCentralPortal
+        if: steps.secrets.outputs.present == 'true'
+        run: ./gradlew publishAggregationToCentralPortal -PreleaseVersion="$VERSION"

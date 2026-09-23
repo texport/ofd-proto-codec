@@ -20,7 +20,10 @@ plugins {
 }
 
 group = "io.github.texport"
-version = "1.3.1"
+// Линия версии; номер выпуска (1.3.0, 1.3.1, …) назначает выпуск по меткам git
+// и передаёт свойством -PreleaseVersion. Без него — <линия>.0-SNAPSHOT.
+val versionLine = "1.3"
+version = providers.gradleProperty("releaseVersion").orNull ?: "$versionLine.0-SNAPSHOT"
 
 repositories {
     mavenLocal()

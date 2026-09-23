@@ -1,12 +1,13 @@
 # Соседние библиотеки texport, которых нет в Maven Central в нужной версии.
 #
 # Кодек берёт протокол 2.0.4 (ofd-kt-proto-v204), а в Central его ещё нет.
-# Протокол собирается из исходников и кладётся в локальное хранилище
-# раннера — публиковать ради сборки ничего не требуется. Клиент сети
-# (ofd-network-client 1.2.1) в Central есть и берётся оттуда.
+# Протокол собирается из исходников ветки ниже и кладётся в локальное
+# хранилище раннера под той версией, которую кодек просит в
+# gradle/libs.versions.toml (ofdKtProtoV204), — публиковать ради сборки
+# ничего не требуется. Клиент сети (ofd-network-client 1.2.1) в Central есть
+# и берётся оттуда.
 #
-# Ветка или метка протокола задаётся здесь и только здесь; её берут и
-# проверка, и выпуск.
+# Ветка протокола задаётся здесь и только здесь; её берут и проверка, и выпуск.
 name: Соседние библиотеки из исходников
 description: Собирает ofd-kt-proto из исходников в локальное хранилище Maven.
 
@@ -27,5 +28,8 @@ runs:
 
     - name: Протокол в локальное хранилище
       shell: bash
-      working-directory: .siblings/ofd-kt-proto
-      run: ./gradlew publishToMavenLocal
+      run: |
+        version=$(sed -n 's/^ofdKtProtoV204 = "\(.*\)"$/\1/p' gradle/libs.versions.toml)
+        test -n "$version" || { echo "::error::В libs.versions.toml нет ofdKtProtoV204"; exit 1; }
+        cd .siblings/ofd-kt-proto
+        ./gradlew publishToMavenLocal -PreleaseVersion="$version"
