@@ -119,7 +119,7 @@ publishing {
                 developer {
                     id.set("sergeyivanov")
                     name.set("Sergey Ivanov")
-                    email.set("sergey.ivanov@example.com")
+                    email.set("ivanov.sergey.ekb@gmail.com")
                 }
             }
 
@@ -182,7 +182,7 @@ nmcpAggregation {
     centralPortal {
         username.set(project.findProperty("ossrhUsername")?.toString() ?: System.getenv("OSSRH_USERNAME"))
         password.set(project.findProperty("ossrhPassword")?.toString() ?: System.getenv("OSSRH_PASSWORD"))
-        publishingType.set("USER_MANAGED")
+        publishingType.set("AUTOMATIC")
     }
 }
 
