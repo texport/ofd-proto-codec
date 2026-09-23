@@ -135,8 +135,13 @@ publishing {
 signing {
     val signingKey = System.getenv("SIGNING_KEY")
     val signingPassword = System.getenv("SIGNING_PASSWORD")
+    val signingKeyId = System.getenv("SIGNING_KEY_ID")
     if (!signingKey.isNullOrEmpty() && !signingPassword.isNullOrEmpty()) {
-        useInMemoryPgpKeys(signingKey, signingPassword)
+        if (signingKeyId.isNullOrEmpty()) {
+            useInMemoryPgpKeys(signingKey, signingPassword)
+        } else {
+            useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+        }
     }
     isRequired = false
     sign(publishing.publications)
