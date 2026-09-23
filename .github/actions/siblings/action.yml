@@ -1,0 +1,31 @@
+# Соседние библиотеки texport, которых нет в Maven Central в нужной версии.
+#
+# Кодек берёт протокол 2.0.4 (ofd-kt-proto-v204), а в Central его ещё нет.
+# Протокол собирается из исходников и кладётся в локальное хранилище
+# раннера — публиковать ради сборки ничего не требуется. Клиент сети
+# (ofd-network-client 1.2.1) в Central есть и берётся оттуда.
+#
+# Ветка или метка протокола задаётся здесь и только здесь; её берут и
+# проверка, и выпуск.
+name: Соседние библиотеки из исходников
+description: Собирает ofd-kt-proto из исходников в локальное хранилище Maven.
+
+inputs:
+  ofd-kt-proto-ref:
+    description: Ветка или метка texport/ofd-kt-proto
+    default: main
+
+runs:
+  using: composite
+  steps:
+    - name: Протокол
+      uses: actions/checkout@v4
+      with:
+        repository: texport/ofd-kt-proto
+        ref: ${{ inputs.ofd-kt-proto-ref }}
+        path: .siblings/ofd-kt-proto
+
+    - name: Протокол в локальное хранилище
+      shell: bash
+      working-directory: .siblings/ofd-kt-proto
+      run: ./gradlew publishToMavenLocal

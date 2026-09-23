@@ -1,54 +1,42 @@
+# Проверка каждого изменения. Её же вызывает выпуск по метке (release.yml):
+# в выпуск и в Maven Central уходит только то, что прошло эту проверку.
 name: CI Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ '**' ]
   pull_request:
     branches: [ main ]
+  workflow_call:
+
+permissions:
+  contents: read
 
 jobs:
   build:
     name: Build & Test
+    # iOS-цели и XCFramework собираются только на macOS.
     runs-on: macos-latest
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Checkout ofd-kt-proto
-      uses: actions/checkout@v4
-      with:
-        repository: texport/ofd-kt-proto
-        path: ofd-kt-proto
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17' # javaTargetCore в libs.versions.toml
+          distribution: 'temurin'
 
-    - name: Checkout ofd-network-client
-      uses: actions/checkout@v4
-      with:
-        repository: texport/ofd-network-client
-        path: ofd-network-client
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: 'gradle'
+      - name: Соседние библиотеки из исходников
+        uses: ./.github/actions/siblings
 
-    - name: Build & Publish dependencies to Maven Local
-      run: |
-        cd ofd-kt-proto
-        chmod +x gradlew
-        ./gradlew publishToMavenLocal
-        cd ../ofd-network-client
-        chmod +x gradlew
-        ./gradlew publishToMavenLocal
-        cd ..
+      # Автоправку detekt на CI выключает сама сборка (по переменной CI):
+      # нарушение роняет проверку, а не переписывается молча.
+      - name: Run Detekt Static Analysis
+        run: ./gradlew detekt
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-
-    - name: Run Detekt Static Analysis
-      run: ./gradlew detekt
-
-    - name: Build and Run Tests
-      run: ./gradlew build
+      - name: Build and Run Tests
+        run: ./gradlew build
