@@ -2,7 +2,8 @@
 # и в Maven Central уходит только то, что прошло эту проверку.
 #
 # Файл один и тот же в протоколе, кодеке и ядре. Разнятся только версия JDK
-# (из каталога версий), задача покрытия и шаг соседей: у протокола соседей нет.
+# (из каталога версий), задача покрытия, шаг соседей (у протокола соседей
+# нет) и шаг iOS-тестов (у ядра они выключены в сборке).
 name: CI Build
 
 on:
@@ -54,6 +55,12 @@ jobs:
 
       - name: Run Unit Tests
         run: ./gradlew jvmTest
+
+      - name: Run Android Host Tests
+        run: ./gradlew testAndroidHostTest
+
+      - name: Run iOS Simulator Tests
+        run: ./gradlew iosSimulatorArm64Test
 
       - name: Verify Code Coverage Thresholds
         run: ./gradlew koverVerify
