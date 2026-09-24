@@ -20,7 +20,7 @@ runs:
   using: composite
   steps:
     - name: Протокол
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: texport/ofd-kt-proto
         ref: ${{ inputs.ofd-kt-proto-ref }}
