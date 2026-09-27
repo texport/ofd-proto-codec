@@ -13,10 +13,9 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.detekt)
     alias(libs.plugins.kover)
-    alias(libs.plugins.nmcp)
-    alias(libs.plugins.nmcp.aggregation)
+    // Публикации раскладывают собранную библиотеку в хранилище Maven: из него
+    // выпуск упаковывает zip для Gradle, в Maven Central кодек не выгружается.
     `maven-publish`
-    signing
 }
 
 group = "io.github.texport"
@@ -33,7 +32,6 @@ repositories {
 
 dependencies {
     detektPlugins(libs.detekt.formatting)
-    add("nmcpAggregation", dependencies.project(mapOf("path" to ":")))
 }
 
 detekt {
@@ -98,58 +96,6 @@ kotlin {
     }
 }
 
-publishing {
-    publications.withType<MavenPublication>().configureEach {
-        val javadocJarTask = tasks.register<Jar>("${name}JavadocJar") {
-            description = "Generates Javadoc jar for publication ${this@configureEach.name}"
-            archiveClassifier.set("javadoc")
-            archiveAppendix.set(this@configureEach.name)
-        }
-        artifact(javadocJarTask)
-        pom {
-            name.set("ofd-proto-codec")
-            description.set("Trilingual CPCR/OFD protocol codec with provider/version modules")
-            url.set("https://github.com/texport/ofd-proto-codec")
-
-            licenses {
-                license {
-                    name.set("The Apache License, Version 2.0")
-                    url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                }
-            }
-
-            developers {
-                developer {
-                    id.set("sergeyivanov")
-                    name.set("Sergey Ivanov")
-                    email.set("ivanov.sergey.ekb@gmail.com")
-                }
-            }
-
-            scm {
-                connection.set("scm:git:git://github.com/texport/ofd-proto-codec.git")
-                developerConnection.set("scm:git:ssh://github.com/texport/ofd-proto-codec.git")
-                url.set("https://github.com/texport/ofd-proto-codec")
-            }
-        }
-    }
-}
-
-signing {
-    val signingKey = System.getenv("SIGNING_KEY")
-    val signingPassword = System.getenv("SIGNING_PASSWORD")
-    val signingKeyId = System.getenv("SIGNING_KEY_ID")
-    if (!signingKey.isNullOrEmpty() && !signingPassword.isNullOrEmpty()) {
-        if (signingKeyId.isNullOrEmpty()) {
-            useInMemoryPgpKeys(signingKey, signingPassword)
-        } else {
-            useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-        }
-    }
-    isRequired = false
-    sign(publishing.publications)
-}
-
 kover {
     reports {
         verify {
@@ -179,14 +125,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().con
 
 tasks.named("check") {
     dependsOn("koverVerify")
-}
-
-nmcpAggregation {
-    centralPortal {
-        username.set(project.findProperty("ossrhUsername")?.toString() ?: System.getenv("OSSRH_USERNAME"))
-        password.set(project.findProperty("ossrhPassword")?.toString() ?: System.getenv("OSSRH_PASSWORD"))
-        publishingType.set("AUTOMATIC")
-    }
 }
 
 tasks.register("generateSpmManifest") {

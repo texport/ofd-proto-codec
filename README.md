@@ -1,6 +1,5 @@
 # ofd-proto-codec
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.texport/ofd-proto-codec.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.texport/ofd-proto-codec)
 [![Version](https://img.shields.io/badge/version-1.2.1-blue.svg)](https://github.com/texport/ofd-proto-codec/releases)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![CI Build](https://img.shields.io/github/actions/workflow/status/texport/ofd-proto-codec/ci.yml?branch=main&label=CI%20Build)](https://github.com/texport/ofd-proto-codec/actions)
@@ -39,19 +38,36 @@ The library is provider/version oriented. At the moment, the only implemented pr
 ### Installation
 
 #### Kotlin Multiplatform & Android
-Add the dependency to your shared `commonMain` source set inside `build.gradle.kts`:
+The library is not published to Maven Central. Every [GitHub release](https://github.com/texport/ofd-proto-codec/releases) carries the compiled library as a ready-made Maven repository for Gradle: `ofd-proto-codec-maven-<version>.zip`. It contains Gradle module metadata, all KMP targets (JVM, Android, iOS klibs) and the `ofd-kt-proto-v204` protocol library, which is not available in Maven Central; the remaining dependencies resolve from Maven Central.
+
+1. Download `ofd-proto-codec-maven-<version>.zip` from the release and unzip it into a folder of your project, e.g. `libs/maven`.
+2. Add that folder as a repository in `settings.gradle.kts` (or `build.gradle.kts`):
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        maven(uri("libs/maven"))
+        google()
+        mavenCentral()
+    }
+}
+```
+
+3. Add the dependency to your shared `commonMain` source set inside `build.gradle.kts`:
 
 ```kotlin
 kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("io.github.texport:ofd-proto-codec:1.2.1")
+                implementation("io.github.texport:ofd-proto-codec:<version>")
             }
         }
     }
 }
 ```
+
+`<version>` is the release number without the `v` prefix, e.g. `1.3.0` for release `v1.3.0`.
 
 #### Apple Swift Package Manager (SPM)
 You can integrate this library directly into your iOS project using Xcode's Swift Package Manager:
@@ -169,19 +185,36 @@ The library follows clean architecture principles:
 ### Подключение библиотеки
 
 #### В Kotlin Multiplatform и Android
-Добавьте зависимость в ваш общий набор исходников `commonMain` в `build.gradle.kts`:
+В Maven Central библиотека не публикуется. Каждый [выпуск на GitHub](https://github.com/texport/ofd-proto-codec/releases) несёт собранную библиотеку в виде готового хранилища Maven для Gradle: `ofd-proto-codec-maven-<версия>.zip`. В нём метаданные модулей Gradle, все цели KMP (JVM, Android, klib для iOS) и библиотека протокола `ofd-kt-proto-v204`, которой нет в Maven Central; остальные зависимости берутся из Maven Central.
+
+1. Скачайте `ofd-proto-codec-maven-<версия>.zip` из выпуска и распакуйте его в папку проекта, например `libs/maven`.
+2. Добавьте эту папку в хранилища в `settings.gradle.kts` (или `build.gradle.kts`):
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        maven(uri("libs/maven"))
+        google()
+        mavenCentral()
+    }
+}
+```
+
+3. Добавьте зависимость в ваш общий набор исходников `commonMain` в `build.gradle.kts`:
 
 ```kotlin
 kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("io.github.texport:ofd-proto-codec:1.2.1")
+                implementation("io.github.texport:ofd-proto-codec:<версия>")
             }
         }
     }
 }
 ```
+
+`<версия>` — номер выпуска без префикса `v`, например `1.3.0` для выпуска `v1.3.0`.
 
 #### В Apple iOS проектах (через SPM)
 Вы можете подключить библиотеку непосредственно в iOS приложение с помощью Swift Package Manager в Xcode:
