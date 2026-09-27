@@ -12,10 +12,11 @@
 # В Maven-хранилища кодек не выгружается: собранная библиотека для Gradle
 # едет в самом выпуске. ofd-proto-codec-maven-<версия>.zip — хранилище
 # в раскладке Maven (метаданные модулей Gradle, все цели KMP вместе с klib
-# для iOS, POM с зависимостями) вместе с собранным из исходников
-# протоколом ofd-kt-proto-v204, которого в общих хранилищах нет, так что
-# архив самодостаточен. Рядом — jar для JVM, aar для
-# Android и OfdProtoCodec.xcframework.zip для iOS; строка binaryTarget для
+# для iOS, POM с зависимостями) вместе с теми самыми сборками протоколов
+# ofd-kt-proto и ofd-kt-proto-v204 и клиента сети ofd-network-client,
+# с которыми собран кодек; в общих хранилищах их нет, так что архив
+# самодостаточен. Рядом — jar для JVM, aar для Android
+# и OfdProtoCodec.xcframework.zip для iOS; строка binaryTarget для
 # Package.swift с его суммой — в заметках.
 name: Release
 
@@ -90,8 +91,6 @@ jobs:
         with:
           cache-provider: enhanced
 
-      - uses: ./.github/actions/siblings
-
       # generateSpmManifest собирает XCFramework, упаковывает его в zip
       # и считает сумму; Package.swift, который она переписывает, остаётся
       # на раннере.
@@ -108,10 +107,12 @@ jobs:
           shasum -a 256 "$zip" | cut -d' ' -f1 > dist/OfdProtoCodec.xcframework.zip.sha256
           ls -l dist
 
-      # publishToMavenLocal кладёт кодек рядом с протоколом, который сюда
-      # уже положил шаг соседних библиотек; архивом уходит вся ветка
-      # io/github/texport, поэтому библиотеки texport потребитель берёт
-      # из одного архива, а сторонние зависимости — из обычных хранилищ.
+      # publishToMavenLocal кладёт кодек рядом с протоколами и клиентом сети,
+      # которые сборка уже разложила сюда из их выпусков на GitHub
+      # (settings.gradle.kts). Архивом уходит вся ветка io/github/texport —
+      # ровно те сборки соседей, с которыми собран кодек, поэтому библиотеки
+      # texport потребитель берёт из одного архива, а сторонние зависимости —
+      # из обычных хранилищ.
       - name: Собрать хранилище Maven для Gradle
         run: |
           ./gradlew publishToMavenLocal -PreleaseVersion="$VERSION"

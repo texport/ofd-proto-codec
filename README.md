@@ -38,7 +38,7 @@ The library is provider/version oriented. At the moment, the only implemented pr
 ### Installation
 
 #### Kotlin Multiplatform & Android
-The library is not published to Maven Central. Every [GitHub release](https://github.com/texport/ofd-proto-codec/releases) carries the compiled library as a ready-made Maven repository for Gradle: `ofd-proto-codec-maven-<version>.zip`. It contains Gradle module metadata, all KMP targets (JVM, Android, iOS klibs) and the `ofd-kt-proto-v204` protocol library, which is not available in Maven Central; the remaining dependencies resolve from Maven Central.
+The library is not published to Maven Central. Every [GitHub release](https://github.com/texport/ofd-proto-codec/releases) carries the compiled library as a ready-made Maven repository for Gradle: `ofd-proto-codec-maven-<version>.zip`. It contains Gradle module metadata, all KMP targets (JVM, Android, iOS klibs) and the exact builds of the protocol libraries (`ofd-kt-proto`, `ofd-kt-proto-v204`) and `ofd-network-client` the codec was built with, none of which is in Maven Central; the remaining dependencies resolve from Maven Central. The codec's own build takes those libraries the same way — as compiled builds from their GitHub releases, never from sources.
 
 1. Download `ofd-proto-codec-maven-<version>.zip` from the release and unzip it into a folder of your project, e.g. `libs/maven`.
 2. Add that folder as a repository in `settings.gradle.kts` (or `build.gradle.kts`):
@@ -185,7 +185,7 @@ The library follows clean architecture principles:
 ### Подключение библиотеки
 
 #### В Kotlin Multiplatform и Android
-В Maven Central библиотека не публикуется. Каждый [выпуск на GitHub](https://github.com/texport/ofd-proto-codec/releases) несёт собранную библиотеку в виде готового хранилища Maven для Gradle: `ofd-proto-codec-maven-<версия>.zip`. В нём метаданные модулей Gradle, все цели KMP (JVM, Android, klib для iOS) и библиотека протокола `ofd-kt-proto-v204`, которой нет в Maven Central; остальные зависимости берутся из Maven Central.
+В Maven Central библиотека не публикуется. Каждый [выпуск на GitHub](https://github.com/texport/ofd-proto-codec/releases) несёт собранную библиотеку в виде готового хранилища Maven для Gradle: `ofd-proto-codec-maven-<версия>.zip`. В нём метаданные модулей Gradle, все цели KMP (JVM, Android, klib для iOS) и те самые сборки библиотек протокола (`ofd-kt-proto`, `ofd-kt-proto-v204`) и клиента сети `ofd-network-client`, с которыми собран кодек, — в Maven Central их нет; остальные зависимости берутся из Maven Central. Сборка самого кодека берёт эти библиотеки так же — готовыми сборками из их выпусков на GitHub, а не из исходников.
 
 1. Скачайте `ofd-proto-codec-maven-<версия>.zip` из выпуска и распакуйте его в папку проекта, например `libs/maven`.
 2. Добавьте эту папку в хранилища в `settings.gradle.kts` (или `build.gradle.kts`):

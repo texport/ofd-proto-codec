@@ -1,9 +1,9 @@
 [versions]
 kotlin = "2.4.0"
-ofdKtProto = "2.0.3-2"
-ofdKtProtoV204 = "2.0.4-1"
+ofdKtProto = "2.0.3-4"
+ofdKtProtoV204 = "2.0.4-2"
 detekt = "1.23.8"
-ofdNetworkClient = "1.2.1"
+ofdNetworkClient = "1.2.2"
 serialization = "1.11.0"
 coroutines = "1.11.0"
 kover = "0.9.8"
